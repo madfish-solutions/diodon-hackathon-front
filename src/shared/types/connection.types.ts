@@ -1,5 +1,5 @@
 import Caver from 'caver-js';
-import { ethers } from 'ethers';
+import { providers } from 'ethers';
 
 export enum ConnectionType {
   Klaytn = 'Klaytn',
@@ -13,7 +13,7 @@ export interface KlaytnConnection {
 
 export interface EthereumConnection {
   type: ConnectionType.Ethereum;
-  provider: ethers.providers.Web3Provider;
+  ethereum: providers.ExternalProvider;
 }
 
 export type Connection = KlaytnConnection | EthereumConnection;

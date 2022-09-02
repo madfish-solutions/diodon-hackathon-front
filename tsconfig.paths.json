@@ -2,6 +2,8 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@blockchain/*": ["./blockchain/*"],
+      "@config/*": ["./config/*"],
       "@providers/*": ["./providers/*"],
       "@shared/*": ["./shared/*"]
     }

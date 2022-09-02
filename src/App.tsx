@@ -1,7 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import Caver from 'caver-js';
+import { providers } from 'ethers';
 import { observer } from 'mobx-react-lite';
+
+import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
+import { useConnectKlaytn } from '@blockchain/use-connect-klaytn';
 
 import './App.css';
 import { useRootStore } from './providers';
@@ -11,58 +14,8 @@ import { ConnectionType } from './shared';
 export const App = observer(() => {
   const { authStore } = useRootStore();
 
-  const connectKlaytn = useCallback(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const klaytn = (window as any).klaytn;
-
-    if (!klaytn) {
-      alert('Klaytn wallet is not installed or inactive');
-
-      return;
-    }
-
-    try {
-      const [accountAddress]: string[] = await klaytn.enable();
-      authStore.setConnection({
-        type: ConnectionType.Klaytn,
-        caver: new Caver(klaytn)
-      });
-      authStore.setAddress(accountAddress);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      alert(`Failed to connect to Klaytn wallet: ${(e as Error).message}`);
-    }
-  }, [authStore]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const klaytn = (window as any).klaytn;
-
-    if (klaytn) {
-      const accountsChangedCallback = ([accountAddress]: string[]) => {
-        authStore.setConnection({
-          type: ConnectionType.Klaytn,
-          caver: new Caver(klaytn)
-        });
-        authStore.setAddress(accountAddress);
-      };
-
-      const networkChangedCallback = (networkId: string) => {
-        // eslint-disable-next-line no-console
-        console.log('networkChangedCallback', networkId);
-        authStore.resetStore();
-      };
-
-      klaytn.on('accountsChanged', accountsChangedCallback);
-      klaytn.on('networkChanged', networkChangedCallback);
-
-      return () => {
-        klaytn.off('accountsChanged', accountsChangedCallback);
-        klaytn.off('networkChanged', networkChangedCallback);
-      };
-    }
-  }, [authStore]);
+  const connectEthereum = useConnectEthereum();
+  const connectKlaytn = useConnectKlaytn();
 
   const signTestMessage = useCallback(async () => {
     const { connection, address } = authStore;
@@ -71,18 +24,26 @@ export const App = observer(() => {
       return;
     }
 
-    if (connection.type === ConnectionType.Klaytn) {
-      try {
-        const message = 'Hello world';
-        const signature = await connection.caver.klay.sign(connection.caver.utils.utf8ToHex(message), address);
-        alert(`Signature: ${signature}`);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        alert(`Failed to sign message: ${(e as Error).message}`);
+    try {
+      const message = 'Hello world';
+      let signature = '';
+      if (connection.type === ConnectionType.Klaytn) {
+        signature = await connection.caver.klay.sign(connection.caver.utils.utf8ToHex(message), address);
+      } else {
+        const provider = new providers.Web3Provider(connection.ethereum);
+        const signer = provider.getSigner();
+        signature = await signer.signMessage(message);
       }
+      alert(`Signature: ${signature}`);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      alert(`Failed to sign message: ${(e as Error).message}`);
     }
   }, [authStore]);
+
+  const connectMetamask = useCallback(async () => await connectEthereum(), [connectEthereum]);
+  const connectWithWalletConnect = useCallback(async () => await connectEthereum('walletconnect'), [connectEthereum]);
 
   return (
     <div className="rows">
@@ -95,7 +56,8 @@ export const App = observer(() => {
         ) : (
           <>
             <button onClick={connectKlaytn}>Connect Klaytn wallet</button>
-            <button>Connect Ethereum wallet</button>
+            <button onClick={connectMetamask}>Connect Metamask</button>
+            <button onClick={connectWithWalletConnect}>Connect with Wallet Connect</button>
           </>
         )}
       </div>

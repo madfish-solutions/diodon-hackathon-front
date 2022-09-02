@@ -1,19 +1,20 @@
 import React from 'react';
 
+import { UseWalletProvider } from '@keshan3262/use-wallet';
 import { createRoot } from 'react-dom/client';
-import { UseWalletProvider } from 'use-wallet';
 
 import 'reflect-metadata';
 
 import './index.css';
 import { App } from './App';
+import { WALLET_CONNECTORS } from './config';
 import { RootStoreProvider } from './providers';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <RootStoreProvider>
-      <UseWalletProvider>
+      <UseWalletProvider connectors={WALLET_CONNECTORS}>
         <App />
       </UseWalletProvider>
     </RootStoreProvider>
