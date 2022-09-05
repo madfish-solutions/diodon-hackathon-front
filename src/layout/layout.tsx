@@ -2,6 +2,7 @@ import cx from 'classnames';
 
 import { Sidebar, Header } from '@shared/components';
 import { CFC } from '@shared/types';
+import { ToastWrapper } from '@shared/utils/toasts';
 
 import styles from './layout.module.scss';
 import { useLayoutViewModel } from './use-layout.vm';
@@ -21,6 +22,7 @@ export const Layout: CFC<LayoutProps> = ({ title, description, image, className,
       {isComponentDidMount ? (
         <>
           <div className={styles.root}>
+            <ToastWrapper />
             <Header />
             <Sidebar className={styles.sidebar} />
             <div className={cx(styles.mainWrapper)}>
