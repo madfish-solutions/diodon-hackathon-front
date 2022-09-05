@@ -4,6 +4,8 @@
     "paths": {
       "@blockchain/*": ["./blockchain/*"],
       "@config/*": ["./config/*"],
+      "@layout": ["./layout"],
+      "@modules/*": ["./modules/*"],
       "@providers/*": ["./providers/*"],
       "@shared/*": ["./shared/*"]
     }

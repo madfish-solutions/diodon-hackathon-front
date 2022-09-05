@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import 'reflect-metadata';
 
 import './index.css';
-import { App } from './App';
+import { App } from './app';
 import { WALLET_CONNECTORS } from './config';
 import { RootStoreProvider } from './providers';
 

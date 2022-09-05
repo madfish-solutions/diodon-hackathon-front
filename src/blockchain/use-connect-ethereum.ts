@@ -9,7 +9,7 @@ import { ConnectionType } from '@shared/types';
 export const useConnectEthereum = () => {
   const { authStore } = useRootStore();
   const wallet = useWallet();
-  const { account, connect, ethereum } = wallet;
+  const { account, connect, ethereum, reset: disconnect } = wallet;
   // eslint-disable-next-line no-console
   console.log(RPC_URL);
 
@@ -38,5 +38,8 @@ export const useConnectEthereum = () => {
     }
   }, [account, authStore, ethereum]);
 
-  return connectEthereum;
+  return {
+    connect: connectEthereum,
+    disconnect
+  };
 };
