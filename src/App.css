@@ -15,3 +15,7 @@
   grid-template-columns: 1fr;
   row-gap: 5px;
 }
+
+* {
+  box-sizing: border-box;
+}

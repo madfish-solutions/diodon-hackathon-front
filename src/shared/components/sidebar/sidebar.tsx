@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
+import { Navigation } from '../navigation';
 import styles from './sidebar.module.scss';
 
 interface SidebarProps {
@@ -11,7 +12,7 @@ interface SidebarProps {
 export const Sidebar: FC<SidebarProps> = ({ className }) => {
   return (
     <div className={cx(styles.root, className)} data-test-id="sidebar">
-      TODO: add navigation
+      <Navigation className={styles.navigation} />
       <footer className={styles.footer}>Some footer</footer>
     </div>
   );

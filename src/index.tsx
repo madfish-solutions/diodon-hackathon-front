@@ -2,6 +2,7 @@ import React from 'react';
 
 import { UseWalletProvider } from '@keshan3262/use-wallet';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
 import 'reflect-metadata';
 
@@ -15,7 +16,9 @@ root.render(
   <React.StrictMode>
     <RootStoreProvider>
       <UseWalletProvider connectors={WALLET_CONNECTORS}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </UseWalletProvider>
     </RootStoreProvider>
   </React.StrictMode>

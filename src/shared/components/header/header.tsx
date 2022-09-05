@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import cx from 'classnames';
+import { Link } from 'react-router-dom';
 
 import styles from './header.module.scss';
 
@@ -32,7 +33,7 @@ export const Header: FC<HeaderProps> = ({ className }) => {
   return (
     <div className={styles.wrapper}>
       <header className={cx(styles.root, className)} data-test-id="header">
-        <a href="/">Logo placeholder</a>
+        <Link to="/">Logo placeholder</Link>
       </header>
     </div>
   );

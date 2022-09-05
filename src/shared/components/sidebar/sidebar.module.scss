@@ -23,10 +23,13 @@
 }
 
 .footer {
-  margin: 32px 8px 4px 16px;
+  margin: 16px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 140px;
   justify-content: space-between;
+}
+
+.navigation {
+  margin-bottom: auto;
 }
