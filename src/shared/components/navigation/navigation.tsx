@@ -24,6 +24,13 @@ export const Navigation: FC<NavigationProps> = ({ className }) => {
         className={cx(styles.link, isActivePath(router.pathname, '/about') && styles.active)}
       >
         About
+      </Link>,
+      <Link
+        key="workspace"
+        to="/workspace"
+        className={cx(styles.link, isActivePath(router.pathname, '/workspace') && styles.active)}
+      >
+        Workspace
       </Link>
     ];
   }, [router.pathname]);
