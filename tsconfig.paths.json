@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@abis/*": ["./abis/*"],
       "@blockchain/*": ["./blockchain/*"],
       "@config/*": ["./config/*"],
       "@layout": ["./layout"],

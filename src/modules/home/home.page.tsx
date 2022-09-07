@@ -1,9 +1,16 @@
 import { FC } from 'react';
 
-import { useHomeViewModel } from './use-home.vm';
+import { observer } from 'mobx-react-lite';
 
-export const HomePage: FC = () => {
-  const { address, connectKlaytn, connectMetamask, disconnect, signTestMessage } = useHomeViewModel();
+import { SetOwnerForm } from './forms/set-owner-form';
+import { useHomePageViewModel } from './home-page.vm';
+
+export const HomePage: FC = observer(() => {
+  const { address, connectMetamask, disconnect, isInitialized, ownerLabel, signTestMessage } = useHomePageViewModel();
+
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="rows">
@@ -15,7 +22,6 @@ export const HomePage: FC = () => {
           </>
         ) : (
           <>
-            <button onClick={connectKlaytn}>Connect Klaytn wallet</button>
             <button onClick={connectMetamask}>Connect Metamask</button>
           </>
         )}
@@ -25,6 +31,8 @@ export const HomePage: FC = () => {
           <button onClick={signTestMessage}>Sign "Hello world" message</button>
         </div>
       )}
+      <p>"Owner" contract owner: {ownerLabel}</p>
+      {address ? <SetOwnerForm /> : <p>Connect wallet to interact with "Owner" contract</p>}
     </div>
   );
-};
+});

@@ -1,12 +1,9 @@
 import { useCallback, useEffect } from 'react';
 
-import Caver from 'caver-js';
-
-import { useRootStore } from '@providers/root-store.provider';
-import { ConnectionType } from '@shared/types';
+import { useAuthStore } from '@shared/hooks';
 
 export const useConnectKlaytn = () => {
-  const { authStore } = useRootStore();
+  const authStore = useAuthStore();
 
   const connectKlaytn = useCallback(async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,10 +17,11 @@ export const useConnectKlaytn = () => {
 
     try {
       const [accountAddress]: string[] = await klaytn.enable();
-      authStore.setConnection({
+      // TODO: uncomment and change this code to enable Klaytn wallets integration
+      /* authStore.setConnection({
         type: ConnectionType.Klaytn,
         caver: new Caver(klaytn)
-      });
+      }); */
       authStore.setAddress(accountAddress);
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -38,10 +36,11 @@ export const useConnectKlaytn = () => {
 
     if (klaytn) {
       const accountsChangedCallback = ([accountAddress]: string[]) => {
-        authStore.setConnection({
+        // TODO: uncomment and change this code to enable Klaytn wallets integration
+        /* authStore.setConnection({
           type: ConnectionType.Klaytn,
           caver: new Caver(klaytn)
-        });
+        }); */
         authStore.setAddress(accountAddress);
       };
 
