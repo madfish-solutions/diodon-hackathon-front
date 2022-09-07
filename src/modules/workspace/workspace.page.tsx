@@ -18,9 +18,9 @@ export const WorkspacePage: FC = () => {
   return (
     <>
       <div className={styles.toasts}>
-        <button onClick={() => showSuccessToast(SUCCESS_MESSAGE)}>Success</button>
-        <button onClick={() => showErrorToast(ERROR_MESSAGE)}>Error</button>
-        <button onClick={() => showInfoToast(INFO_MESSAGE)}>Info</button>
+        <Button onClick={() => showSuccessToast(SUCCESS_MESSAGE)}>Success</Button>
+        <Button onClick={() => showErrorToast(ERROR_MESSAGE)}>Error</Button>
+        <Button onClick={() => showInfoToast(INFO_MESSAGE)}>Info</Button>
       </div>
       <div className={styles.buttons}>
         <Button>Button Component</Button>

@@ -1,9 +1,10 @@
-import { ForwardRefExoticComponent, HTMLProps, RefAttributes } from 'react';
+import { ForwardRefExoticComponent, HTMLProps, ReactNode, RefAttributes } from 'react';
 
 import cx from 'classnames';
 import { Link, LinkProps } from 'react-router-dom';
 
-import { CFC, isUndefined } from '@shared/types';
+import { CFC } from '@shared/types';
+import { isUndefined } from '@shared/types/type-checks';
 
 import styles from './button.module.scss';
 
@@ -11,7 +12,12 @@ export type ButtonProps = {
   loading?: boolean;
   type?: 'button' | 'submit' | 'reset' | undefined;
   external?: boolean;
+  themeOposite?: boolean;
   className?: string;
+  innerClassName?: string;
+  textClassName?: string;
+  icon?: ReactNode;
+  control?: ReactNode;
 } & (HTMLProps<HTMLButtonElement> | ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>>);
 
 export const Button: CFC<ButtonProps> = ({
@@ -19,23 +25,40 @@ export const Button: CFC<ButtonProps> = ({
   type = 'button',
   external = false,
   className,
+  innerClassName,
+  textClassName,
   children,
+  icon,
+  control,
+  themeOposite,
   ...props
 }) => {
+  const compoundClassName = cx(className, styles.root, {
+    [styles.loading]: loading
+  });
+
   if ('href' in props && !isUndefined(props.href)) {
     const anchorProps = {
       target: external ? '_blank' : undefined,
       rel: external ? 'noreferrer noopener' : undefined,
-      className: cx(styles.root, className),
+      className: compoundClassName,
       ...(props as ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>> & { href: string })
     };
 
     if (anchorProps.target === '_blank') {
-      return <a {...anchorProps}>{children}</a>;
+      return (
+        <a {...anchorProps}>
+          {control}
+          {children}
+          {icon}
+        </a>
+      );
     } else {
       return (
         <Link to={anchorProps.href} {...anchorProps}>
+          {control}
           {children}
+          {icon}
         </Link>
       );
     }
@@ -45,10 +68,12 @@ export const Button: CFC<ButtonProps> = ({
     <button
       // @ts-ignore
       type={type}
-      className={styles.root}
+      className={compoundClassName}
       {...(props as HTMLProps<HTMLButtonElement>)}
     >
+      {control}
       {children}
+      {icon}
     </button>
   );
 };
