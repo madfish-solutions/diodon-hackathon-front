@@ -20,7 +20,7 @@ export const useHomePageViewModel = () => {
   const owner = homePageStore?.ownerContractOwner;
   const ownerLoading = homePageStore?.ownerContractOwnerLoading;
   const ownerLabel = owner ?? (ownerLoading ? 'Loading...' : 'Unknown');
-  const ownerTransactionsContract = homePageStore?.ownerTransactionsContract;
+  const ownerViewContract = homePageStore?.ownerViewContract;
 
   const initializeFn = useCallback(async () => {
     await rootStore.createHomePageStore();
@@ -44,27 +44,26 @@ export const useHomePageViewModel = () => {
   useEffect(() => void loadOwnerContractOwner(), [loadOwnerContractOwner]);
 
   useEffect(() => {
-    if (ownerTransactionsContract) {
+    if (ownerViewContract) {
+      const filter = {
+        address: ownerViewContract.address,
+        topics: [ownerViewContract.interface.getEventTopic('OwnerSet')]
+      };
+
       const ownerChangeListener = (oldOwner: string, newOwner: string) => {
         // eslint-disable-next-line no-console
         console.log(`Owner changed from ${oldOwner} to ${newOwner}`);
         void loadOwnerContractOwner();
       };
 
-      // eslint-disable-next-line no-console
-      console.log('Subscribe to OwnerSet');
-      ownerTransactionsContract.on('OwnerSet', ownerChangeListener);
+      ownerViewContract.on(filter, ownerChangeListener);
 
-      return () => {
-        // eslint-disable-next-line no-console
-        console.log('Unsubscribe from OwnerSet');
-        ownerTransactionsContract.off('OwnerSet', ownerChangeListener);
-      };
+      return () => ownerViewContract.off(filter, ownerChangeListener);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
-  }, [ownerTransactionsContract, loadOwnerContractOwner]);
+  }, [ownerViewContract, loadOwnerContractOwner]);
 
   const signTestMessage = useCallback(async () => {
     if (!connection || !address) {

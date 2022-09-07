@@ -18,7 +18,7 @@ const OWNER_FORM_VALIDATION_SCHEMA = objectSchema().shape({
 });
 
 export const useSetOwnerFormViewModel = () => {
-  const { ownerTransactionsContract } = useHomePageStore();
+  const { ownerTransactionsContract, ownerContractOwnerStore } = useHomePageStore();
   const { showErrorToast, showInfoToast, showSuccessToast } = useToasts();
 
   const handleSubmit = useCallback(
@@ -34,6 +34,7 @@ export const useSetOwnerFormViewModel = () => {
         const receipt = await response.wait(1);
         showSuccessToast(`Transaction with hash ${receipt.transactionHash} is successful`);
         actions.resetForm();
+        await ownerContractOwnerStore.load();
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -45,7 +46,7 @@ export const useSetOwnerFormViewModel = () => {
         actions.setSubmitting(false);
       }
     },
-    [ownerTransactionsContract, showErrorToast, showInfoToast, showSuccessToast]
+    [ownerTransactionsContract, showErrorToast, showInfoToast, showSuccessToast, ownerContractOwnerStore]
   );
 
   const formik = useFormik({
@@ -70,6 +71,7 @@ export const useSetOwnerFormViewModel = () => {
     errors,
     handleNewOwnerChange,
     handleSubmit: formik.handleSubmit,
-    isSubmitting: formik.isSubmitting
+    isSubmitting: formik.isSubmitting,
+    values: formik.values
   };
 };

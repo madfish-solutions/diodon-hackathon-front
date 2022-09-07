@@ -13,12 +13,12 @@ export class ContractWrapper<T extends Record<string, ContractFunction>> {
     this.estimateGas = this.internalContract.estimateGas as T;
   }
 
-  connect(providerOrSigner: Provider | Signer): void {
-    this.internalContract = this.internalContract.connect(providerOrSigner);
+  get address() {
+    return this.internalContract.address;
   }
 
-  attach(addressOrName: string): void {
-    this.internalContract = this.internalContract.attach(addressOrName);
+  get interface() {
+    return this.internalContract.interface;
   }
 
   on(event: EventFilter | string, listener: Listener) {

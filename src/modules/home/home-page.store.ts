@@ -42,27 +42,21 @@ export class HomePageStore {
       ownerContractOwner: computed,
       ownerContractOwnerLoading: computed,
 
-      reconnectOwnerViewContract: action,
-      setOwnerTransactionsContract: action
+      updateContracts: action
     });
-  }
-
-  reconnectOwnerViewContract() {
-    const { connection } = this.rootStore.authStore;
-    this.ownerViewContract.connect(connection?.provider ?? FALLBACK_PROVIDER);
-  }
-
-  setOwnerTransactionsContract(newContract: Nullable<OwnerContractWrapper>) {
-    this.ownerTransactionsContract = newContract;
   }
 
   updateContracts() {
     const { connection } = this.rootStore.authStore;
 
-    this.reconnectOwnerViewContract();
-    this.setOwnerTransactionsContract(
-      connection ? new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, ownerContractAbi, connection.signer) : null
+    this.ownerViewContract = new OwnerContractWrapper(
+      OWNER_CONTRACT_ADDRESS,
+      ownerContractAbi,
+      connection?.provider ?? FALLBACK_PROVIDER
     );
+    this.ownerTransactionsContract = connection
+      ? new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, ownerContractAbi, connection.signer)
+      : null;
   }
 
   async getContractOwner() {
