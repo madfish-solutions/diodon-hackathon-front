@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
+import { Button } from '@shared/components';
+
 import { SetOwnerForm } from './forms/set-owner-form';
 import { useHomePageViewModel } from './home-page.vm';
 
@@ -18,17 +20,17 @@ export const HomePage: FC = observer(() => {
         {address ? (
           <>
             <span>{address}</span>
-            <button onClick={disconnect}>Disconnect</button>
+            <Button onClick={disconnect}>Disconnect</Button>
           </>
         ) : (
           <>
-            <button onClick={connectMetamask}>Connect Metamask</button>
+            <Button onClick={connectMetamask}>Connect Metamask</Button>
           </>
         )}
       </div>
       {address && (
         <div className="buttons">
-          <button onClick={signTestMessage}>Sign "Hello world" message</button>
+          <Button onClick={signTestMessage}>Sign "Hello world" message</Button>
         </div>
       )}
       <p>"Owner" contract owner: {ownerLabel}</p>

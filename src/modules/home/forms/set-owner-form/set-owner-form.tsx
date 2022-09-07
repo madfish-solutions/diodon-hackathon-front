@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
+import { Button, Input } from '@shared/components';
 import { isNull } from '@shared/helpers';
 
-import styles from './set-owner-form.module.scss';
 import { useSetOwnerFormViewModel } from './use-set-owner-form.vm';
 
 export const SetOwnerForm: FC = observer(() => {
@@ -18,12 +18,10 @@ export const SetOwnerForm: FC = observer(() => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="newOwner">New owner</label>
-      <input id="newOwner" type="text" onChange={handleNewOwnerChange} />
-      {errors.newOwner && <span className={styles.error}>{errors.newOwner}</span>}
-      <button disabled={disabled} type="submit">
+      <Input error={errors.newOwner} id="newOwner" label="New owner" onChange={handleNewOwnerChange} />
+      <Button disabled={disabled} type="submit">
         {isSubmitting ? 'Sending transaction...' : 'Set new owner'}
-      </button>
+      </Button>
     </form>
   );
 });

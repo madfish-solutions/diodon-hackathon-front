@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react';
 
 import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
 import { useRootStore } from '@providers/root-store.provider';
+import { OperationRejectionError } from '@shared/errors';
+import { transformMetamaskError } from '@shared/helpers';
 import { useAuthStore, useStoreInitialization } from '@shared/hooks';
 import { useToasts } from '@shared/utils/toasts';
 
@@ -18,6 +20,7 @@ export const useHomePageViewModel = () => {
   const owner = homePageStore?.ownerContractOwner;
   const ownerLoading = homePageStore?.ownerContractOwnerLoading;
   const ownerLabel = owner ?? (ownerLoading ? 'Loading...' : 'Unknown');
+  const ownerTransactionsContract = homePageStore?.ownerTransactionsContract;
 
   const initializeFn = useCallback(async () => {
     await rootStore.createHomePageStore();
@@ -28,7 +31,9 @@ export const useHomePageViewModel = () => {
     try {
       await homePageStore?.ownerContractOwnerStore.load();
     } catch (e) {
-      showErrorToast(e as Error);
+      // eslint-disable-next-line no-console
+      console.error(e);
+      showErrorToast(transformMetamaskError(e as Error));
     }
   }, [homePageStore, showErrorToast]);
 
@@ -39,22 +44,27 @@ export const useHomePageViewModel = () => {
   useEffect(() => void loadOwnerContractOwner(), [loadOwnerContractOwner]);
 
   useEffect(() => {
-    const ownerContract = homePageStore?.ownerTransactionsContract;
-    if (ownerContract) {
+    if (ownerTransactionsContract) {
       const ownerChangeListener = (oldOwner: string, newOwner: string) => {
         // eslint-disable-next-line no-console
         console.log(`Owner changed from ${oldOwner} to ${newOwner}`);
         void loadOwnerContractOwner();
       };
 
-      ownerContract.on('OwnerSet', ownerChangeListener);
+      // eslint-disable-next-line no-console
+      console.log('Subscribe to OwnerSet');
+      ownerTransactionsContract.on('OwnerSet', ownerChangeListener);
 
-      return () => ownerContract.off('OwnerSet', ownerChangeListener);
+      return () => {
+        // eslint-disable-next-line no-console
+        console.log('Unsubscribe from OwnerSet');
+        ownerTransactionsContract.off('OwnerSet', ownerChangeListener);
+      };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
-  }, [homePageStore, loadOwnerContractOwner]);
+  }, [ownerTransactionsContract, loadOwnerContractOwner]);
 
   const signTestMessage = useCallback(async () => {
     if (!connection || !address) {
@@ -65,7 +75,12 @@ export const useHomePageViewModel = () => {
       const signature = await connection.signer.signMessage(TEST_MESSAGE);
       showSuccessToast(`Signature: ${signature}`);
     } catch (e) {
-      showErrorToast(`Failed to sign message: ${(e as Error).message}`);
+      // eslint-disable-next-line no-console
+      console.error(e);
+      const transformedError = transformMetamaskError(e as Error);
+      if (!(transformedError instanceof OperationRejectionError)) {
+        showErrorToast(`Failed to sign message: ${transformedError.message}`);
+      }
     }
   }, [connection, address, showSuccessToast, showErrorToast]);
 

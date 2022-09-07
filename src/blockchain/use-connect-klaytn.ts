@@ -45,8 +45,6 @@ export const useConnectKlaytn = () => {
       };
 
       const networkChangedCallback = (networkId: string) => {
-        // eslint-disable-next-line no-console
-        console.log('networkChangedCallback', networkId);
         authStore.resetStore();
       };
 
