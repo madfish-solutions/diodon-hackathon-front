@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Button } from '@shared/components';
+import { Button, Card } from '@shared/components';
 import { useToasts } from '@shared/utils/toasts';
 
 import { AppRootRoutes } from '../../app-root-routes.enum';
@@ -24,6 +24,21 @@ export const WorkspacePage: FC = () => {
         <Button>Button Component</Button>
         <Button href={AppRootRoutes.Root}>Home</Button>
         <Button href={AppRootRoutes.About}>About</Button>
+      </div>
+      <div className={styles.card}>
+        <Card
+          header={{
+            content: 'Header',
+            button: <Button>Button</Button>
+          }}
+          subheader={{
+            content: 'Subheader',
+            button: <Button>Button</Button>
+          }}
+          footer="Footer"
+        >
+          Chilren
+        </Card>
       </div>
     </>
   );
