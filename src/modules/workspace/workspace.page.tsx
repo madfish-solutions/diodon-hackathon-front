@@ -1,6 +1,8 @@
 import { FC } from 'react';
 
-import { Button, Card } from '@shared/components';
+import { Button, Card, Input } from '@shared/components';
+import { NumberInput } from '@shared/components/number-input';
+import { TokenInput } from '@shared/components/token-input';
 import { useToasts } from '@shared/utils/toasts';
 
 import { AppRootRoutes } from '../../app-root-routes.enum';
@@ -39,6 +41,17 @@ export const WorkspacePage: FC = () => {
         >
           Chilren
         </Card>
+      </div>
+      <div>
+        <Input label="Text Input" />
+        <NumberInput label="Number Input" />
+        <TokenInput
+          label="Token Input"
+          value=""
+          onInputChange={() => {
+            return;
+          }}
+        />
       </div>
     </>
   );
