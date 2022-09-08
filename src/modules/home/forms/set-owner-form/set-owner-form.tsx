@@ -14,11 +14,17 @@ export const SetOwnerForm: FC = observer(() => {
     return null;
   }
 
-  const { disabled, errors, handleNewOwnerChange, handleSubmit, isSubmitting } = setOwnerFormViewModel;
+  const { disabled, errors, handleNewOwnerChange, handleSubmit, isSubmitting, values } = setOwnerFormViewModel;
 
   return (
     <form onSubmit={handleSubmit}>
-      <Input error={errors.newOwner} id="newOwner" label="New owner" onChange={handleNewOwnerChange} />
+      <Input
+        error={errors.newOwner}
+        id="newOwner"
+        label="New owner"
+        onChange={handleNewOwnerChange}
+        value={values.newOwner}
+      />
       <Button disabled={disabled} type="submit">
         {isSubmitting ? 'Sending transaction...' : 'Set new owner'}
       </Button>
