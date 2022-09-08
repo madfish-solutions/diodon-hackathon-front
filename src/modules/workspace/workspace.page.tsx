@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { Button, Card, Input } from '@shared/components';
 import { NumberInput } from '@shared/components/number-input';
+import { Slider } from '@shared/components/slider';
 import { TokenInput } from '@shared/components/token-input';
 import { useToasts } from '@shared/utils/toasts';
 
@@ -42,7 +43,7 @@ export const WorkspacePage: FC = () => {
           Chilren
         </Card>
       </div>
-      <div>
+      <div className={styles.inputs}>
         <Input label="Text Input" />
         <NumberInput label="Number Input" />
         <TokenInput
@@ -52,6 +53,9 @@ export const WorkspacePage: FC = () => {
             return;
           }}
         />
+      </div>
+      <div className={styles.slider}>
+        <Slider />
       </div>
     </>
   );
