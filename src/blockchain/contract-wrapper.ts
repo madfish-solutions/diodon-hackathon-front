@@ -1,16 +1,20 @@
 import { Listener, Provider } from '@ethersproject/abstract-provider';
 import { CallOverrides, ContractFunction } from '@ethersproject/contracts';
-import { Contract, ContractInterface, EventFilter, Signer } from 'ethers';
+import { BigNumber, Contract, ContractInterface, EventFilter, Signer } from 'ethers';
 
 import { Optional } from '@shared/types';
 
+type EstimateGasMethods<T extends Record<string, ContractFunction>> = {
+  [K in keyof T]: T[K] extends (...args: infer A) => unknown ? (...args: A) => Promise<BigNumber> : never;
+};
+
 export class ContractWrapper<T extends Record<string, ContractFunction>> {
   protected internalContract: Contract;
-  estimateGas: T;
+  estimateGas: EstimateGasMethods<T>;
 
   constructor(addressOrName: string, abi: ContractInterface, provider?: Provider | Signer) {
     this.internalContract = new Contract(addressOrName, abi, provider);
-    this.estimateGas = this.internalContract.estimateGas as T;
+    this.estimateGas = this.internalContract.estimateGas as EstimateGasMethods<T>;
   }
 
   get address() {

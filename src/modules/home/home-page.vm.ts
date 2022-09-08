@@ -11,16 +11,17 @@ import { useHomePageStore } from './hooks/use-home-page-store';
 
 const TEST_MESSAGE = 'Hello, World!';
 
+// eslint-disable-next-line
 export const useHomePageViewModel = () => {
   const rootStore = useRootStore();
   const { connection, address } = useAuthStore();
   const { connect: connectEthereum, disconnect } = useConnectEthereum();
   const homePageStore = useHomePageStore();
   const { showErrorToast, showSuccessToast } = useToasts();
+  const { ownerViewContract, ownerContractOwnerStore } = homePageStore ?? {};
   const owner = homePageStore?.ownerContractOwner;
   const ownerLoading = homePageStore?.ownerContractOwnerLoading;
   const ownerLabel = owner ?? (ownerLoading ? 'Loading...' : 'Unknown');
-  const ownerViewContract = homePageStore?.ownerViewContract;
 
   const initializeFn = useCallback(async () => {
     await rootStore.createHomePageStore();
@@ -52,8 +53,8 @@ export const useHomePageViewModel = () => {
 
       const ownerChangeListener = (oldOwner: string, newOwner: string) => {
         // eslint-disable-next-line no-console
-        console.log(`Owner changed from ${oldOwner} to ${newOwner}`);
-        void loadOwnerContractOwner();
+        console.log(`Owner changed from ${oldOwner} to ${newOwner}`, Date.now());
+        ownerContractOwnerStore?.setRawData({ value: newOwner });
       };
 
       ownerViewContract.on(filter, ownerChangeListener);
@@ -63,7 +64,7 @@ export const useHomePageViewModel = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
-  }, [ownerViewContract, loadOwnerContractOwner]);
+  }, [ownerViewContract, loadOwnerContractOwner, ownerContractOwnerStore]);
 
   const signTestMessage = useCallback(async () => {
     if (!connection || !address) {
