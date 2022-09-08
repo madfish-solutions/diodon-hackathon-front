@@ -16,3 +16,6 @@ export const WALLET_CONNECTORS: Record<string, ConnectorConfig> = {
 };
 
 export const FALLBACK_PROVIDER = new providers.JsonRpcProvider(RPC_URL);
+
+export const HEX_BASE = 16;
+export const CHAIN_ID_AS_HEX = `0x${CHAIN_ID.toString(HEX_BASE)}`;
