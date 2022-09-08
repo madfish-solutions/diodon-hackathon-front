@@ -1,0 +1,5 @@
+[
+  "event OwnerSet(address indexed oldOwner, address indexed newOwner)",
+  "function changeOwner(address newOwner) returns (bool)",
+  "function getOwner() view returns (address)"
+]
