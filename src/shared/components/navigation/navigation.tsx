@@ -31,6 +31,9 @@ export const Navigation: FC<NavigationProps> = ({ className }) => {
         className={cx(styles.link, isActivePath(router.pathname, '/workspace') && styles.active)}
       >
         Workspace
+      </Link>,
+      <Link key="e404" to="/404" className={cx(styles.link, isActivePath(router.pathname, '/404') && styles.active)}>
+        404
       </Link>
     ];
   }, [router.pathname]);
