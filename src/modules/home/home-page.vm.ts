@@ -1,21 +1,18 @@
 import { useCallback, useEffect } from 'react';
 
-import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
 import { useRootStore } from '@providers/root-store.provider';
 import { OperationRejectionError } from '@shared/errors';
 import { transformMetamaskError } from '@shared/helpers';
 import { useAuthStore, useStoreInitialization } from '@shared/hooks';
 import { useToasts } from '@shared/utils/toasts';
 
-import { useHomePageStore } from './hooks/use-home-page-store';
+import { useHomePageStore } from './hooks';
 
 const TEST_MESSAGE = 'Hello, World!';
 
-// eslint-disable-next-line
 export const useHomePageViewModel = () => {
   const rootStore = useRootStore();
   const { connection, address } = useAuthStore();
-  const { connect: connectEthereum, disconnect } = useConnectEthereum();
   const homePageStore = useHomePageStore();
   const { showErrorToast, showSuccessToast } = useToasts();
   const { ownerViewContract, ownerContractOwnerStore } = homePageStore ?? {};
@@ -84,12 +81,8 @@ export const useHomePageViewModel = () => {
     }
   }, [connection, address, showSuccessToast, showErrorToast]);
 
-  const connectMetamask = useCallback(async () => await connectEthereum(), [connectEthereum]);
-
   return {
     address,
-    connectMetamask,
-    disconnect,
     isInitialized,
     ownerLabel,
     signTestMessage

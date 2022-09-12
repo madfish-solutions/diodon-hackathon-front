@@ -3,6 +3,7 @@ import { FC } from 'react';
 import cx from 'classnames';
 import { Link } from 'react-router-dom';
 
+import { ConnectButton } from '../connect-button';
 import styles from './header.module.scss';
 
 interface HeaderProps {
@@ -34,6 +35,8 @@ export const Header: FC<HeaderProps> = ({ className }) => {
     <div className={styles.wrapper}>
       <header className={cx(styles.root, className)} data-test-id="header">
         <Link to="/">Logo placeholder</Link>
+        <div className={styles.flex1} />
+        <ConnectButton />
       </header>
     </div>
   );

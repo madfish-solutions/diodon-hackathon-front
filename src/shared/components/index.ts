@@ -4,3 +4,4 @@ export * from './sidebar';
 export * from './button';
 export * from './card';
 export * from './input';
+export * from './connect-button';
