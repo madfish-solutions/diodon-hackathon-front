@@ -19,6 +19,8 @@ export const useConnectEthereum = () => {
   const connectEthereum = useCallback(
     async (connectorId?: string) => {
       try {
+        // eslint-disable-next-line no-console
+        console.log('connect>>>>>>>>>>>', connectorId);
         await connect(connectorId);
       } catch (e) {
         // eslint-disable-next-line no-console
