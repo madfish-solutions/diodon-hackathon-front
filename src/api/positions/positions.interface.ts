@@ -4,10 +4,10 @@ import { MarketId, PositionType } from '@shared/types';
   URL: https://diodon-mock-data.fly.dev/api/v1/positions
  */
 
-export interface AccountPosition {
+export interface Position {
   marketId: MarketId;
   type: PositionType;
-  amountAtomic: number;
+  amountTokens: number;
   amountUsd: number;
   pnlPercent: number;
   pnlUsd: number;
@@ -18,5 +18,5 @@ export interface AccountPosition {
 
 export interface AccountPositionResponse {
   accountPkh: string;
-  positions: AccountPosition[];
+  positions: Position[];
 }

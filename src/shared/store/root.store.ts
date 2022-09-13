@@ -7,11 +7,13 @@ import { Nullable } from '../types';
 import { AccountStore } from './account.store';
 import { AuthStore } from './auth.store';
 import { MarketsStore } from './markets.store';
+import { PositionsStore } from './positions.store';
 
 export class RootStore {
   authStore = new AuthStore(this);
   marketsStore = new MarketsStore();
   accountStore = new AccountStore();
+  positionsStore = new PositionsStore();
 
   homePageStore: Nullable<IHomePageStore> = null;
 
@@ -20,6 +22,7 @@ export class RootStore {
       authStore: false,
       marketsStore: false,
       accountStore: false,
+      positionsStore: false,
       homePageStore: observable,
       createHomePageStore: action
     });

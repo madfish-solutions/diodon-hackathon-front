@@ -1,25 +1,12 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import { useApi } from '@shared/hooks';
-import { useMarketsStore } from '@shared/hooks/use-markets-store';
-
 import { MarketItem } from './components/market-item';
+import { useMarketsViewModel } from './use-markets.vm';
 
 export const MarketsList: FC = observer(() => {
-  const api = useApi();
-  const marketsStore = useMarketsStore();
-  const { markets } = marketsStore;
-
-  useEffect(() => {
-    (async () => {
-      await api.call(async () => {
-        await marketsStore.loadMarkets();
-      });
-    })();
-    // eslint-disable-next-line
-  }, []);
+  const { markets } = useMarketsViewModel();
 
   return (
     <div>

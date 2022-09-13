@@ -19,13 +19,10 @@ export const useConnectEthereum = () => {
   const connectEthereum = useCallback(
     async (connectorId?: string) => {
       try {
-        // eslint-disable-next-line no-console
-        console.log('connect>>>>>>>>>>>', connectorId);
-        await connect(connectorId);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        showErrorToast(`Failed to connect to Ethereum wallet: ${(e as Error).message}`);
+        return await connect(connectorId);
+      } catch (error) {
+        showErrorToast(`Failed to connect to Ethereum wallet: ${(error as Error).message}`);
+        throw error;
       }
     },
     [connect, showErrorToast]
@@ -36,10 +33,9 @@ export const useConnectEthereum = () => {
       (async () => {
         try {
           await switchChain(ethereum);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          showErrorToast((e as Error).message);
+        } catch (error) {
+          showErrorToast((error as Error).message);
+          throw error;
         }
       })();
     } else if (account && ethereum) {

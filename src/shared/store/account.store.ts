@@ -22,8 +22,6 @@ export class AccountStore {
 
   async loadData(accountPkh: string) {
     const { data } = await getAccountDataApi(accountPkh);
-    // eslint-disable-next-line no-console
-    console.log('data', data);
     this.setData(data);
   }
 }
