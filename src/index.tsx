@@ -1,25 +1,20 @@
-import React from 'react';
+import { StrictMode } from 'react';
 
-import { UseWalletProvider } from '@keshan3262/use-wallet';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 
 import 'reflect-metadata';
 
 import './index.css';
 import { App } from './app';
-import { WALLET_CONNECTORS } from './config';
-import { RootStoreProvider } from './providers';
 
-const root = createRoot(document.getElementById('root') as HTMLElement);
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = createRoot(rootElement);
 root.render(
-  <React.StrictMode>
-    <RootStoreProvider>
-      <UseWalletProvider connectors={WALLET_CONNECTORS}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </UseWalletProvider>
-    </RootStoreProvider>
-  </React.StrictMode>
+  <StrictMode>
+    <App />
+  </StrictMode>
 );

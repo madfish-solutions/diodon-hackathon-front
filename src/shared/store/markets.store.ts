@@ -19,6 +19,8 @@ export class MarketsStore {
 
   async loadMarkets() {
     const { markets } = await getMarketsApi();
+    // eslint-disable-next-line no-console
+    console.log('markets', markets);
     this.setMarkets(markets);
   }
 }
