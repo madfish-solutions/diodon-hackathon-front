@@ -1,1 +1,3 @@
-export const AboutPage = () => <p>TODO: Add some 'About' page content</p>;
+import { MarketsList } from '@components/markets-list';
+
+export const AboutPage = () => <MarketsList />;
