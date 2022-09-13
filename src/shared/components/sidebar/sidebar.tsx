@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
+import { Account } from '@components/account';
+
 import { Navigation } from '../navigation';
 import styles from './sidebar.module.scss';
 
@@ -12,7 +14,10 @@ interface SidebarProps {
 export const Sidebar: FC<SidebarProps> = ({ className }) => {
   return (
     <div className={cx(styles.root, className)} data-test-id="sidebar">
-      <Navigation className={styles.navigation} />
+      <div className={styles.navigation}>
+        <Navigation />
+        <Account />
+      </div>
       <footer className={styles.footer}>Some footer</footer>
     </div>
   );

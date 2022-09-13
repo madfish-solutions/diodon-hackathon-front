@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { useApi } from '@shared/hooks';
 import { useMarketsStore } from '@shared/hooks/use-markets-store';
 
-import { MarketItem } from '../market-item';
+import { MarketItem } from './components/market-item';
 
 export const MarketsList: FC = observer(() => {
   const api = useApi();
