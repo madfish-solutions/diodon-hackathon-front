@@ -1,4 +1,5 @@
 export * from './arrays';
+export * from './formaters';
 export * from './forms';
 export * from './metamask-error';
 export * from './strings';
