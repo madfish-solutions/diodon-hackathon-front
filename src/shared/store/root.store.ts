@@ -5,18 +5,19 @@ import { isNull } from '@shared/helpers';
 
 import { Nullable } from '../types';
 import { AuthStore } from './auth.store';
+import { MarketsStore } from './markets.store';
 
 export class RootStore {
-  authStore: AuthStore;
+  authStore = new AuthStore(this);
+  marketsStore = new MarketsStore();
 
   homePageStore: Nullable<IHomePageStore> = null;
 
   constructor() {
-    this.authStore = new AuthStore(this);
-
     makeObservable(this, {
+      authStore: false,
+      marketsStore: false,
       homePageStore: observable,
-
       createHomePageStore: action
     });
   }

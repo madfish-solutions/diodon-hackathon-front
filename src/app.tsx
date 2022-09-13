@@ -1,6 +1,6 @@
 import { Layout } from '@layout';
 
-import './App.css';
+import './app.css';
 import { AppRouter } from './app.router';
 import { useAppViewModel } from './use-app.vm';
 

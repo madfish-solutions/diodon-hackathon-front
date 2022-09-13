@@ -1,3 +1,7 @@
+/*
+  URL: https://diodon-mock-data.fly.dev/api/v1/account
+ */
+
 export interface AccountData {
   netCollateralAtomic: number;
   netCollateralUsd: number;

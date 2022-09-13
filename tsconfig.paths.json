@@ -8,7 +8,8 @@
       "@layout": ["./layout"],
       "@modules/*": ["./modules/*"],
       "@providers/*": ["./providers/*"],
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./shared/*"],
+      "@api/*": ["./api/*"]
     }
   }
 }

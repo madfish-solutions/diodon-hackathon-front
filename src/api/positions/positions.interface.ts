@@ -1,5 +1,9 @@
 import { MarketId, PositionType } from '@shared/types';
 
+/*
+  URL: https://diodon-mock-data.fly.dev/api/v1/positions
+ */
+
 export interface AccountPosition {
   marketId: MarketId;
   type: PositionType;

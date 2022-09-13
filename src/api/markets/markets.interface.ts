@@ -1,5 +1,11 @@
+/*
+  URL: https://diodon-mock-data.fly.dev/api/v1/markets
+ */
+
+import { MarketId } from '@shared/types';
+
 export interface MarketData {
-  marketId: 'AMD' | 'APPL' | 'SHOP';
+  marketId: MarketId;
   marketPriceUsd: number;
   marketPriceChange24Usd: number;
   indexPriceUsd: number;
