@@ -8,7 +8,7 @@ import { RootStoreProvider } from '@providers/root-store.provider';
 
 import { AppRouter } from './app.router';
 
-import './app.css';
+import './App.css';
 
 export const App = () => (
   <RootStoreProvider>
