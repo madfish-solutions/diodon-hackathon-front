@@ -3,6 +3,7 @@ import { FC } from 'react';
 import cx from 'classnames';
 
 import { Account } from '@components/account';
+import { BlockNumber } from '@components/block-number';
 
 import { Navigation } from '../navigation';
 import styles from './sidebar.module.scss';
@@ -18,7 +19,9 @@ export const Sidebar: FC<SidebarProps> = ({ className }) => {
         <Navigation />
         <Account />
       </div>
-      <footer className={styles.footer}>Some footer</footer>
+      <footer className={styles.footer}>
+        <BlockNumber />
+      </footer>
     </div>
   );
 };

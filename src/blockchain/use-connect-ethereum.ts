@@ -11,9 +11,9 @@ import { useToasts } from '@shared/utils/toasts';
 import { switchChain } from './switch-chain';
 
 export const useConnectEthereum = () => {
+  const { showErrorToast } = useToasts();
   const authStore = useAuthStore();
   const wallet = useWallet();
-  const { showErrorToast } = useToasts();
   const { account, chainId, connect, ethereum, reset: disconnect } = wallet;
 
   const connectEthereum = useCallback(
@@ -28,28 +28,42 @@ export const useConnectEthereum = () => {
     [connect, showErrorToast]
   );
 
-  useEffect(() => {
-    if (account && ethereum && chainId !== CHAIN_ID) {
-      (async () => {
-        try {
-          await switchChain(ethereum);
-        } catch (error) {
-          showErrorToast((error as Error).message);
-          throw error;
-        }
-      })();
-    } else if (account && ethereum) {
-      const provider = new providers.Web3Provider(ethereum);
-      authStore.setAddress(account);
+  const doSwitchChain = useCallback(
+    async (_ethereum: providers.ExternalProvider) => {
+      try {
+        await switchChain(_ethereum);
+      } catch (error) {
+        showErrorToast((error as Error).message);
+        throw error;
+      }
+    },
+    [showErrorToast]
+  );
+
+  const doConnect = useCallback(
+    async (_account: string, _ethereum: providers.ExternalProvider) => {
+      const provider = new providers.Web3Provider(_ethereum);
+      authStore.setAddress(_account);
       authStore.setConnection({
         type: ConnectionType.Ethereum,
         provider,
         signer: provider.getSigner()
       });
-    } else {
-      authStore.resetStore();
+    },
+    [authStore]
+  );
+
+  useEffect(() => {
+    if (!account || !ethereum) {
+      return authStore.resetStore();
     }
-  }, [account, authStore, chainId, ethereum, showErrorToast]);
+
+    if (chainId !== CHAIN_ID) {
+      return void doSwitchChain(ethereum);
+    }
+
+    return void doConnect(account, ethereum);
+  }, [account, authStore, chainId, doConnect, doSwitchChain, ethereum, showErrorToast]);
 
   return {
     connect: connectEthereum,
