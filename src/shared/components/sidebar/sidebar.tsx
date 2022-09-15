@@ -12,11 +12,13 @@ interface SidebarProps {
   className?: string;
 }
 
+const SHOW_NAVIGATION = false;
+
 export const Sidebar: FC<SidebarProps> = ({ className }) => {
   return (
     <div className={cx(styles.root, className)} data-test-id="sidebar">
       <div className={styles.navigation}>
-        <Navigation />
+        {SHOW_NAVIGATION && <Navigation />}
         <Account />
       </div>
       <footer className={styles.footer}>

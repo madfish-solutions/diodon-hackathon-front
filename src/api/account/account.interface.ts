@@ -7,6 +7,7 @@ export interface AccountData {
   netCollateralUsd: number;
   freeCollateralAtomic: number;
   freeCollateralUsd: number;
+  buyingPower: number;
   marginRatioPercent: number;
   leverage: number;
 }

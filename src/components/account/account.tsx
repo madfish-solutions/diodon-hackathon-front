@@ -5,7 +5,8 @@ import { observer } from 'mobx-react-lite';
 import { ConnectButton } from '@shared/components';
 import { useAccountStore, useApi, useAuthStore } from '@shared/hooks';
 
-import { AccountDataInfo } from './components/account-data-info/account-data-info';
+import styles from './account.module.scss';
+import { AccountDataInfo } from './components/account-data-info';
 
 export const Account: FC = observer(() => {
   const api = useApi();
@@ -26,7 +27,8 @@ export const Account: FC = observer(() => {
   }, [address]);
 
   return (
-    <div style={{ margin: 4, padding: 4, border: '1px solid blue' }}>
+    <div>
+      <h2 className={styles.header}>Account data</h2>
       {data ? <AccountDataInfo data={data} /> : <ConnectButton />}
     </div>
   );

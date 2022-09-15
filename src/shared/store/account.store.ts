@@ -18,6 +18,10 @@ export class AccountStore {
 
   setData(data: Nullable<AccountData>) {
     this.data = data;
+    // TODO: Move it to BE
+    if (this.data && data) {
+      this.data.buyingPower = data.freeCollateralUsd * 10;
+    }
   }
 
   async loadData(accountPkh: string) {
