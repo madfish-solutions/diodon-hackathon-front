@@ -9,15 +9,18 @@ import { ClosePositionModal } from './close-position';
 import { OpenPositionModal } from './open-position';
 
 export const Modals: FC = observer(() => {
-  const { modal } = useModalsStore();
+  const { modal, payload } = useModalsStore();
+  if (!payload) {
+    return null;
+  }
 
   switch (modal) {
     case ModalType.OpenPosition:
-      return <OpenPositionModal />;
-    case ModalType.ClosePosition:
-      return <ClosePositionModal />;
+      return <OpenPositionModal marketId={payload.marketId} />;
     case ModalType.AddPosition:
-      return <AddPositionModal />;
+      return <AddPositionModal marketId={payload.marketId} />;
+    case ModalType.ClosePosition:
+      return <ClosePositionModal marketId={payload.marketId} />;
     default:
       return null;
   }

@@ -10,21 +10,15 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
   const position = isConnected ? positionsStore.getPosition(marketId) : null;
 
   const openHandler = () => {
-    // eslint-disable-next-line no-console
-    console.log('open', marketId);
-    modalsStore.open(ModalType.OpenPosition);
+    modalsStore.open(ModalType.OpenPosition, { marketId });
   };
 
   const closeHandler = () => {
-    // eslint-disable-next-line no-console
-    console.log('close', marketId);
-    modalsStore.open(ModalType.ClosePosition);
+    modalsStore.open(ModalType.ClosePosition, { marketId });
   };
 
   const addHandler = () => {
-    // eslint-disable-next-line no-console
-    console.log('add', marketId);
-    modalsStore.open(ModalType.AddPosition);
+    modalsStore.open(ModalType.AddPosition, { marketId });
   };
 
   return { position, openHandler, closeHandler, addHandler };
