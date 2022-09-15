@@ -20,7 +20,7 @@ export class AccountStore {
     this.data = data;
     // TODO: Move it to BE
     if (this.data && data) {
-      this.data.buyingPower = data.freeCollateralUsd * 10;
+      this.data.buyingPowerUsd = data.freeCollateralUsd * 10;
     }
   }
 

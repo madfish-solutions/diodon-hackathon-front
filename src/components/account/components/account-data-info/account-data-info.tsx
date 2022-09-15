@@ -16,7 +16,7 @@ export const AccountDataInfo: FC<Props> = ({ data }) => (
         <b>Buying Power:</b>
       </dt>
       <dd style={{ marginBottom: 8 }}>
-        <b>{getUsdView(data.buyingPower)}</b>
+        <b>{getUsdView(data.buyingPowerUsd)}</b>
       </dd>
 
       <dt>Net Collateral:</dt>
