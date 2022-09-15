@@ -17,3 +17,28 @@
   border-top: 1px solid blue;
   display: flex;
 }
+
+.closeButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 16px;
+  gap: 8px;
+  border: 1px solid #003686;
+  border-radius: 8px;
+  color: #003686;
+}
+
+.addButton,
+.openButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 16px;
+  gap: 8px;
+  background: #003686;
+  border-radius: 8px;
+  color: #fff;
+}

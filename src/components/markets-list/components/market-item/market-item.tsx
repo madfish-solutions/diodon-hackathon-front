@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { MarketData } from '@api/markets';
+import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
 import { getPercentView, getTokensView, getUsdView } from '@shared/helpers';
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export const MarketItem: FC<Props> = observer(({ market }) => {
-  const { position } = useMarketItemViewModel(market.marketId);
+  const { position, openHandler, closeHandler, addHandler } = useMarketItemViewModel(market.marketId);
 
   return (
     <div className={styles.item}>
@@ -32,6 +33,15 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
         <span>Market Price 24h change: {getUsdView(market.indexPriceChange24Usd)}</span>
         <span>Volume 24h: {getUsdView(market.volume24Usd)}</span>
         <span>Founding rate 8h: {getPercentView(market.fundingRateChange8Percent)}</span>
+        {!position && (
+          <div>
+            <p>
+              <Button onClick={openHandler} className={styles.openButton}>
+                Open
+              </Button>
+            </p>
+          </div>
+        )}
       </div>
       {position ? (
         <div className={styles.position}>
@@ -43,6 +53,18 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           <span>Avg Open Price: {getUsdView(position.avgOpenPriceUsd)}</span>
           <span>Liquidity 1 Price: {getUsdView(position.liqPrice1Usd)}</span>
           <span>ALiquidity 2 Price: {getUsdView(position.liqPrice2Usd)}</span>
+          <div>
+            <p>
+              <Button onClick={closeHandler} className={styles.closeButton}>
+                Close
+              </Button>
+            </p>
+            <p>
+              <Button onClick={addHandler} className={styles.addButton}>
+                Add
+              </Button>
+            </p>
+          </div>
         </div>
       ) : null}
     </div>
