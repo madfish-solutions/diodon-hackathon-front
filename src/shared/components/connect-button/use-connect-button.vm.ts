@@ -6,7 +6,7 @@ export const useConnectButtonViewModel = () => {
   const { address } = useAuthStore();
   const { connect, disconnect } = useConnectEthereum();
 
-  const disconnectHandle = () => disconnect();
+  const disconnectHandle = async () => disconnect();
   const connectHandle = async () => await connect();
 
   return { address, disconnectHandle, connectHandle };

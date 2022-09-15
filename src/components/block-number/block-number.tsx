@@ -1,14 +1,17 @@
 import { FC } from 'react';
 
-import { useWallet } from '@keshan3262/use-wallet';
+import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
 
 export const BlockNumber: FC = () => {
-  const wallet = useWallet();
-  const blockNumber = wallet?.getBlockNumber?.();
+  const { blockNumber, isConnected, status } = useConnectEthereum();
 
   return (
     <div>
-      <i>Block:</i> {blockNumber}
+      <p>
+        <i>Block:</i> {blockNumber}
+      </p>
+      <p>Connected: {`${isConnected}`}</p>
+      <p>Status: {`${status}`}</p>
     </div>
   );
 };

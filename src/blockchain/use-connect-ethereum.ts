@@ -14,7 +14,7 @@ export const useConnectEthereum = () => {
   const { showErrorToast } = useToasts();
   const authStore = useAuthStore();
   const wallet = useWallet();
-  const { account, chainId, connect, ethereum, reset: disconnect } = wallet;
+  const { account, chainId, connect, ethereum, reset: disconnect, isConnected, status } = wallet;
 
   const connectEthereum = useCallback(
     async (connectorId?: string) => {
@@ -27,6 +27,10 @@ export const useConnectEthereum = () => {
     },
     [connect, showErrorToast]
   );
+
+  const disconnectEthereum = useCallback(async () => {
+    disconnect();
+  }, [disconnect]);
 
   const doSwitchChain = useCallback(
     async (_ethereum: providers.ExternalProvider) => {
@@ -67,6 +71,9 @@ export const useConnectEthereum = () => {
 
   return {
     connect: connectEthereum,
-    disconnect
+    disconnect: disconnectEthereum,
+    isConnected: isConnected(),
+    blockNumber: wallet.getBlockNumber?.() ?? null,
+    status
   };
 };
