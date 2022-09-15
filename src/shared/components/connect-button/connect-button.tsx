@@ -10,7 +10,7 @@ export const ConnectButton: FC = observer(() => {
 
   return address ? (
     <>
-      <span style={{ marginRight: 8 }}>{address}</span>
+      <span style={{ marginRight: 8, opacity: 0.5, fontSize: '80%', color: '#fff' }}>{address}</span>
       <Button onClick={disconnectHandle}>Disconnect</Button>
     </>
   ) : (
