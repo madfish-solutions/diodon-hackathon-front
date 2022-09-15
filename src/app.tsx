@@ -5,6 +5,7 @@ import { AppSync } from '@components/app-sync';
 import { WALLET_CONNECTORS } from '@config/constants';
 import { Layout } from '@layout';
 import { RootStoreProvider } from '@providers/root-store.provider';
+import { Modals } from '@shared/components';
 
 import { AppRouter } from './app.router';
 
@@ -18,6 +19,7 @@ export const App = () => (
           <AppRouter />
         </Layout>
         <AppSync />
+        <Modals />
       </BrowserRouter>
     </UseWalletProvider>
   </RootStoreProvider>

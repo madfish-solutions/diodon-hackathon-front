@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 
 import { createRoot } from 'react-dom/client';
+import Modal from 'react-modal';
 
 import 'reflect-metadata';
 
@@ -18,3 +19,5 @@ root.render(
     <App />
   </StrictMode>
 );
+
+Modal.setAppElement('#root');

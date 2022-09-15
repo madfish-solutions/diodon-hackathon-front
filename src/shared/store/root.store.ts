@@ -7,6 +7,7 @@ import { Nullable } from '../types';
 import { AccountStore } from './account.store';
 import { AuthStore } from './auth.store';
 import { MarketsStore } from './markets.store';
+import { ModalsStore } from './modals.store';
 import { PositionsStore } from './positions.store';
 
 export class RootStore {
@@ -14,6 +15,8 @@ export class RootStore {
   marketsStore = new MarketsStore();
   accountStore = new AccountStore();
   positionsStore = new PositionsStore();
+
+  modalsStore = new ModalsStore();
 
   homePageStore: Nullable<IHomePageStore> = null;
 
@@ -23,6 +26,7 @@ export class RootStore {
       marketsStore: false,
       accountStore: false,
       positionsStore: false,
+      modalsStore: false,
       homePageStore: observable,
       createHomePageStore: action
     });
