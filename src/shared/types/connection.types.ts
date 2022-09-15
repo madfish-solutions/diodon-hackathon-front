@@ -12,3 +12,8 @@ export interface EthereumConnection {
 
 // TODO: extend for Klaytn wallets integration
 export type Connection = EthereumConnection;
+
+export enum ConnectedStatus {
+  connected = 'connected',
+  disconnected = 'disconnected'
+}

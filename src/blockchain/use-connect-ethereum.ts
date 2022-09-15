@@ -5,7 +5,7 @@ import { providers } from 'ethers';
 
 import { CHAIN_ID } from '@config/environment';
 import { useAuthStore } from '@shared/hooks';
-import { ConnectionType } from '@shared/types';
+import { ConnectedStatus, ConnectionType } from '@shared/types';
 import { useToasts } from '@shared/utils/toasts';
 
 import { switchChain } from './switch-chain';
@@ -68,6 +68,10 @@ export const useConnectEthereum = () => {
 
     return void doConnect(account, ethereum);
   }, [account, authStore, chainId, doConnect, doSwitchChain, ethereum, showErrorToast]);
+
+  useEffect(() => {
+    authStore.setStatus(status as ConnectedStatus);
+  }, [authStore, status]);
 
   return {
     connect: connectEthereum,

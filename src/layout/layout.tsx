@@ -1,6 +1,7 @@
 import cx from 'classnames';
 
-import { Sidebar, Header } from '@shared/components';
+import { Header } from '@components/header';
+import { Sidebar } from '@components/sidebar';
 import { CFC } from '@shared/types';
 import { ToastWrapper } from '@shared/utils/toasts';
 

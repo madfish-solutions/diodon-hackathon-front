@@ -3,8 +3,9 @@ import { FC } from 'react';
 import cx from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { ConnectButton } from '../connect-button';
-import { DiodonLogo } from '../icons';
+import { ConnectButton } from '@shared/components/connect-button';
+import { DiodonLogo } from '@shared/components/icons';
+
 import styles from './header.module.scss';
 
 interface HeaderProps {
