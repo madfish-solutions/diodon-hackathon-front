@@ -28,7 +28,7 @@ export const Account: FC = observer(() => {
 
   return (
     <div>
-      <h2 className={styles.header}>Account data</h2>
+      <h2 className={styles.title}>Account data</h2>
       {data ? <AccountDataInfo data={data} /> : <ConnectButton />}
     </div>
   );
