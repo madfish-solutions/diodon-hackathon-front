@@ -3,8 +3,10 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { MarketData } from '@api/markets';
+import { PositionTypeIcon } from '@shared/components/position-type-icon';
 import { getPercentView, getTokensView, getUsdView } from '@shared/helpers';
 
+import styles from './market-item.module.scss';
 import { useMarketItemViewModel } from './use-market-item.vm';
 
 interface Props {
@@ -15,8 +17,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
   const { position } = useMarketItemViewModel(market.marketId);
 
   return (
-    <div style={{ border: '1px solid #666', margin: '32px 4px', padding: 4 }}>
-      <div style={{ margin: 4, padding: 4, display: 'flex' }}>
+    <div className={styles.item}>
+      <div className={styles.market}>
         <b>Name: {market.marketId}</b>
         <span>Market Price: {getUsdView(market.marketPriceUsd)}</span>
         <span>Market Price 24h change: {getUsdView(market.marketPriceChange24Usd)}</span>
@@ -26,9 +28,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
         <span>Founding rate 8h: {getPercentView(market.fundingRateChange8Percent)}</span>
       </div>
       {position ? (
-        <div style={{ borderTop: '1px solid blue', display: 'flex' }}>
-          <b>{position.type}</b>
-          <span>{position.type}</span>
+        <div className={styles.position}>
+          <PositionTypeIcon type={position.type} width={64} height={64} />
           <span>Amount: {getTokensView(position.amountTokens)}</span>
           <span>Amount USD: {getUsdView(position.amountUsd)}</span>
           <span>PNL: {getPercentView(position.pnlPercent)}</span>
