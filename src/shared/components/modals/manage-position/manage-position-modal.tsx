@@ -4,12 +4,12 @@ import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
 import { getUsdView } from '../../../helpers';
-import { MarketId } from '../../../types';
+import { MarketId, Undefined } from '../../../types';
 import { modalsStyle } from '../modals-style';
 import { useManagePositionModalViewModel } from './use-manage-position-modal.vm';
 
 interface Props {
-  marketId: MarketId;
+  marketId: Undefined<MarketId>;
 }
 
 export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {

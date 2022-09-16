@@ -6,7 +6,7 @@ import { number as numberSchema, object as objectSchema } from 'yup';
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
 import { ModalType } from '../../../store/modals.store';
-import { MarketId } from '../../../types';
+import { MarketId, Undefined } from '../../../types';
 
 export interface FormValues {
   orderAmount: string;
@@ -14,12 +14,12 @@ export interface FormValues {
 
 const MIN_ORDER_AMOUNT = 0.01;
 
-export const useOpenPositionModalViewModel = (marketId: MarketId) => {
+export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.OpenPosition);
   const closeModalHandler = () => modalsStore.close();
   const marketsStore = useMarketsStore();
-  const market = marketsStore.getMarket(marketId);
+  const market = marketId ? marketsStore.getMarket(marketId) : null;
   const { data } = useAccountStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();

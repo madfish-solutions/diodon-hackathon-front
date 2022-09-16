@@ -5,7 +5,6 @@ export const modalsStyle = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    border: '1px solid red'
+    transform: 'translate(-50%, -50%)'
   }
 };

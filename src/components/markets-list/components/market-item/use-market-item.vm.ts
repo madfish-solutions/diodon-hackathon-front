@@ -14,8 +14,6 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
   };
 
   const manageHandler = () => {
-    // eslint-disable-next-line no-console
-    console.log('manageHandler');
     modalsStore.open(ModalType.ManagePosition, { marketId });
   };
 

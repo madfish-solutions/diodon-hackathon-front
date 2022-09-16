@@ -4,7 +4,9 @@ import { MarketId, Nullable } from '../types';
 
 export enum ModalType {
   OpenPosition,
-  ManagePosition
+  ManagePosition,
+  Deposit,
+  Withdraw
 }
 
 interface OpenPositionPayload {

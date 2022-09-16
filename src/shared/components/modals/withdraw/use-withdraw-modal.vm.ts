@@ -1,12 +1,10 @@
-import { useCallback, ChangeEventHandler } from 'react';
+import { ChangeEventHandler, useCallback } from 'react';
 
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema } from 'yup';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
-import { useMarketsStore } from '../../../hooks/use-markets-store';
 import { ModalType } from '../../../store/modals.store';
-import { MarketId, Undefined } from '../../../types';
 
 export interface FormValues {
   orderAmount: string;
@@ -14,12 +12,10 @@ export interface FormValues {
 
 const MIN_ORDER_AMOUNT = 0.01;
 
-export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) => {
+export const useWithdrawModalViewModel = () => {
   const modalsStore = useModalsStore();
-  const isOpen = modalsStore.isOpen(ModalType.ManagePosition);
+  const isOpen = modalsStore.isOpen(ModalType.Withdraw);
   const closeModalHandler = () => modalsStore.close();
-  const marketsStore = useMarketsStore();
-  const market = marketId ? marketsStore.getMarket(marketId) : null;
   const { data } = useAccountStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
@@ -58,7 +54,6 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     value,
     handleChange,
     error,
-    market,
     isOpen,
     buyingPowerUsd,
     closeModalHandler,
