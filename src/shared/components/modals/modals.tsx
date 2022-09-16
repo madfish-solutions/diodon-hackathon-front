@@ -2,15 +2,16 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import { useModalsStore } from '../../hooks';
+import { useAuthStore, useModalsStore } from '../../hooks';
 import { ModalType } from '../../store/modals.store';
 import { AddPositionModal } from './add-position';
 import { ClosePositionModal } from './close-position';
 import { OpenPositionModal } from './open-position';
 
 export const Modals: FC = observer(() => {
+  const { isConnected } = useAuthStore();
   const { modal, payload } = useModalsStore();
-  if (!payload) {
+  if (!payload || !isConnected) {
     return null;
   }
 

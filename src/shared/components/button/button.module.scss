@@ -10,3 +10,8 @@
   border-radius: 8px;
   border: none;
 }
+
+.root[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

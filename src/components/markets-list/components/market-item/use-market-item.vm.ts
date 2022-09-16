@@ -21,5 +21,5 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
     modalsStore.open(ModalType.AddPosition, { marketId });
   };
 
-  return { position, openHandler, closeHandler, addHandler };
+  return { position, isConnected, openHandler, closeHandler, addHandler };
 };
