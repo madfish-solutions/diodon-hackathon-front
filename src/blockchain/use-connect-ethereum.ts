@@ -1,45 +1,83 @@
 import { useCallback, useEffect } from 'react';
 
 import { useWallet } from '@keshan3262/use-wallet';
+import { providers } from 'ethers';
 
-import { RPC_URL } from '@config/environment';
-import { useRootStore } from '@providers/root-store.provider';
-import { ConnectionType } from '@shared/types';
+import { CHAIN_ID } from '@config/environment';
+import { useAuthStore } from '@shared/hooks';
+import { ConnectedStatus, ConnectionType } from '@shared/types';
+import { useToasts } from '@shared/utils/toasts';
+
+import { switchChain } from './switch-chain';
 
 export const useConnectEthereum = () => {
-  const { authStore } = useRootStore();
+  const { showErrorToast } = useToasts();
+  const authStore = useAuthStore();
   const wallet = useWallet();
-  const { account, connect, ethereum, reset: disconnect } = wallet;
-  // eslint-disable-next-line no-console
-  console.log(RPC_URL);
+  const { account, chainId, connect, ethereum, reset: disconnect, isConnected, status } = wallet;
 
   const connectEthereum = useCallback(
     async (connectorId?: string) => {
       try {
-        await connect(connectorId);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        alert(`Failed to connect to Ethereum wallet: ${(e as Error).message}`);
+        return await connect(connectorId);
+      } catch (error) {
+        showErrorToast(`Failed to connect to Ethereum wallet: ${(error as Error).message}`);
+        throw error;
       }
     },
-    [connect]
+    [connect, showErrorToast]
+  );
+
+  const disconnectEthereum = useCallback(async () => {
+    disconnect();
+  }, [disconnect]);
+
+  const doSwitchChain = useCallback(
+    async (_ethereum: providers.ExternalProvider) => {
+      try {
+        await switchChain(_ethereum);
+      } catch (error) {
+        showErrorToast((error as Error).message);
+        throw error;
+      }
+    },
+    [showErrorToast]
+  );
+
+  const doConnect = useCallback(
+    async (_account: string, _ethereum: providers.ExternalProvider) => {
+      const provider = new providers.Web3Provider(_ethereum);
+      authStore.setAddress(_account);
+      authStore.setConnection({
+        type: ConnectionType.Ethereum,
+        provider,
+        signer: provider.getSigner()
+      });
+    },
+    [authStore]
   );
 
   useEffect(() => {
-    if (account && ethereum) {
-      authStore.setAddress(account);
-      authStore.setConnection({
-        type: ConnectionType.Ethereum,
-        ethereum
-      });
-    } else {
-      authStore.resetStore();
+    if (!account || !ethereum) {
+      return authStore.resetStore();
     }
-  }, [account, authStore, ethereum]);
+
+    if (chainId !== CHAIN_ID) {
+      return void doSwitchChain(ethereum);
+    }
+
+    return void doConnect(account, ethereum);
+  }, [account, authStore, chainId, doConnect, doSwitchChain, ethereum, showErrorToast]);
+
+  useEffect(() => {
+    authStore.setStatus(status as ConnectedStatus);
+  }, [authStore, status]);
 
   return {
     connect: connectEthereum,
-    disconnect
+    disconnect: disconnectEthereum,
+    isConnected: isConnected(),
+    blockNumber: wallet.getBlockNumber?.() ?? null,
+    status
   };
 };

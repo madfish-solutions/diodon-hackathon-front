@@ -1,0 +1,32 @@
+.item {
+  margin: 32px 0;
+  padding: 8px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  flex: 1;
+  font-size: 80%;
+}
+
+.market {
+  margin: 4px;
+  padding: 4px;
+  display: flex;
+}
+
+.position {
+  border-top: 1px solid blue;
+  display: flex;
+}
+
+.manageButton,
+.openButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 16px;
+  gap: 8px;
+  background: #003686;
+  border-radius: 8px;
+  color: #fff;
+}

@@ -2,12 +2,15 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@abis/*": ["./abis/*"],
       "@blockchain/*": ["./blockchain/*"],
       "@config/*": ["./config/*"],
       "@layout": ["./layout"],
       "@modules/*": ["./modules/*"],
       "@providers/*": ["./providers/*"],
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./shared/*"],
+      "@api/*": ["./api/*"],
+      "@components/*": ["./components/*"]
     }
   }
 }
