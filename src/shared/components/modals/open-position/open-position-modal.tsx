@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
-  const { market, isOpen, buyingPowerUsd, closeModalHandler } = useOpenPositionModalViewModel(marketId);
+  const { market, isOpen, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
+    useOpenPositionModalViewModel(marketId);
 
   if (!market) {
     throw new Error('Market is not defined');
@@ -27,8 +28,10 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         <p>Price: {getUsdView(market.marketPriceUsd)}</p>
         <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
       </div>
-      <form>
-        <input />
+      <form onSubmit={handleSubmit}>
+        <input type="number" name="orderAmount" value={value} onChange={handleChange} />
+        <p style={{ color: 'red' }}>{error}</p>
+        <button type="submit">Open position ({value})</button>
       </form>
     </Modal>
   );
