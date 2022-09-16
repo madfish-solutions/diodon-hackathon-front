@@ -4,8 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useAuthStore, useModalsStore } from '../../hooks';
 import { ModalType } from '../../store/modals.store';
-import { AddPositionModal } from './add-position';
-import { ClosePositionModal } from './close-position';
+import { ManagePositionModal } from './manage-position';
 import { OpenPositionModal } from './open-position';
 
 export const Modals: FC = observer(() => {
@@ -18,10 +17,8 @@ export const Modals: FC = observer(() => {
   switch (modal) {
     case ModalType.OpenPosition:
       return <OpenPositionModal marketId={payload.marketId} />;
-    case ModalType.AddPosition:
-      return <AddPositionModal marketId={payload.marketId} />;
-    case ModalType.ClosePosition:
-      return <ClosePositionModal marketId={payload.marketId} />;
+    case ModalType.ManagePosition:
+      return <ManagePositionModal marketId={payload.marketId} />;
     default:
       return null;
   }

@@ -14,9 +14,9 @@ export interface FormValues {
 
 const MIN_ORDER_AMOUNT = 0.01;
 
-export const useOpenPositionModalViewModel = (marketId: MarketId) => {
+export const useManagePositionModalViewModel = (marketId: MarketId) => {
   const modalsStore = useModalsStore();
-  const isOpen = modalsStore.isOpen(ModalType.OpenPosition);
+  const isOpen = modalsStore.isOpen(ModalType.ManagePosition);
   const closeModalHandler = () => modalsStore.close();
   const marketsStore = useMarketsStore();
   const market = marketsStore.getMarket(marketId);

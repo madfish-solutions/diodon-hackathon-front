@@ -4,21 +4,17 @@ import { MarketId, Nullable } from '../types';
 
 export enum ModalType {
   OpenPosition,
-  ClosePosition,
-  AddPosition
+  ManagePosition
 }
 
 interface OpenPositionPayload {
   marketId: MarketId;
 }
-interface AddPositionPayload {
-  marketId: MarketId;
-}
-interface ClosePositionPayload {
+interface ManagePositionPayload {
   marketId: MarketId;
 }
 
-export type ModalPayload = OpenPositionPayload | AddPositionPayload | ClosePositionPayload;
+export type ModalPayload = OpenPositionPayload | ManagePositionPayload;
 
 export class ModalsStore {
   modal: Nullable<ModalType> = null;

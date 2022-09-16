@@ -13,13 +13,11 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
     modalsStore.open(ModalType.OpenPosition, { marketId });
   };
 
-  const closeHandler = () => {
-    modalsStore.open(ModalType.ClosePosition, { marketId });
+  const manageHandler = () => {
+    // eslint-disable-next-line no-console
+    console.log('manageHandler');
+    modalsStore.open(ModalType.ManagePosition, { marketId });
   };
 
-  const addHandler = () => {
-    modalsStore.open(ModalType.AddPosition, { marketId });
-  };
-
-  return { position, isConnected, openHandler, closeHandler, addHandler };
+  return { position, isConnected, openHandler, manageHandler };
 };
