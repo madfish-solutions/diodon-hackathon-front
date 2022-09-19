@@ -6,7 +6,7 @@
 }
 
 .thumb {
-  background: #FFFFFF;
+  background: black;
   width: 8px;
   height: 24px;
   border-radius: 4px;
@@ -24,6 +24,8 @@
 
 .marksWrapper {
   position: relative;
+  margin-top: 4px;
+  margin-bottom: calc(12px * 1.21);
 }
 
 .customMarkWrapper {
@@ -45,4 +47,5 @@
 .customMark {
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.21;
 }
