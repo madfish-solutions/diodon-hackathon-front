@@ -1,0 +1,48 @@
+.slider {
+  width: 100%;
+  height: 24px;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.thumb {
+  background: #FFFFFF;
+  width: 8px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.track {
+  background: linear-gradient(270deg, #00C2FF 0%, #FF9921 100%);
+
+  border-image-source: linear-gradient(270deg, #00C2FF 0%, #FF9921 100%);
+  height: 16px;
+  border-radius: 8px;
+  width: 100%;
+  top: 4px;
+}
+
+.marksWrapper {
+  position: relative;
+}
+
+.customMarkWrapper {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+}
+
+.customMarkWrapper1 {
+  left: 0;
+  width: 66.7%;
+}
+
+.customMarkWrapper2 {
+  left: 33.3%;
+  width: 66.7%;
+}
+
+.customMark {
+  font-size: 12px;
+  font-weight: 700;
+}
