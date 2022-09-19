@@ -46,7 +46,7 @@ export const AccountDataInfo: FC<Props> = ({ data }) => {
         <dt>Leverage:</dt>
         <dd style={{ marginBottom: 8 }}>{data.leverage}</dd>
       </dl>
-      <MarginSlider value={6.25} />
+      <MarginSlider value={data.marginRatioPercent} />
       <p>
         <Button onClick={handleDeposit}>Deposit</Button>
         <Button onClick={handleWithraw}>Withdraw</Button>
