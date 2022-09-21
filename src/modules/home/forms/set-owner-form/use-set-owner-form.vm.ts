@@ -29,7 +29,7 @@ export const useSetOwnerFormViewModel = () => {
 
       try {
         actions.setSubmitting(true);
-        const response = await ownerTransactionsContract.changeOwner(values.newOwner);
+        const response = await ownerTransactionsContract.methods.changeOwner(values.newOwner);
         showInfoToast(`Transaction with hash ${response.hash} is pending`);
         const receipt = await response.wait(1);
         showSuccessToast(`Transaction with hash ${receipt.transactionHash} is successful`);

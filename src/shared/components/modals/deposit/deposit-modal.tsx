@@ -8,7 +8,7 @@ import { modalsStyle } from '../modals-style';
 import { useDepositModalViewModel } from './use-deposit-modal.vm';
 
 export const DepositModal: FC = observer(() => {
-  const { isOpen, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
+  const { isOpen, market, buyingPowerUsd, closeModalHandler, handleSubmit, error, isSubmitting, value, handleChange } =
     useDepositModalViewModel();
 
   return (
@@ -19,9 +19,12 @@ export const DepositModal: FC = observer(() => {
         <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
       </div>
       <form onSubmit={handleSubmit}>
+        <input type="text" name="market" value={market} onChange={handleChange} />
         <input type="number" name="orderAmount" value={value} onChange={handleChange} />
         <p style={{ color: 'red' }}>{error}</p>
-        <button type="submit">Open position ({value})</button>
+        <button type="submit" disabled={isSubmitting}>
+          Deposit ({value} dDAI)
+        </button>
       </form>
     </Modal>
   );
