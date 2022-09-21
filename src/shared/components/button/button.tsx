@@ -10,6 +10,7 @@ import styles from './button.module.scss';
 
 export type ButtonProps = {
   loading?: boolean;
+  theme?: 'primary';
   type?: 'button' | 'submit' | 'reset' | undefined;
   external?: boolean;
   themeOposite?: boolean;
@@ -20,8 +21,13 @@ export type ButtonProps = {
   control?: ReactNode;
 } & (HTMLProps<HTMLButtonElement> | ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>>);
 
+const themeClass = {
+  primary: styles.primary
+};
+
 export const Button: CFC<ButtonProps> = ({
   loading,
+  theme = 'primary',
   type = 'button',
   external = false,
   className,
@@ -33,7 +39,7 @@ export const Button: CFC<ButtonProps> = ({
   themeOposite,
   ...props
 }) => {
-  const compoundClassName = cx(className, styles.root, {
+  const compoundClassName = cx(className, styles.root, themeClass[theme], {
     [styles.loading]: loading
   });
 
