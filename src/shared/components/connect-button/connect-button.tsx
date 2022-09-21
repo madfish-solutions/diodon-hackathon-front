@@ -2,20 +2,29 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
+import { shortize } from '@shared/helpers/shortize';
+
 import { Button } from '../button';
 import { useConnectButtonViewModel } from './use-connect-button.vm';
 
-export const ConnectButton: FC = observer(() => {
+interface Props {
+  className?: string;
+}
+
+export const ConnectButton: FC<Props> = observer(({ className }) => {
   const { address, disconnectHandle, connectHandle } = useConnectButtonViewModel();
 
   return address ? (
     <>
-      <span style={{ marginRight: 8, opacity: 0.5, fontSize: '80%', color: '#fff' }}>{address}</span>
-      <Button onClick={disconnectHandle}>Disconnect</Button>
+      <Button onClick={disconnectHandle} className={className}>
+        <span style={{ color: '#fff' }}>{shortize(address)}</span>
+      </Button>
     </>
   ) : (
     <>
-      <Button onClick={connectHandle}>Connect Metamask</Button>
+      <Button onClick={connectHandle} className={className}>
+        Connect Metamask
+      </Button>
     </>
   );
 });

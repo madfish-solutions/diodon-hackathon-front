@@ -5,3 +5,4 @@ export * from './metamask-error';
 export * from './strings';
 export * from './type-checks';
 export * from './prepare-number-as-string';
+export * from './get-random-id';
