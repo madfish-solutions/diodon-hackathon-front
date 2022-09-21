@@ -10,6 +10,7 @@
       "@providers/*": ["./providers/*"],
       "@shared/*": ["./shared/*"],
       "@api/*": ["./api/*"],
+      "@styles/*": ["./styles/*"],
       "@components/*": ["./components/*"]
     }
   }
