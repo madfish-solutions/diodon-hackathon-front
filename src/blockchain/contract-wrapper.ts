@@ -1,20 +1,34 @@
 import { Listener, Provider } from '@ethersproject/abstract-provider';
-import { CallOverrides, ContractFunction } from '@ethersproject/contracts';
+import { ContractFunction } from '@ethersproject/contracts';
 import { BigNumber, Contract, ContractInterface, EventFilter, Signer } from 'ethers';
 
-import { Optional } from '@shared/types';
+import { Nullable } from '@shared/types';
 
 type EstimateGasMethods<T extends Record<string, ContractFunction>> = {
   [K in keyof T]: T[K] extends (...args: infer A) => unknown ? (...args: A) => Promise<BigNumber> : never;
 };
 
-export class ContractWrapper<T extends Record<string, ContractFunction>> {
+type TopicSet<T extends unknown[]> = T extends [...infer Rest, infer E] ? [...TopicSet<Rest>, Nullable<E> | E[]] : [];
+
+export abstract class ContractWrapper<T extends Record<string, ContractFunction>, E extends Record<string, unknown[]>> {
   protected internalContract: Contract;
   estimateGas: EstimateGasMethods<T>;
+  methods: T;
+  filters: {
+    [K in keyof E]: (...args: TopicSet<E[K]>) => EventFilter;
+  };
 
   constructor(addressOrName: string, abi: ContractInterface, provider?: Provider | Signer) {
     this.internalContract = new Contract(addressOrName, abi, provider);
     this.estimateGas = this.internalContract.estimateGas as EstimateGasMethods<T>;
+    this.methods = {} as T;
+    this.filters = {} as typeof this.filters;
+    for (const fnName in this.internalContract.functions) {
+      this.methods[fnName as keyof T] = this.internalContract[fnName];
+    }
+    for (const eventName in this.internalContract.filters) {
+      this.filters[eventName as keyof E] = this.internalContract.filters[eventName];
+    }
   }
 
   get address() {
@@ -35,13 +49,5 @@ export class ContractWrapper<T extends Record<string, ContractFunction>> {
 
   off(event: EventFilter | string, listener: Listener) {
     this.internalContract.off(event, listener);
-  }
-
-  static async executeContractFunction(fn: ContractFunction, overrides: Optional<CallOverrides>, ...args: unknown[]) {
-    if (overrides) {
-      return fn(...args, overrides);
-    }
-
-    return fn(...args);
   }
 }

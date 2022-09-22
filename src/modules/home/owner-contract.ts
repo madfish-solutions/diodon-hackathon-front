@@ -1,6 +1,7 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider';
-import { CallOverrides } from 'ethers';
+import { Provider, TransactionResponse } from '@ethersproject/abstract-provider';
+import { CallOverrides, Signer } from 'ethers';
 
+import ownerContractAbi from '@abis/owner-contract.json';
 import { ContractWrapper } from '@blockchain/contract-wrapper';
 
 type OwnerContractMethods = {
@@ -8,12 +9,12 @@ type OwnerContractMethods = {
   changeOwner: (newOwner: string, overrides?: CallOverrides) => Promise<TransactionResponse>;
 };
 
-export class OwnerContractWrapper extends ContractWrapper<OwnerContractMethods> {
-  async getOwner(overrides?: CallOverrides): Promise<string> {
-    return ContractWrapper.executeContractFunction(this.internalContract.getOwner, overrides);
-  }
+type OwnerContractEvents = {
+  OwnerSet: [string, string];
+};
 
-  async changeOwner(newOwner: string, overrides?: CallOverrides): Promise<TransactionResponse> {
-    return ContractWrapper.executeContractFunction(this.internalContract.changeOwner, overrides, newOwner);
+export class OwnerContractWrapper extends ContractWrapper<OwnerContractMethods, OwnerContractEvents> {
+  constructor(address: string, provider?: Provider | Signer) {
+    super(address, ownerContractAbi, provider);
   }
 }
