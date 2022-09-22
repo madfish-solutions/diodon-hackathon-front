@@ -1,6 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import ownerContractAbi from '@abis/owner-contract.json';
 import { FALLBACK_PROVIDER } from '@config/constants';
 import { Led, ModelBuilder } from '@shared/model-builder';
 import { LoadingErrorData, RootStore } from '@shared/store';
@@ -30,7 +29,7 @@ export class HomePageStore {
   }
   //#endregion "Owner" contract owner store
 
-  ownerViewContract = new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, ownerContractAbi, FALLBACK_PROVIDER);
+  ownerViewContract = new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, FALLBACK_PROVIDER);
   ownerTransactionsContract: Nullable<OwnerContractWrapper> = null;
 
   constructor(private rootStore: RootStore) {
@@ -51,15 +50,14 @@ export class HomePageStore {
 
     this.ownerViewContract = new OwnerContractWrapper(
       OWNER_CONTRACT_ADDRESS,
-      ownerContractAbi,
       connection?.provider ?? FALLBACK_PROVIDER
     );
     this.ownerTransactionsContract = connection
-      ? new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, ownerContractAbi, connection.signer)
+      ? new OwnerContractWrapper(OWNER_CONTRACT_ADDRESS, connection.signer)
       : null;
   }
 
   async getContractOwner() {
-    return { value: await this.ownerViewContract.getOwner() };
+    return { value: await this.ownerViewContract.methods.getOwner() };
   }
 }
