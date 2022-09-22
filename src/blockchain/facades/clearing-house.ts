@@ -81,8 +81,8 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 margin
    * @eventParam uint256 marginRatio)
    */
-  public async removeMargin(amm: address, amount: BigNumber): Promise<Transaction> {
-    return await this.contract.methods.connect(this.signer).removeMargin(amm, [amount.toString()]);
+  public async removeMargin(amm: address, amount: BigNumber) {
+    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()]);
   }
 
   /**
