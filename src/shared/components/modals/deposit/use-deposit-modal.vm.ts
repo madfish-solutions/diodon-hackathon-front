@@ -10,7 +10,7 @@ import { ERC20TokenContractWrapper } from '@blockchain/erc20-contract-wrapper';
 import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { ClearingHouse } from '@blockchain/facades';
 import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
-import { CLEARING_HOUSE_ADDRESS, DDAI_ADDRESS } from '@config/environment';
+import { AMMS, CLEARING_HOUSE_ADDRESS, DDAI_ADDRESS } from '@config/environment';
 import { toAtomic } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
@@ -22,11 +22,6 @@ export interface FormValues {
 }
 
 const MIN_ORDER_AMOUNT = 0.01;
-
-const amms = {
-  AAPL: '0x21f98596D0bb9da7fFcA2a3e29d47FcEA858e79B',
-  AMD: '0xA7675BDD2f6029e43F7EbB345da77B3deaf2B2cF'
-};
 
 export const useDepositModalViewModel = () => {
   const modalsStore = useModalsStore();
@@ -64,7 +59,7 @@ export const useDepositModalViewModel = () => {
           );
         }
         transactionsFunctions.push(async () =>
-          clearingHouse.addMargin(amms[values.market], new BigNumber(rawAmount.toString()))
+          clearingHouse.addMargin(AMMS[values.market], new BigNumber(rawAmount.toString()))
         );
         await executeTransactionsBatch(transactionsFunctions);
       });
@@ -90,7 +85,7 @@ export const useDepositModalViewModel = () => {
     (formik.touched.market && formik.errors.market) ||
     null;
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = event => {
+  const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);
   };
 
