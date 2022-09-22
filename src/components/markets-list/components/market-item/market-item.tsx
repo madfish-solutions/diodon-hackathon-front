@@ -44,21 +44,24 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
         )}
       </div>
       {position ? (
-        <div className={styles.position}>
-          <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
-          <span>Amount: {getTokensView(position.amountTokens)}</span>
-          <span>Amount USD: {getUsdView(position.amountUsd)}</span>
-          <span>PNL: {getPercentView(position.pnlPercent)}</span>
-          <span>PNL USD: {getUsdView(position.pnlUsd)}</span>
-          <span>Avg Open Price: {getUsdView(position.avgOpenPriceUsd)}</span>
-          <span>Liquidity 1 Price: {getUsdView(position.liqPrice1Usd)}</span>
-          <span>ALiquidity 2 Price: {getUsdView(position.liqPrice2Usd)}</span>
-          <div>
-            <Button onClick={manageHandler} className={styles.manageButton}>
-              Manage
-            </Button>
+        <>
+          <div className={styles.position}>
+            <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
+            <span>Amount: {getTokensView(position.amountTokens)}</span>
+            <span>Amount USD: {getUsdView(position.amountUsd)}</span>
+            <span>PNL: {getPercentView(position.pnlPercent)}</span>
+            <span>PNL USD: {getUsdView(position.pnlUsd)}</span>
+            <span>Avg Open Price: {getUsdView(position.avgOpenPriceUsd)}</span>
+            <span>Liquidity 1 Price: {getUsdView(position.liqPrice1Usd)}</span>
+            <span>ALiquidity 2 Price: {getUsdView(position.liqPrice2Usd)}</span>
+            <div>
+              <Button onClick={manageHandler} className={styles.manageButton}>
+                Manage
+              </Button>
+            </div>
           </div>
-        </div>
+          {/* <MarginSlider value={MOCK_MARGIN_LEVEL_PERCENTAGE} /> */}
+        </>
       ) : null}
     </div>
   );
