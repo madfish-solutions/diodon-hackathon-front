@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { CardCell } from '@components/card-cell';
 import { Button, ConnectButton } from '@shared/components';
 import { DiodonLogo } from '@shared/svg';
 
@@ -7,18 +8,16 @@ import styles from './data-card.module.scss';
 
 const stepsToStart = ['Connect a wallet', 'Place a deposit', 'Trade'];
 
-const connected = true;
+const connected = false;
 
 export const DataCard: FC = () => {
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.label}>Account Data</h1>
       <div className={styles.root}>
         {connected ? (
           <div className={styles.card}>
-            <div className={styles.mainInfo}>NET COLLATERAL: 1,212.12 KDAI</div>
+            <CardCell label="Net Collateral:">10000</CardCell>
             <div className={styles.additionalInfo}>
-              <div>Buying power: $ 10,743.1</div>
               <div>Free collateral: $ 4,200.17</div>
               <div>Opened positions: $ 6,743.12</div>
               <div>Margin ratio: 666.13</div>
@@ -32,18 +31,18 @@ export const DataCard: FC = () => {
           </div>
         ) : (
           <div className={styles.mainScreen}>
-            <div>
-              <DiodonLogo />
-            </div>
-            <div className={styles.mainText}>start trading!</div>
-            <div>
+            <div className={styles.firstSection}>
               <ul>
                 {stepsToStart.map(step => (
                   <li>{step}</li>
                 ))}
               </ul>
+              <ConnectButton />
             </div>
-            <ConnectButton />
+            <div className={styles.secondSection}>
+              <DiodonLogo />
+              <div className={styles.mainText}>start trading!</div>
+            </div>
           </div>
         )}
       </div>
