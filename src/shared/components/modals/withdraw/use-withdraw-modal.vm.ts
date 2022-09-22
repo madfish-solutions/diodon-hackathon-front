@@ -14,10 +14,11 @@ import { toAtomic } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
 import { ModalType } from '../../../store/modals.store';
+import { MarketId } from '../../../types';
 
 export interface FormValues {
   orderAmount: string;
-  market: 'AAPL' | 'AMD';
+  market: MarketId;
 }
 
 const MIN_ORDER_AMOUNT = 0.01;
@@ -60,7 +61,7 @@ export const useWithdrawModalViewModel = () => {
       orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required(),
       market: stringSchema().oneOf(['AAPL', 'AMD'], 'Available options: AAPL, AMD').required()
     }),
-    initialValues: { orderAmount: '', market: 'AAPL' },
+    initialValues: { orderAmount: '', market: MarketId.APPL },
     onSubmit: handleSubmit
   });
 
