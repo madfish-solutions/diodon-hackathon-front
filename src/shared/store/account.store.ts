@@ -4,11 +4,12 @@ import { getAccountDataApi } from '@api/account';
 
 import { AccountData } from '../../api';
 import { Nullable } from '../types';
+import { RootStore } from './root.store';
 
 export class AccountStore {
   data: Nullable<AccountData> = null;
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this, {
       data: observable,
 

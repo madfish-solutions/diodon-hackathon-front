@@ -20,7 +20,7 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           <DiodonLogo width={177} height={48} />
         </Link>
         <div className={styles.flex1} />
-        <ConnectButton />
+        <ConnectButton className={styles.button} />
       </header>
     </div>
   );
