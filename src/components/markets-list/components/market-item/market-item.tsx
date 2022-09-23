@@ -3,10 +3,12 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { MarketData } from '@api/markets';
+import { CardCell } from '@components/card-cell';
 import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
 import { getPercentView, getTokensView, getUsdView } from '@shared/helpers';
+import { CloseIcon } from '@shared/svg/close-icon';
 
 import styles from './market-item.module.scss';
 import { useMarketItemViewModel } from './use-market-item.vm';
@@ -27,41 +29,57 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
             <b>{market.marketId}</b>
           </div>
         </div>
-        <span>Market Price: {getUsdView(market.marketPriceUsd)}</span>
-        <span>Market Price 24h change: {getUsdView(market.marketPriceChange24Usd)}</span>
-        <span>Index Price: {getUsdView(market.indexPriceUsd)}</span>
-        <span>Market Price 24h change: {getUsdView(market.indexPriceChange24Usd)}</span>
-        <span>Volume 24h: {getUsdView(market.volume24Usd)}</span>
-        <span>Founding rate 8h: {getPercentView(market.fundingRateChange8Percent)}</span>
-        {!position && (
-          <div>
+        <div className={styles.details}>
+          <CardCell label="Market Price" className={styles.cardCell}>
+            {getUsdView(market.marketPriceUsd)}
+          </CardCell>
+          <CardCell label="Index Price" className={styles.cardCell}>
+            {getUsdView(market.indexPriceUsd)}
+          </CardCell>
+          <CardCell label="Funding rate 8h" className={styles.cardCell}>
+            {getPercentView(market.fundingRateChange8Percent)}
+          </CardCell>
+          <CardCell label="Volume 24h" className={styles.cardCell}>
+            {getUsdView(market.volume24Usd)}
+          </CardCell>
+        </div>
+        {!position ? (
+          <div className={styles.button}>
             <p>
               <Button onClick={openHandler} className={styles.openButton} disabled={!isConnected}>
                 Open
               </Button>
             </p>
           </div>
+        ) : (
+          <div className={styles.closeButton}>
+            <CloseIcon />
+          </div>
         )}
       </div>
       {position ? (
-        <>
-          <div className={styles.position}>
-            <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
-            <span>Amount: {getTokensView(position.amountTokens)}</span>
-            <span>Amount USD: {getUsdView(position.amountUsd)}</span>
-            <span>PNL: {getPercentView(position.pnlPercent)}</span>
-            <span>PNL USD: {getUsdView(position.pnlUsd)}</span>
-            <span>Avg Open Price: {getUsdView(position.avgOpenPriceUsd)}</span>
-            <span>Liquidity 1 Price: {getUsdView(position.liqPrice1Usd)}</span>
-            <span>ALiquidity 2 Price: {getUsdView(position.liqPrice2Usd)}</span>
-            <div>
-              <Button onClick={manageHandler} className={styles.manageButton}>
-                Manage
-              </Button>
-            </div>
+        <div className={styles.position}>
+          <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
+          <div className={styles.detailsPosition}>
+            <CardCell label="Amount" className={styles.cardCell}>
+              {getTokensView(position.amountTokens)}
+            </CardCell>
+            <CardCell label="Profit / Loss" className={styles.cardCell}>
+              {getPercentView(position.pnlPercent)}
+            </CardCell>
+            <CardCell label="Avg Open Price" className={styles.cardCell}>
+              {getUsdView(position.avgOpenPriceUsd)}
+            </CardCell>
+            <CardCell label="Liquidity 1 Price" className={styles.cardCell}>
+              {getUsdView(position.liqPrice1Usd)}
+            </CardCell>
           </div>
-          {/* <MarginSlider value={MOCK_MARGIN_LEVEL_PERCENTAGE} /> */}
-        </>
+          <div className={styles.button}>
+            <Button onClick={manageHandler} className={styles.manageButton}>
+              Manage
+            </Button>
+          </div>
+        </div>
       ) : null}
     </div>
   );

@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  min-width: 120px;
+}
+
+.label {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.amount {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+
+  display: flex;
+  align-items: center;
+
+  color: #FFFFFF;
+}

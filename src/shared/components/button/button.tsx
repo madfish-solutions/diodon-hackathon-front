@@ -10,7 +10,7 @@ import styles from './button.module.scss';
 
 export type ButtonProps = {
   loading?: boolean;
-  theme?: 'primary';
+  theme?: 'primary' | 'secondary';
   type?: 'button' | 'submit' | 'reset' | undefined;
   external?: boolean;
   themeOposite?: boolean;
@@ -22,7 +22,8 @@ export type ButtonProps = {
 } & (HTMLProps<HTMLButtonElement> | ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>>);
 
 const themeClass = {
-  primary: styles.primary
+  primary: styles.primary,
+  secondary: styles.secondary
 };
 
 export const Button: CFC<ButtonProps> = ({

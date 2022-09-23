@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
+import { CardCell } from '@components/card-cell';
 import { Button, ConnectButton } from '@shared/components';
 import { DiodonLogo } from '@shared/svg';
 
@@ -15,13 +16,11 @@ export const DataCard: FC = observer(() => {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={styles.label}>Account Data</h1>
       <div className={styles.root}>
         {isConnected ? (
           <div className={styles.card}>
-            <div className={styles.mainInfo}>NET COLLATERAL: 1,212.12 KDAI</div>
+            <CardCell label="Net Collateral:">10000</CardCell>
             <div className={styles.additionalInfo}>
-              <div>Buying power: $ 10,743.1</div>
               <div>Free collateral: $ 4,200.17</div>
               <div>Opened positions: $ 6,743.12</div>
               <div>Margin ratio: 666.13</div>
@@ -39,18 +38,18 @@ export const DataCard: FC = observer(() => {
           </div>
         ) : (
           <div className={styles.mainScreen}>
-            <div>
-              <DiodonLogo />
-            </div>
-            <div className={styles.mainText}>start trading!</div>
-            <div>
+            <div className={styles.firstSection}>
               <ul>
                 {stepsToStart.map(step => (
                   <li key={step}>{step}</li>
                 ))}
               </ul>
+              <ConnectButton />
             </div>
-            <ConnectButton />
+            <div className={styles.secondSection}>
+              <DiodonLogo />
+              <div className={styles.mainText}>start trading!</div>
+            </div>
           </div>
         )}
       </div>
