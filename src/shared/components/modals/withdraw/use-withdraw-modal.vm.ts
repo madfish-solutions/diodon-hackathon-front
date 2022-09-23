@@ -60,7 +60,7 @@ export const useWithdrawModalViewModel = () => {
       orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required(),
       market: stringSchema().oneOf(['AAPL', 'AMD'], 'Available options: AAPL, AMD').required()
     }),
-    initialValues: { orderAmount: '', market: MarketId.APPL },
+    initialValues: { orderAmount: '', market: MarketId.AAPL },
     onSubmit: handleSubmit
   });
 

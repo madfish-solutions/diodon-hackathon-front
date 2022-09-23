@@ -11,7 +11,7 @@ export const DDAI_ADDRESS = process.env.REACT_APP_DDAI_ADDRESS!;
 export const CLEARING_HOUSE_ADDRESS = process.env.REACT_APP_CLEARING_HOUSE_ADDRESS!;
 
 export const AMMS = {
-  [MarketId.APPL]: '0x21f98596D0bb9da7fFcA2a3e29d47FcEA858e79B',
+  [MarketId.AAPL]: '0x21f98596D0bb9da7fFcA2a3e29d47FcEA858e79B',
   [MarketId.AMD]: '0xA7675BDD2f6029e43F7EbB345da77B3deaf2B2cF',
   [MarketId.SHOP]: '0xxxxx'
 };

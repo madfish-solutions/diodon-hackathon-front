@@ -11,7 +11,7 @@ export const MarketIcon: FC<Props> = ({ marketId, ...props }) => {
   switch (marketId) {
     case MarketId.AMD:
       return <AmdLogo {...props} />;
-    case MarketId.APPL:
+    case MarketId.AAPL:
       return <AppleLogo {...props} />;
     case MarketId.SHOP:
       return <ShopifyLogo {...props} />;

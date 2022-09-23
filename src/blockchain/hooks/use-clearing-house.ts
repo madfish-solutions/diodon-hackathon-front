@@ -5,8 +5,9 @@ import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber/lib/bignu
 import { BigNumber } from 'bignumber.js';
 
 import { ZERO_AMOUNT } from '@config/constants';
-import { CLEARING_HOUSE_ADDRESS, DDAI_ADDRESS } from '@config/environment';
+import { AMMS, CLEARING_HOUSE_ADDRESS, DDAI_ADDRESS } from '@config/environment';
 import { useAuthStore } from '@shared/hooks';
+import { MarketId } from '@shared/types';
 
 import { ERC20TokenContractWrapper } from '../erc20-contract-wrapper';
 import { ClearingHouse } from '../facades';
@@ -77,9 +78,15 @@ export const useClearingHouse = () => {
   );
 
   const openPosition = useCallback(
-    async (side: Side, quoteAssetAmount: BigNumber, leverage: BigNumber, baseAssetAmountLimit: BigNumber) => {
+    async (
+      market: MarketId,
+      side: Side,
+      quoteAssetAmount: BigNumber,
+      leverage: BigNumber,
+      baseAssetAmountLimit: BigNumber // Min received
+    ) => {
       return clearingHouse
-        ? clearingHouse.openPosition(CLEARING_HOUSE_ADDRESS, side, quoteAssetAmount, leverage, baseAssetAmountLimit)
+        ? clearingHouse.openPosition(AMMS[market], side, quoteAssetAmount, leverage, baseAssetAmountLimit)
         : null;
     },
     [clearingHouse]

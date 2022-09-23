@@ -1,4 +1,4 @@
-import { useCallback, ChangeEventHandler } from 'react';
+import { ChangeEventHandler, useCallback } from 'react';
 
 import BigNumber from 'bignumber.js';
 import { FormikHelpers, useFormik } from 'formik';
@@ -34,9 +34,13 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
       actions.setSubmitting(true);
 
       await api.call(async () => {
-        // eslint-disable-next-line no-console
-        console.log('values', values);
-        await openPosition(Side.BUY, new BigNumber(values.orderAmount), new BigNumber(2), new BigNumber(3));
+        await openPosition(
+          MarketId.AMD,
+          Side.BUY,
+          new BigNumber(values.orderAmount),
+          new BigNumber(2),
+          new BigNumber(0) // Min received
+        );
       });
 
       actions.setSubmitting(false);

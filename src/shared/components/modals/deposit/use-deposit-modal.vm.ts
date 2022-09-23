@@ -56,10 +56,10 @@ export const useDepositModalViewModel = () => {
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      market: stringSchema().oneOf(['AAPL', 'AMD'], 'Available options: AAPL, AMD').required(),
+      market: stringSchema().oneOf([MarketId.AAPL, MarketId.AMD], 'Available options: AAPL, AMD').required(),
       orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(dDAIBalance.toNumber()).required()
     }),
-    initialValues: { orderAmount: '', market: MarketId.APPL },
+    initialValues: { orderAmount: '', market: MarketId.AAPL },
     onSubmit: handleSubmit
   });
 
