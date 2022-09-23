@@ -1,7 +1,8 @@
 import { FC } from 'react';
 
-import { CardCell } from '@components/card-cell';
 import { observer } from 'mobx-react-lite';
+
+import { CardCell } from '@components/card-cell';
 import { Button, ConnectButton } from '@shared/components';
 import { DiodonLogo } from '@shared/svg';
 
@@ -9,9 +10,6 @@ import styles from './data-card.module.scss';
 import { useDataCardViewModel } from './use-data-card.vm';
 
 const stepsToStart = ['Connect a wallet', 'Place a deposit', 'Trade'];
-
-
-const connected = false;
 
 export const DataCard: FC = observer(() => {
   const { isConnected, openDepositModal, openWithdrawModal } = useDataCardViewModel();
