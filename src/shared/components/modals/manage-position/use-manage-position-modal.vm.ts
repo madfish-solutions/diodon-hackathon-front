@@ -1,7 +1,11 @@
 import { useCallback, ChangeEventHandler } from 'react';
 
+import BigNumber from 'bignumber.js';
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema } from 'yup';
+
+import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
+import { AMMS } from '@config/environment';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
@@ -23,6 +27,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
   const { data } = useAccountStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
+  const { clearingHouse } = useClearingHouse();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -54,7 +59,20 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     formik.setValues({ orderAmount: event.target.value }, true);
   };
 
+  const closePosition = useCallback(async () => {
+    await api.call(async () => {
+      if (!clearingHouse || !marketId) {
+        return;
+      }
+
+      const response = await clearingHouse.closePosition(AMMS[marketId], new BigNumber(1));
+      await response.wait(1);
+      modalsStore.close();
+    });
+  }, [api, clearingHouse, marketId, modalsStore]);
+
   return {
+    closePosition,
     value,
     handleChange,
     error,

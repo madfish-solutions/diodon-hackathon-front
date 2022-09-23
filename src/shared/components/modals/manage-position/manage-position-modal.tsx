@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
-  const { market, isOpen, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
+  const { closePosition, market, isOpen, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
     useManagePositionModalViewModel(marketId);
 
   if (!market) {
@@ -34,7 +34,9 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
         <p>({value})</p>
         <button type="submit">Reduce position</button>
         <button type="submit">Increase position</button>
-        <button type="submit">Fully close position</button>
+        <button type="button" onClick={closePosition}>
+          Fully close position
+        </button>
       </form>
     </Modal>
   );

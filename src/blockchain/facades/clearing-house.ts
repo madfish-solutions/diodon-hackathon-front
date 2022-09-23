@@ -1,10 +1,21 @@
 import { BigNumber } from 'bignumber.js';
-import { ethers, Transaction } from 'ethers';
+import { BigNumber as EthersBigNumber, ethers, Transaction } from 'ethers';
 
 import clearingHouseAbi from '@abis/clearing-house.json';
+import { ZERO_AMOUNT } from '@config/constants';
+import { valueToBigNumber } from '@shared/helpers/bignumber';
 
 import { CommonFacade } from './common';
 import { address, Side } from './types';
+
+interface RawPositionResponse {
+  size: [EthersBigNumber];
+  margin: [EthersBigNumber];
+  openNotional: [EthersBigNumber];
+  lastUpdatedCumulativePremiumFraction: [EthersBigNumber];
+  liquidityHistoryIndex: [EthersBigNumber];
+  blockNumber: [EthersBigNumber];
+}
 
 export class ClearingHouse extends CommonFacade {
   constructor(
@@ -16,19 +27,35 @@ export class ClearingHouse extends CommonFacade {
   }
 
   public async getLiquidationFeeRatio(): Promise<BigNumber> {
-    return await this.contract.liquidationFeeRatio();
+    return valueToBigNumber(await this.contract.liquidationFeeRatio());
   }
 
   public async getInitMarginRatio(): Promise<BigNumber> {
-    return await this.contract.initMarginRatio();
+    return valueToBigNumber(await this.contract.initMarginRatio());
   }
 
   public async getMaintenanceMarginRatio(): Promise<BigNumber> {
-    return this.contract.maintenanceMarginRatio();
+    return valueToBigNumber(await this.contract.maintenanceMarginRatio());
   }
 
   public async getPartialLiqudationRatio(): Promise<BigNumber> {
-    return await this.contract.partialLiqudationRatio();
+    return valueToBigNumber(await this.contract.partialLiqudationRatio());
+  }
+
+  public async getPosition(amm: address, trader: address) {
+    const rawResponse: RawPositionResponse = await this.contract.getPosition(amm, trader);
+    if (rawResponse.size[0].eq(ZERO_AMOUNT)) {
+      return null;
+    }
+
+    return {
+      size: valueToBigNumber(rawResponse.size[0]),
+      margin: valueToBigNumber(rawResponse.margin[0]),
+      openNotional: valueToBigNumber(rawResponse.openNotional[0]),
+      lastUpdatedCumulativePremiumFraction: valueToBigNumber(rawResponse.lastUpdatedCumulativePremiumFraction[0]),
+      liquidityHistoryIndex: valueToBigNumber(rawResponse.liquidityHistoryIndex[0]),
+      blockNumber: valueToBigNumber(rawResponse.blockNumber[0])
+    };
   }
 
   /**
@@ -68,7 +95,7 @@ export class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).addMargin(amm, [amount.toString()]);
+    return await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()]);
   }
 
   /**
@@ -82,7 +109,7 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 marginRatio)
    */
   public async removeMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()]);
+    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toFixed()]);
   }
 
   /**
@@ -125,7 +152,7 @@ export class ClearingHouse extends CommonFacade {
   ): Promise<Transaction> {
     return await this.contract
       .connect(this.signer)
-      .openPosition(amm, side, [quoteAssetAmount.toString()], [leverage.toString()], [baseAssetAmountLimit.toString()]);
+      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()]);
   }
 
   /**
@@ -147,8 +174,8 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 spotPrice,
    * @eventParam int256 fundingPayment
    */
-  public async closePosition(_amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).closePosition(_amm);
+  public async closePosition(_amm: address, quoteAssetAmountLimit: BigNumber) {
+    return await this.contract.connect(this.signer).closePosition(_amm, [quoteAssetAmountLimit.toFixed()]);
   }
 
   /**
@@ -222,7 +249,7 @@ export class ClearingHouse extends CommonFacade {
     trader: address,
     quoteAssetAmountLimit: BigNumber
   ): Promise<Transaction> {
-    return this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()]);
+    return this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toFixed()]);
   }
 
   /**
