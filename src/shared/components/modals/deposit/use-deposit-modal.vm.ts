@@ -39,6 +39,10 @@ export const useDepositModalViewModel = () => {
         const rawAmount = EthersBigNumber.from(toAtomic(new BigNumber(values.orderAmount), DDAI_DECIMALS).toFixed());
         const transactionsFunctions = await getApproves(rawAmount);
 
+        if (!clearingHouse) {
+          throw new Error('Clearing house is not defined');
+        }
+
         transactionsFunctions.push(async () =>
           clearingHouse.addMargin(AMMS[values.market], new BigNumber(rawAmount.toString()))
         );

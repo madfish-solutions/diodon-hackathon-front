@@ -1,7 +1,11 @@
 import { useCallback, ChangeEventHandler } from 'react';
 
+import BigNumber from 'bignumber.js';
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema } from 'yup';
+
+import { Side } from '@blockchain/facades/types';
+import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
@@ -23,6 +27,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const { data } = useAccountStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
+  const { openPosition } = useClearingHouse();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -32,11 +37,14 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
         // TODO: CONTRACT API CALL
         // eslint-disable-next-line no-console
         console.log('values', values);
+        if (values.orderAmount === '1231') {
+          await openPosition(Side.BUY, new BigNumber(1), new BigNumber(2), new BigNumber(3));
+        }
       });
 
       actions.setSubmitting(false);
     },
-    [api]
+    [api, openPosition]
   );
 
   const formik = useFormik<FormValues>({

@@ -46,7 +46,7 @@ export const DataCard: FC = observer(() => {
             <div>
               <ul>
                 {stepsToStart.map(step => (
-                  <li>{step}</li>
+                  <li key={step}>{step}</li>
                 ))}
               </ul>
             </div>

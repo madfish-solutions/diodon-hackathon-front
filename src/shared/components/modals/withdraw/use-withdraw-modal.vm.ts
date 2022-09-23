@@ -1,18 +1,17 @@
 import { ChangeEventHandler, useCallback } from 'react';
 
-import { TransactionResponse } from '@ethersproject/abstract-provider';
 import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber } from 'ethers';
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema, string as stringSchema } from 'yup';
 
 import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
-import { ClearingHouse } from '@blockchain/facades';
+import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
-import { AMMS, CLEARING_HOUSE_ADDRESS } from '@config/environment';
+import { AMMS } from '@config/environment';
 import { toAtomic } from '@shared/helpers/bignumber';
 
-import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
+import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
 import { ModalType } from '../../../store/modals.store';
 import { MarketId } from '../../../types';
 
@@ -28,32 +27,32 @@ export const useWithdrawModalViewModel = () => {
   const isOpen = modalsStore.isOpen(ModalType.Withdraw);
   const closeModalHandler = () => modalsStore.close();
   const { data } = useAccountStore();
-  const authStore = useAuthStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
+  const { clearingHouse, getApproves } = useClearingHouse();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
       actions.setSubmitting(true);
 
       await api.call(async () => {
-        const clearingHouse = new ClearingHouse(
-          authStore.connection!.provider,
-          CLEARING_HOUSE_ADDRESS,
-          authStore.connection!.signer
-        );
         const rawAmount = EthersBigNumber.from(toAtomic(new BigNumber(values.orderAmount), DDAI_DECIMALS).toFixed());
-        const transactionsFunctions: Array<() => Promise<TransactionResponse>> = [];
+        const transactionsFunctions = await getApproves(rawAmount);
+
+        if (!clearingHouse) {
+          throw new Error('Clearing house is not defined');
+        }
 
         transactionsFunctions.push(async () =>
           clearingHouse.removeMargin(AMMS[values.market], new BigNumber(rawAmount.toString()))
         );
+
         await executeTransactionsBatch(transactionsFunctions);
       });
 
       actions.setSubmitting(false);
     },
-    [api, authStore.connection]
+    [api, clearingHouse, getApproves]
   );
 
   const formik = useFormik<FormValues>({
