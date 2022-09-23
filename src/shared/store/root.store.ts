@@ -13,7 +13,7 @@ import { PositionsStore } from './positions.store';
 export class RootStore {
   authStore = new AuthStore(this);
   marketsStore = new MarketsStore();
-  accountStore = new AccountStore(this);
+  accountStore = new AccountStore();
   positionsStore = new PositionsStore();
 
   modalsStore = new ModalsStore();
