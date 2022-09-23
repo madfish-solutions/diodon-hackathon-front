@@ -11,7 +11,7 @@ export const Socials: FC = () => {
   return (
     <div className={styles.root}>
       {SocialLinksData.map(({ id, href, label, Icon }) => (
-        <Button key={id} href={href} external title={label} className={styles.button}>
+        <Button theme="secondary" key={id} href={href} external title={label} className={styles.button}>
           <Icon className={cx(styles.iconHover, styles[`icon-active-${label}`])} />
         </Button>
       ))}

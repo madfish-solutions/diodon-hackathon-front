@@ -4,9 +4,10 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  height: 100vh;
   padding-top: 80px;
-  background: #E2EEFF;
-  min-height: 100vh;
+  background: linear-gradient(56.03deg, #234f74, #4f9188);
+  background-size: 100% 100%;
 }
 
 .sidebar {
@@ -16,11 +17,12 @@
 .mainWrapper {
   flex: 1;
   padding: 0 80px;
-  background: linear-gradient(0.25turn, #234f74, #4f9188);
 }
 
 .mainWrapper {
   position: relative;
+  height: 100%;
+  background-size: 100% 100%;
 }
 
 .mainWrapper::before {

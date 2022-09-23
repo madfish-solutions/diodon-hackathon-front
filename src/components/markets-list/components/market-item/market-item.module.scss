@@ -1,21 +1,30 @@
 .item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin: 32px 0;
-  padding: 8px;
-  background: #FFFFFF;
   border-radius: 8px;
   flex: 1;
   font-size: 80%;
+  background: linear-gradient(269.07deg, rgba(222, 209, 93, 0.24) 0%, rgba(0, 209, 255, 0.08) 100%);
+  min-height: 100px;
 }
 
 .market {
   margin: 4px;
   padding: 4px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 64px;
 }
 
 .position {
-  border-top: 1px solid blue;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
   display: flex;
+  padding: 12px 64px;
+  align-items: center;
 }
 
 .manageButton,
@@ -29,4 +38,26 @@
   background: #003686;
   border-radius: 8px;
   color: #fff;
+  min-width: 80px;
+}
+
+.details,
+.detailsPosition {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.button,
+.closeButton {
+  min-width: 80px;
+}
+
+.closeButton {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 55px;
 }
