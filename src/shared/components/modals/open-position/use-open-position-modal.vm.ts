@@ -34,12 +34,9 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
       actions.setSubmitting(true);
 
       await api.call(async () => {
-        // TODO: CONTRACT API CALL
         // eslint-disable-next-line no-console
         console.log('values', values);
-        if (values.orderAmount === '1231') {
-          await openPosition(Side.BUY, new BigNumber(1), new BigNumber(2), new BigNumber(3));
-        }
+        await openPosition(Side.BUY, new BigNumber(values.orderAmount), new BigNumber(2), new BigNumber(3));
       });
 
       actions.setSubmitting(false);
