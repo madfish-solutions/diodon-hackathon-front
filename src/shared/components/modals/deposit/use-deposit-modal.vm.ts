@@ -26,8 +26,7 @@ export const useDepositModalViewModel = () => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.Deposit);
   const closeModalHandler = () => modalsStore.close();
-  const { data } = useAccountStore();
-  const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
+  const { dDAIBalance } = useAccountStore();
   const api = useApi();
   const { clearingHouse, getApproves } = useClearingHouse();
 
@@ -58,7 +57,7 @@ export const useDepositModalViewModel = () => {
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
       market: stringSchema().oneOf(['AAPL', 'AMD'], 'Available options: AAPL, AMD').required(),
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required()
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(dDAIBalance.toNumber()).required()
     }),
     initialValues: { orderAmount: '', market: MarketId.APPL },
     onSubmit: handleSubmit
@@ -81,7 +80,7 @@ export const useDepositModalViewModel = () => {
     handleChange,
     error,
     isOpen,
-    buyingPowerUsd,
+    dDAIBalance,
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
