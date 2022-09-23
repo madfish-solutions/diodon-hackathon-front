@@ -41,7 +41,7 @@ export const DataCard: FC = observer(() => {
             <div className={styles.firstSection}>
               <ul>
                 {stepsToStart.map(step => (
-                  <li>{step}</li>
+                  <li key={step}>{step}</li>
                 ))}
               </ul>
               <ConnectButton />

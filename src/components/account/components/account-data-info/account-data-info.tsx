@@ -6,6 +6,7 @@ import { getUsdView } from '@shared/helpers';
 import { useModalsStore } from '@shared/hooks';
 import { ModalType } from '@shared/store/modals.store';
 
+import { MarginSlider } from '../margin-slider';
 import styles from './account-data-info.module.scss';
 
 interface Props {
@@ -45,6 +46,7 @@ export const AccountDataInfo: FC<Props> = ({ data }) => {
         <dt>Leverage:</dt>
         <dd style={{ marginBottom: 8 }}>{data.leverage}</dd>
       </dl>
+      <MarginSlider value={data.marginRatioPercent} />
       <p>
         <Button onClick={handleDeposit}>Deposit</Button>
         <Button onClick={handleWithraw}>Withdraw</Button>

@@ -1,5 +1,5 @@
 export enum MarketId {
   AMD = 'AMD',
-  APPL = 'APPL',
+  AAPL = 'AAPL',
   SHOP = 'SHOP'
 }
