@@ -1,20 +1,25 @@
 import { FC } from 'react';
 
 import { CardCell } from '@components/card-cell';
+import { observer } from 'mobx-react-lite';
 import { Button, ConnectButton } from '@shared/components';
 import { DiodonLogo } from '@shared/svg';
 
 import styles from './data-card.module.scss';
+import { useDataCardViewModel } from './use-data-card.vm';
 
 const stepsToStart = ['Connect a wallet', 'Place a deposit', 'Trade'];
 
+
 const connected = false;
 
-export const DataCard: FC = () => {
+export const DataCard: FC = observer(() => {
+  const { isConnected, openDepositModal, openWithdrawModal } = useDataCardViewModel();
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.root}>
-        {connected ? (
+        {isConnected ? (
           <div className={styles.card}>
             <CardCell label="Net Collateral:">10000</CardCell>
             <div className={styles.additionalInfo}>
@@ -25,8 +30,12 @@ export const DataCard: FC = () => {
             </div>
             <div>Low risk: you’re going to get a good night’s sleep.</div>
             <div className={styles.buttons}>
-              <Button className={styles.button}>Deposit</Button>
-              <Button className={styles.button}>Withdraw</Button>
+              <Button className={styles.button} onClick={openDepositModal}>
+                Deposit
+              </Button>
+              <Button className={styles.button} onClick={openWithdrawModal}>
+                Withdraw
+              </Button>
             </div>
           </div>
         ) : (
@@ -48,4 +57,4 @@ export const DataCard: FC = () => {
       </div>
     </div>
   );
-};
+});

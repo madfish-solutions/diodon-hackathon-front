@@ -19,7 +19,10 @@ export const DepositModal: FC = observer(() => {
         <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
       </div>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="market" value={market} onChange={handleChange} />
+        <select name="market" value={market} onChange={handleChange}>
+          <option value="AMD">AMD</option>
+          <option value="AAPL">AAPL</option>
+        </select>
         <input type="number" name="orderAmount" value={value} onChange={handleChange} />
         <p style={{ color: 'red' }}>{error}</p>
         <button type="submit" disabled={isSubmitting}>

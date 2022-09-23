@@ -8,7 +8,7 @@ import { modalsStyle } from '../modals-style';
 import { useWithdrawModalViewModel } from './use-withdraw-modal.vm';
 
 export const WithdrawModal: FC = observer(() => {
-  const { isOpen, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
+  const { isOpen, isSubmitting, market, buyingPowerUsd, closeModalHandler, handleSubmit, error, value, handleChange } =
     useWithdrawModalViewModel();
 
   return (
@@ -19,9 +19,15 @@ export const WithdrawModal: FC = observer(() => {
         <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
       </div>
       <form onSubmit={handleSubmit}>
+        <select name="market" value={market} onChange={handleChange}>
+          <option value="AMD">AMD</option>
+          <option value="AAPL">AAPL</option>
+        </select>
         <input type="number" name="orderAmount" value={value} onChange={handleChange} />
         <p style={{ color: 'red' }}>{error}</p>
-        <button type="submit">Open position ({value})</button>
+        <button type="submit" disabled={isSubmitting}>
+          Withdraw ({value} dDAI)
+        </button>
       </form>
     </Modal>
   );
