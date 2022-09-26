@@ -190,7 +190,7 @@ export class ClearingHouse extends CommonFacade {
    */
   public async closePosition(_amm: address, _quoteAssetAmountLimit: BigNumber) {
     return await (
-      await this.contract.connect(this.signer).closePosition(_amm, _quoteAssetAmountLimit.toFixed())
+      await this.contract.connect(this.signer).closePosition(_amm, [_quoteAssetAmountLimit.toFixed()])
     ).wait();
   }
 
