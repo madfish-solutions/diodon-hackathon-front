@@ -102,7 +102,7 @@ export class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()]);
+    return await (await this.contract.connect(this.signer).addMargin(amm, [amount.toString()])).wait();
   }
 
   /**
@@ -116,7 +116,7 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 marginRatio)
    */
   public async removeMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toFixed()]);
+    return await this.contract.methods.connect(this.signer).removeMargin(amm, [amount.toString()]);
   }
 
   /**
@@ -124,7 +124,7 @@ export class ClearingHouse extends CommonFacade {
    * @param amm Pool address // apple/usd
    */
   public async settlePosition(amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).settlePosition(amm);
+    return await (await this.contract.connect(this.signer).settlePosition(amm)).wait();
   }
 
   /**
@@ -159,9 +159,14 @@ export class ClearingHouse extends CommonFacade {
   ) {
     return await this.contract
       .connect(this.signer)
-      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()], {
-        from: await this.signer.getAddress()
-      });
+      .openPosition(
+        amm,
+        side,
+        [quoteAssetAmount.toString()],
+        [leverage.toString()],
+        [baseAssetAmountLimit.toString()],
+        { from: await this.signer.getAddress() }
+      );
   }
 
   /**
@@ -183,8 +188,10 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 spotPrice,
    * @eventParam int256 fundingPayment
    */
-  public async closePosition(_amm: address, quoteAssetAmountLimit: BigNumber) {
-    return await this.contract.connect(this.signer).closePosition(_amm, [quoteAssetAmountLimit.toFixed()]);
+  public async closePosition(_amm: address, _quoteAssetAmountLimit: BigNumber) {
+    return await (
+      await this.contract.connect(this.signer).closePosition(_amm, _quoteAssetAmountLimit.toFixed())
+    ).wait();
   }
 
   /**
@@ -219,7 +226,7 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam int256 fundingPayment
    */
   public async liquidate(amm: address, trader: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).liquidate(amm, trader);
+    return await (await this.contract.connect(this.signer).liquidate(amm, trader)).wait();
   }
 
   /**
@@ -258,19 +265,27 @@ export class ClearingHouse extends CommonFacade {
     trader: address,
     quoteAssetAmountLimit: BigNumber
   ): Promise<Transaction> {
-    return this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toFixed()]);
+    return await (
+      await this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()])
+    ).wait();
   }
 
   /**
-   * @notice if funding rate is positive, traders with long position pay traders with short position and vice versa.
-   * @param amm IAmm address
+   * @notice update funding rate
+   * @dev only allow to update while reaching `nextFundingTime`
+   *
+   * @event FundingRateUpdated
+   * @eventParam int256 rate
+   * @eventParam uint256 underlyingPrice
    */
-  public async fundingPayment(amm: address): Promise<Transaction> {
-    return await this.contract.connect(this.signer).fundingPayment(amm);
+  public async updateFundingRate() {
+    return await (await this.contract.connect(this.signer).settleFunding()).wait();
   }
 
   //web3.utils.asciiToHex(str)
   public async addAggregator(key: string, addrr: address) {
-    return await this.contract.connect(this.signer).addAggregator(ethers.utils.formatBytes32String(key), addrr);
+    return await (
+      await this.contract.connect(this.signer).addAggregator(ethers.utils.formatBytes32String(key), addrr)
+    ).wait();
   }
 }
