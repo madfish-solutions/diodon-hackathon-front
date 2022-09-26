@@ -9,6 +9,7 @@ import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
 import { AMMS } from '@config/environment';
+import { getFormikError } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
@@ -20,6 +21,7 @@ export interface FormValues {
   market: MarketId;
 }
 
+const FORM_FIELDS = ['orderAmount', 'market'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 
 export const useDepositModalViewModel = () => {
@@ -65,10 +67,7 @@ export const useDepositModalViewModel = () => {
 
   const value = formik.values.orderAmount;
   const market = formik.values.market;
-  const error =
-    (formik.touched.orderAmount && formik.errors.orderAmount) ||
-    (formik.touched.market && formik.errors.market) ||
-    null;
+  const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
 
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);

@@ -9,12 +9,8 @@ import { CommonFacade } from './common';
 import { address, Side } from './types';
 
 interface RawPositionResponse {
-  size: [EthersBigNumber];
-  margin: [EthersBigNumber];
-  openNotional: [EthersBigNumber];
-  lastUpdatedCumulativePremiumFraction: [EthersBigNumber];
-  liquidityHistoryIndex: [EthersBigNumber];
-  blockNumber: [EthersBigNumber];
+  [i: number]: EthersBigNumber | [EthersBigNumber];
+  length: number;
 }
 
 export class ClearingHouse extends CommonFacade {
@@ -44,17 +40,28 @@ export class ClearingHouse extends CommonFacade {
 
   public async getPosition(amm: address, trader: address) {
     const rawResponse: RawPositionResponse = await this.contract.getPosition(amm, trader);
-    if (rawResponse.size[0].eq(ZERO_AMOUNT)) {
+
+    const [
+      rawSize,
+      rawMargin,
+      rawOpenNotional,
+      rawLastUpdatedCumulativePremiumFraction,
+      rawLiquidityHistoryIndex,
+      rawBlockNumber
+    ] = Array.from(rawResponse);
+    const size = valueToBigNumber(rawSize);
+
+    if (size.eq(ZERO_AMOUNT)) {
       return null;
     }
 
     return {
-      size: valueToBigNumber(rawResponse.size[0]),
-      margin: valueToBigNumber(rawResponse.margin[0]),
-      openNotional: valueToBigNumber(rawResponse.openNotional[0]),
-      lastUpdatedCumulativePremiumFraction: valueToBigNumber(rawResponse.lastUpdatedCumulativePremiumFraction[0]),
-      liquidityHistoryIndex: valueToBigNumber(rawResponse.liquidityHistoryIndex[0]),
-      blockNumber: valueToBigNumber(rawResponse.blockNumber[0])
+      size,
+      margin: valueToBigNumber(rawMargin),
+      openNotional: valueToBigNumber(rawOpenNotional),
+      lastUpdatedCumulativePremiumFraction: valueToBigNumber(rawLastUpdatedCumulativePremiumFraction),
+      liquidityHistoryIndex: valueToBigNumber(rawLiquidityHistoryIndex),
+      blockNumber: valueToBigNumber(rawBlockNumber)
     };
   }
 
@@ -149,10 +156,12 @@ export class ClearingHouse extends CommonFacade {
     quoteAssetAmount: BigNumber,
     leverage: BigNumber,
     baseAssetAmountLimit: BigNumber
-  ): Promise<Transaction> {
+  ) {
     return await this.contract
       .connect(this.signer)
-      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()]);
+      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()], {
+        from: await this.signer.getAddress()
+      });
   }
 
   /**

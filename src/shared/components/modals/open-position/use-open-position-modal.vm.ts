@@ -1,11 +1,16 @@
 import { ChangeEventHandler, useCallback } from 'react';
 
 import BigNumber from 'bignumber.js';
+import { BigNumber as EthersBigNumber } from 'ethers';
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema } from 'yup';
 
+import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { Side } from '@blockchain/facades/types';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
+import { DDAI_DECIMALS } from '@config/constants';
+import { getFormikError } from '@shared/helpers';
+import { toAtomic } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
@@ -14,8 +19,11 @@ import { MarketId, Undefined } from '../../../types';
 
 export interface FormValues {
   orderAmount: string;
+  positionType: Side;
+  leverage: number;
 }
 
+const FORM_FIELDS = ['orderAmount', 'positionType', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 
 export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
@@ -27,52 +35,71 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const { data } = useAccountStore();
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
-  const { openPosition } = useClearingHouse();
+  const { openPosition, getApproves } = useClearingHouse();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
       actions.setSubmitting(true);
 
       await api.call(async () => {
-        await openPosition(
-          MarketId.AMD,
-          Side.BUY,
-          new BigNumber(values.orderAmount),
-          new BigNumber(2),
-          new BigNumber(0) // Min received
+        const rawMargin = toAtomic(new BigNumber(values.orderAmount), DDAI_DECIMALS);
+        const transactionsFunctions = await getApproves(EthersBigNumber.from(rawMargin.toFixed()));
+
+        transactionsFunctions.push(
+          async () =>
+            (await openPosition(
+              marketId!,
+              Number(values.positionType),
+              rawMargin,
+              new BigNumber(values.leverage),
+              new BigNumber(0) // TODO: implement parameter calculation with slippage
+            ))!
         );
+
+        await executeTransactionsBatch(transactionsFunctions);
       });
 
       actions.setSubmitting(false);
     },
-    [api, openPosition]
+    [api, openPosition, marketId, getApproves]
   );
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required()
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required(),
+      leverage: numberSchema().min(2).max(10).integer().required(),
+      positionType: numberSchema().oneOf([Side.BUY, Side.SELL]).required()
     }),
-    initialValues: { orderAmount: '' },
+    initialValues: { orderAmount: '', positionType: Side.BUY, leverage: 2 },
     onSubmit: handleSubmit
   });
 
   const value = formik.values.orderAmount;
-  const error = formik.touched.orderAmount ? formik.errors.orderAmount : null;
+  const positionType = formik.values.positionType;
+  const leverage = formik.values.leverage;
+  const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = event => {
-    formik.setValues({ orderAmount: event.target.value }, true);
+  const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
+    formik.setFieldValue(event.target.name, event.target.value, true);
+  };
+
+  const handleLeverageChange = (newValue: number) => {
+    formik.setFieldValue('leverage', newValue, true);
   };
 
   return {
     value,
     handleChange,
     error,
+    leverage,
+    handleLeverageChange,
     market,
     isOpen,
     buyingPowerUsd,
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
+    positionType,
     values: formik.values
   };
 };

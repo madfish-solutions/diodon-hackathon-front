@@ -1,0 +1,49 @@
+.root {
+  width: 100%;
+  height: 37px;
+  position: relative;
+}
+
+.slider {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb {
+  background: white;
+  width: 8px;
+  height: 20px;
+  border-radius: 4px;
+  top: 0px;
+}
+
+.track {
+  background: linear-gradient(270deg, #FFD700 0%, #00CCFF 100%);
+  height: 12px;
+  border-radius: 6px;
+  width: 100%;
+  top: 4px;
+}
+
+.mark {
+  margin-left: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 100%;
+  background: rgba(255, 255, 255, 0.64);
+  bottom: 5px;
+}
+
+.root > .edgeMark {
+  position: absolute;
+  bottom: 0;
+  font-size: 14px;
+  line-height: 1.21;
+  color:rgba(255, 255, 255, 0.64);
+  &:first-child {
+    left: 0;
+  }
+  &:last-child {
+    right: 0;
+  }
+}
