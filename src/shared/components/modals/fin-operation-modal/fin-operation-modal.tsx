@@ -4,8 +4,7 @@ import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
 import { Cell } from '@components/card-cell';
-import { Button } from '@shared/components';
-import { OperationSwitcher, Tab } from '@shared/components/opeartion-switcher';
+import { Button, OperationSwitcher, Tab } from '@shared/components';
 import { getPercentView, getUsdView, isEqual } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 
@@ -21,7 +20,7 @@ export const FinOperationModal: FC = observer(() => {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
       <h2 className={styles.heading}>
-        <CloseIcon className={styles.closeButton} />
+        <CloseIcon onClick={closeModalHandler} className={styles.closeButton} />
         {operation} <span className={styles.market}>{market}</span>
       </h2>
       <OperationSwitcher operation={operation} onClick={setOperation} />

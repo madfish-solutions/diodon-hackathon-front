@@ -9,7 +9,7 @@ import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
 import { AMMS } from '@config/environment';
-import { Tab } from '@shared/components/opeartion-switcher';
+import { Tab } from '@shared/components';
 import { getFormikError, isEqual } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
