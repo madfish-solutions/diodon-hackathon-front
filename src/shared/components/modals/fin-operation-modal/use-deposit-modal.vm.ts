@@ -13,7 +13,7 @@ import { Tab } from '@shared/components';
 import { getFormikError, isEqual } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
-import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
+import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
 import { ModalType } from '../../../store/modals.store';
 import { MarketId } from '../../../types';
 
@@ -29,7 +29,9 @@ export const useDepositModalViewModel = (operation: Tab) => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.Deposit);
   const closeModalHandler = () => modalsStore.close();
-  const { dDAIBalance, data } = useAccountStore();
+  const accountStore = useAccountStore();
+  const { address } = useAuthStore();
+  const { dDAIBalance, data } = accountStore;
   const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
   const { clearingHouse, getApproves } = useClearingHouse();
@@ -53,11 +55,12 @@ export const useDepositModalViewModel = (operation: Tab) => {
         );
 
         await executeTransactionsBatch(transactionsFunctions);
+        await accountStore.loadDDAIBalance(address!);
       });
 
       actions.setSubmitting(false);
     },
-    [api, getApproves, clearingHouse]
+    [api, getApproves, clearingHouse, address, accountStore]
   );
 
   const formik = useFormik<FormValues>({

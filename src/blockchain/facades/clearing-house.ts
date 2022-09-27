@@ -102,7 +102,7 @@ export class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await (await this.contract.connect(this.signer).addMargin(amm, [amount.toString()])).wait();
+    return await this.contract.connect(this.signer).addMargin(amm, [amount.toString()]);
   }
 
   /**
