@@ -60,6 +60,23 @@
   background: url('../../../../../public/svg/dollar.svg') no-repeat scroll 15px 10px;
 }
 
+.amount {
+  margin-bottom: 8px;
+}
+
+.select {
+  background-image: none;
+  padding-left: 8px;
+}
+
+.option {
+  color: white;
+  background-color: rgba(0, 43, 91);
+  font-size: 18px;
+  font-weight: 700;
+  outline: none;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
