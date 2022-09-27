@@ -1,5 +1,5 @@
 .root {
-  max-width: 256px;
+  width: 256px;
   background: rgba(255, 255, 255, 0.32);
   border: none;
   display: flex;
@@ -10,7 +10,6 @@
   background: #003686;
   border-radius: 8px;
   color: #fff;
-  margin: 2px;
 }
 
 .root[disabled] {
@@ -19,15 +18,15 @@
 }
 
 .primary {
-  min-width: 165px;
-  min-height: 32px;
+  width: 165px;
+  height: 32px;
 
   background: linear-gradient(268.24deg, #00B4ED -0.23%, #236EE0 100%);
   border-radius: 8px;
 }
 
 .secondary {
-  min-width: fit-content;
+  width: fit-content;
   background: transparent;
   padding: 5px 16px;
 }

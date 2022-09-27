@@ -9,7 +9,7 @@ interface Props {
   className?: string;
 }
 
-export const CardCell: CFC<Props> = ({ label, className, children }) => {
+export const Cell: CFC<Props> = ({ label, className, children }) => {
   return (
     <div className={cx(styles.root, className)}>
       <div className={styles.label}>{label}:</div>

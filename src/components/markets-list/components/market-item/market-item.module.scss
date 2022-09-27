@@ -38,7 +38,7 @@
   background: #003686;
   border-radius: 8px;
   color: #fff;
-  min-width: 80px;
+  width: fit-content;
 }
 
 .details,
@@ -60,4 +60,8 @@
   align-items: flex-start;
   justify-content: flex-end;
   height: 55px;
+}
+
+.positionTypeWrapper {
+  width: 155px;
 }

@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import { CardCell } from '@components/card-cell';
+import { Cell } from '@components/card-cell';
 import { Button, ConnectButton } from '@shared/components';
 import { DiodonLogo } from '@shared/svg';
 
@@ -19,7 +19,7 @@ export const DataCard: FC = observer(() => {
       <div className={styles.root}>
         {isConnected ? (
           <div className={styles.card}>
-            <CardCell label="Net Collateral:">10000</CardCell>
+            <Cell label="Net Collateral:">10000</Cell>
             <div className={styles.additionalInfo}>
               <div>Free collateral: $ 4,200.17</div>
               <div>Opened positions: $ 6,743.12</div>
