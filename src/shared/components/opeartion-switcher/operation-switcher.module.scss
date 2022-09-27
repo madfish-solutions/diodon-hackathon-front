@@ -1,0 +1,24 @@
+.root {
+  display: flex;
+
+  width: 228px;
+  height: 40px;
+
+  margin-bottom: 32px;
+  padding: 4px;
+
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.tab {
+  width: 114px;
+  padding: 5px 16px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.active {
+  border: 1px solid #FFD700;;
+  color: #FFD700;
+}

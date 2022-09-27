@@ -9,7 +9,8 @@ import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
 import { AMMS } from '@config/environment';
-import { getFormikError } from '@shared/helpers';
+import { Tab } from '@shared/components/opeartion-switcher';
+import { getFormikError, isEqual } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
@@ -24,13 +25,16 @@ export interface FormValues {
 const FORM_FIELDS = ['orderAmount', 'market'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 
-export const useDepositModalViewModel = () => {
+export const useDepositModalViewModel = (operation: Tab) => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.Deposit);
   const closeModalHandler = () => modalsStore.close();
-  const { dDAIBalance } = useAccountStore();
+  const { dDAIBalance, data } = useAccountStore();
+  const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
   const api = useApi();
   const { clearingHouse, getApproves } = useClearingHouse();
+
+  const maxValue = isEqual(Tab.DEPOSIT, operation) ? dDAIBalance.toNumber() : buyingPowerUsd;
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -59,7 +63,7 @@ export const useDepositModalViewModel = () => {
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
       market: stringSchema().oneOf([MarketId.AAPL, MarketId.AMD], 'Available options: AAPL, AMD').required(),
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(dDAIBalance.toNumber()).required()
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required()
     }),
     initialValues: { orderAmount: '', market: MarketId.AAPL },
     onSubmit: handleSubmit

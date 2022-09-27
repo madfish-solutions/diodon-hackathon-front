@@ -1,0 +1,88 @@
+.heading {
+  position: relative;
+  margin: 0 0 24px 0;
+  color: white;
+}
+
+.market {
+  color: #FFD700;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+
+  margin-bottom: 8px;
+
+  color: rgba(255, 255, 255, 0.64)
+}
+
+.additionalInfo {
+  display: flex;
+
+  margin: 32px 0 40px;
+
+  & > :nth-child(2) {
+    margin-left: 50px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+
+    height: 1px;
+
+    right: 0;
+    left: 0;
+    bottom: 105px;
+
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+}
+
+.input {
+  position: relative;
+  width: 100%;
+  background-color: rgba(0, 43, 91, 0.32);
+  border-radius: 8px;
+  border: 1px solid white;
+  height: 40px;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  padding-left: 30px;
+  outline: none;
+  background: url('../../../../../public/svg/dollar.svg') no-repeat scroll 15px 10px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  padding: 0;
+
+  cursor: pointer;
+}
+
+.opButton {
+  width: 120px;
+  height: 32px;
+}

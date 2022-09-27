@@ -1,15 +1,10 @@
 .root {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  padding-top: 80px;
-  background: linear-gradient(56.03deg, #234f74, #4f9188);
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+
 }
 
 .sidebar {

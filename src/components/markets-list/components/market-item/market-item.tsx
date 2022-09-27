@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { MarketData } from '@api/markets';
-import { CardCell } from '@components/card-cell';
+import { Cell } from '@components/card-cell';
 import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
@@ -23,25 +23,25 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
   return (
     <div className={styles.item}>
       <div className={styles.market}>
-        <div style={{ textAlign: 'center', marginRight: 8 }}>
+        <div style={{ textAlign: 'start', marginRight: 8, minWidth: '110px' }}>
           <MarketIcon marketId={market.marketId} width={48} height={48} />
           <div>
             <b>{market.marketId}</b>
           </div>
         </div>
         <div className={styles.details}>
-          <CardCell label="Market Price" className={styles.cardCell}>
+          <Cell label="Market Price" className={styles.Cell}>
             {getUsdView(market.marketPriceUsd)}
-          </CardCell>
-          <CardCell label="Index Price" className={styles.cardCell}>
+          </Cell>
+          <Cell label="Index Price" className={styles.Cell}>
             {getUsdView(market.indexPriceUsd)}
-          </CardCell>
-          <CardCell label="Funding rate 8h" className={styles.cardCell}>
+          </Cell>
+          <Cell label="Funding rate 8h" className={styles.Cell}>
             {getPercentView(market.fundingRateChange8Percent)}
-          </CardCell>
-          <CardCell label="Volume 24h" className={styles.cardCell}>
+          </Cell>
+          <Cell label="Volume 24h" className={styles.Cell}>
             {getUsdView(market.volume24Usd)}
-          </CardCell>
+          </Cell>
         </div>
         {!position ? (
           <div className={styles.button}>
@@ -59,20 +59,22 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
       </div>
       {position ? (
         <div className={styles.position}>
-          <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
+          <div className={styles.positionTypeWrapper}>
+            <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
+          </div>
           <div className={styles.detailsPosition}>
-            <CardCell label="Amount" className={styles.cardCell}>
+            <Cell label="Amount" className={styles.Cell}>
               {getTokensView(position.amountTokens)}
-            </CardCell>
-            <CardCell label="Profit / Loss" className={styles.cardCell}>
+            </Cell>
+            <Cell label="Profit / Loss" className={styles.Cell}>
               {getPercentView(position.pnlPercent)}
-            </CardCell>
-            <CardCell label="Avg Open Price" className={styles.cardCell}>
+            </Cell>
+            <Cell label="Avg Open Price" className={styles.Cell}>
               {getUsdView(position.avgOpenPriceUsd)}
-            </CardCell>
-            <CardCell label="Liquidity 1 Price" className={styles.cardCell}>
+            </Cell>
+            <Cell label="Liquidity 1 Price" className={styles.Cell}>
               {getUsdView(position.liqPrice1Usd)}
-            </CardCell>
+            </Cell>
           </div>
           <div className={styles.button}>
             <Button onClick={manageHandler} className={styles.manageButton}>
