@@ -4,7 +4,7 @@ import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { BigNumber } from 'bignumber.js';
 
-import { ZERO_AMOUNT } from '@config/constants';
+import { FALLBACK_PROVIDER, ZERO_AMOUNT } from '@config/constants';
 import { AMMS, CLEARING_HOUSE_ADDRESS, DDAI_ADDRESS } from '@config/environment';
 import { useAuthStore } from '@shared/hooks';
 import { MarketId } from '@shared/types';
@@ -33,10 +33,7 @@ export const useClearingHouse = () => {
   );
 
   const dDaiViewContract = useMemo(
-    () =>
-      authStore && authStore.connection
-        ? new ERC20TokenContractWrapper(DDAI_ADDRESS, authStore.connection.provider)
-        : null,
+    () => new ERC20TokenContractWrapper(DDAI_ADDRESS, authStore.connection?.provider ?? FALLBACK_PROVIDER),
     [authStore]
   );
 
