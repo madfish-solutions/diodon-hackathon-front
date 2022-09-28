@@ -17,7 +17,7 @@ export const useGiveMeMoneyButtonViewModel = () => {
     }
     setIsLoading(true);
     try {
-      const resp = await axios.post('https://diodon-faucet.fly.dev/api/v1/', {}, { headers: { PKH: address } });
+      const resp = await axios.post('http://localhost:3000/api/v2/', {}, { headers: { PKH: address } });
       if (resp.status !== 200) {
         throw new Error(resp.statusText);
       }
