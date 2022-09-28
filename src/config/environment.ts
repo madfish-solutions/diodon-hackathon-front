@@ -9,6 +9,7 @@ export const BLOCK_EXPLORER_URL = process.env.REACT_APP_BLOCK_EXPLORER_URL ?? 'h
 export const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME ?? 'Klaytn - Baobab Testnet';
 export const DDAI_ADDRESS = process.env.REACT_APP_DDAI_ADDRESS!;
 export const CLEARING_HOUSE_ADDRESS = process.env.REACT_APP_CLEARING_HOUSE_ADDRESS!;
+export const CLEARING_HOUSE_VIEWER_ADDRESS = process.env.REACT_APP_CLEARING_HOUSE_VIEW_ADDRESS!;
 
 export const AMMS = {
   [MarketId.AAPL]: '0x21f98596D0bb9da7fFcA2a3e29d47FcEA858e79B',

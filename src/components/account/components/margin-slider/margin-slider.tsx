@@ -24,8 +24,6 @@ const SliderThumb: React.FC<SliderThumbProps> = ({ props, originalValue }) => {
       ? `calc(${leftFromProps} - ${shift}px)`
       : leftFromProps - shift
     : undefined;
-  // eslint-disable-next-line no-console
-  console.log('x1', leftFromProps);
 
   return (
     <>

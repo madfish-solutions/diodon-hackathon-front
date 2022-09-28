@@ -65,8 +65,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
         return;
       }
 
-      const response = await clearingHouse.closePosition(AMMS[marketId], new BigNumber(1));
-      await response.wait(1);
+      await clearingHouse.closePosition(AMMS[marketId], new BigNumber(1));
       modalsStore.close();
     });
   }, [api, clearingHouse, marketId, modalsStore]);
