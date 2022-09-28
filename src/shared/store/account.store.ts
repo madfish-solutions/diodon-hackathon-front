@@ -10,6 +10,7 @@ import { toReal } from '@shared/helpers/bignumber';
 
 import { AccountData } from '../../api';
 import { Nullable } from '../types';
+import { RootStore } from './root.store';
 
 const DEFAULT_BALANCE = new BigNumber(ZERO_AMOUNT);
 
@@ -18,7 +19,7 @@ export class AccountStore {
   dDAIBalance = DEFAULT_BALANCE;
   freeCollateral = DEFAULT_BALANCE;
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this, {
       data: observable,
       dDAIBalance: observable,
@@ -47,8 +48,12 @@ export class AccountStore {
     this.setData(data);
   }
 
+  private getProvider() {
+    return this.rootStore.authStore.connection?.provider ?? FALLBACK_PROVIDER;
+  }
+
   async loadDDAIBalance(accountPkh: string) {
-    const dDaiContract = new ERC20TokenContractWrapper(DDAI_ADDRESS, FALLBACK_PROVIDER);
+    const dDaiContract = new ERC20TokenContractWrapper(DDAI_ADDRESS, this.getProvider());
     const rawBalance = await dDaiContract.methods.balanceOf(accountPkh);
     this.setDDAIBalance(toReal(new BigNumber(rawBalance.toString()), DDAI_DECIMALS));
   }
@@ -56,7 +61,7 @@ export class AccountStore {
   async loadFreeCollateral(amm: string, accountPkh: string) {
     const clearingHouseViewerContract = new ClearingHouseViewerContractWrapper(
       CLEARING_HOUSE_VIEWER_ADDRESS,
-      FALLBACK_PROVIDER
+      this.getProvider()
     );
     const rawFreeCollateral = await clearingHouseViewerContract.methods.getFreeCollateral(amm, accountPkh);
     this.setFreeCollateral(toReal(new BigNumber(rawFreeCollateral.toString()), DDAI_DECIMALS));
