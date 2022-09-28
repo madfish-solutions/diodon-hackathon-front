@@ -4,9 +4,8 @@ import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
-import { Cell } from '@components/card-cell';
 import { Button, OperationSwitcher, Tab } from '@shared/components';
-import { getPercentView, getUsdView, isEqual } from '@shared/helpers';
+import { getUsdView } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 import { MarketId } from '@shared/types';
 
@@ -57,12 +56,7 @@ export const FinOperationModal: FC<FinOperationModalProps> = observer(({ initial
           </option>
         </select>
         <p style={{ color: 'red' }}>{error}</p>
-        <div className={styles.additionalInfo}>
-          <Cell label={`Min. ${isEqual(Tab.DEPOSIT, operation) ? 'receive' : 'withdraw'}`}>{getUsdView(123)}</Cell>
-          <Cell label="Current price">{getUsdView(123)}</Cell>
-        </div>
         <div className={styles.footer}>
-          <Cell label="Slippage">{getPercentView(0.23)}</Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
             {operation}
           </Button>
