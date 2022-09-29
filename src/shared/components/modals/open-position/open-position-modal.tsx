@@ -1,16 +1,16 @@
 import { FC } from 'react';
 
-import { Cell } from '@components/card-cell';
 import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
 import { Side } from '@blockchain/facades/types';
+import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
 import { Switcher } from '@shared/components/switcher';
 import { CloseIcon } from '@shared/svg';
 
-import { formatValueBalance, GetPercentView, GetUsdView } from '../../../helpers';
+import { formatValueBalance, PercentView, GetUsdView } from '../../../helpers';
 import { MarketId, Undefined } from '../../../types';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
@@ -88,7 +88,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         </div>
         <div className={styles.footer}>
           <Cell label="Slippage">
-            <GetPercentView amount={0.23} />
+            <PercentView amount={0.23} />
           </Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
             Open {positionTypeName} position

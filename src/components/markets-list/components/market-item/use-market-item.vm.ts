@@ -22,6 +22,10 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
     modalsStore.open(ModalType.OpenPosition, { marketId });
   };
 
+  const manageHandler = () => {
+    modalsStore.open(ModalType.ManagePosition, { marketId });
+  };
+
   const closeHandler = useCallback(async () => {
     try {
       setPositionBeingClosed(true);
@@ -38,5 +42,5 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
     }
   }, [api, clearingHouse, marketId, modalsStore]);
 
-  return { position, positionBeingClosed, isConnected, openHandler, closeHandler };
+  return { position, positionBeingClosed, manageHandler, isConnected, openHandler, closeHandler };
 };
