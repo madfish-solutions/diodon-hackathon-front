@@ -34,11 +34,12 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const marketsStore = useMarketsStore();
   const market = marketId ? marketsStore.getMarket(marketId) : null;
   const accountStore = useAccountStore();
-  const { freeCollateral } = accountStore;
+  const { dDAIBalance } = accountStore;
   const { address } = useAuthStore();
   const api = useApi();
   const { openPosition, getApproves } = useClearingHouse();
-  const maxValue = freeCollateral.decimalPlaces(2).toNumber();
+
+  const maxValue = dDAIBalance.decimalPlaces(2).toNumber();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -70,7 +71,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).required(),
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required(),
       leverage: numberSchema().min(2).max(10).integer().required(),
       positionType: numberSchema().oneOf([Side.BUY, Side.SELL]).required()
     }),
@@ -98,7 +99,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
   useEffect(() => {
     if (address) {
-      api.call(async () => accountStore.loadFreeCollateral(AMMS[marketId!], address));
+      api.call(async () => accountStore.loadDDAIBalance(address));
     }
   }, [accountStore, api, address, marketId]);
 

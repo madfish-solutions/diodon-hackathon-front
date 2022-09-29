@@ -102,7 +102,7 @@ export class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).addMargin(amm, [amount.toString()]);
+    return await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()]);
   }
 
   /**
@@ -116,7 +116,7 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 marginRatio)
    */
   public async removeMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()]);
+    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toFixed()]);
   }
 
   /**
@@ -159,14 +159,9 @@ export class ClearingHouse extends CommonFacade {
   ) {
     return await this.contract
       .connect(this.signer)
-      .openPosition(
-        amm,
-        side,
-        [quoteAssetAmount.toString()],
-        [leverage.toString()],
-        [baseAssetAmountLimit.toString()],
-        { from: await this.signer.getAddress() }
-      );
+      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()], {
+        from: await this.signer.getAddress()
+      });
   }
 
   /**
@@ -266,7 +261,7 @@ export class ClearingHouse extends CommonFacade {
     quoteAssetAmountLimit: BigNumber
   ): Promise<Transaction> {
     return await (
-      await this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toString()])
+      await this.contract.connect(this.signer).liquidateWithSlippage(amm, trader, [quoteAssetAmountLimit.toFixed()])
     ).wait();
   }
 
