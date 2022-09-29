@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 
 import { Side } from '@blockchain/facades/types';
 
-import { getUsdView } from '../../../helpers';
+import { GetUsdView } from '../../../helpers';
 import { MarketId, Undefined } from '../../../types';
 import { modalsStyle } from '../modals-style';
 import { LeverageSlider } from './components';
@@ -39,8 +39,12 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
       <h2>Open Position {marketId}</h2>
       <button onClick={closeModalHandler}>close</button>
       <div>
-        <p>Price: {getUsdView(market.marketPriceUsd)}</p>
-        <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
+        <p>
+          Price: <GetUsdView amount={market.marketPriceUsd} />
+        </p>
+        <p>
+          Buying Power: <GetUsdView amount={buyingPowerUsd} />
+        </p>
       </div>
       <form onSubmit={handleSubmit}>
         <select name="positionType" value={positionType} onChange={handleChange}>

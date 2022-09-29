@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 
 import { Cell } from '@components/cell';
 import { Button, OperationSwitcher, Tab } from '@shared/components';
-import { PercentView, getUsdView, isEqual } from '@shared/helpers';
+import { PercentView, isEqual, GetUsdView } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 
 import styles from './fin-operation-modal.module.scss';
@@ -27,13 +27,19 @@ export const FinOperationModal: FC = observer(() => {
       <form onSubmit={handleSubmit}>
         <div className={styles.info}>
           <div>Amount</div>
-          <div>Balance: {getUsdView(dDAIBalance)}</div>
+          <div>
+            Balance: <GetUsdView amount={dDAIBalance} />
+          </div>
         </div>
         <input type="number" name="orderAmount" className={styles.input} value={value} onChange={handleChange} />
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
-          <Cell label={`Min. ${isEqual(Tab.DEPOSIT, operation) ? 'receive' : 'withdraw'}`}>{getUsdView(123)}</Cell>
-          <Cell label="Current price">{getUsdView(123)}</Cell>
+          <Cell label={`Min. ${isEqual(Tab.DEPOSIT, operation) ? 'receive' : 'withdraw'}`}>
+            <GetUsdView amount={123} />
+          </Cell>
+          <Cell label="Current price">
+            <GetUsdView amount={123} />
+          </Cell>
         </div>
         <div className={styles.footer}>
           <Cell label="Slippage">

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
-import { getUsdView } from '../../../helpers';
+import { GetUsdView } from '../../../helpers';
 import { modalsStyle } from '../modals-style';
 import { useWithdrawModalViewModel } from './use-withdraw-modal.vm';
 
@@ -16,7 +16,9 @@ export const WithdrawModal: FC = observer(() => {
       <h2>Withraw</h2>
       <button onClick={closeModalHandler}>close</button>
       <div>
-        <p>Buying Power: {getUsdView(buyingPowerUsd)}</p>
+        <p>
+          Buying Power: <GetUsdView amount={buyingPowerUsd} />
+        </p>
       </div>
       <form onSubmit={handleSubmit}>
         <select name="market" value={market} onChange={handleChange}>

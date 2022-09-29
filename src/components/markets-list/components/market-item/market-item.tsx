@@ -8,7 +8,7 @@ import { Cell } from '@components/cell';
 import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
-import { getMultiplierView, PercentView, TokensView, getUsdView, GetUsdView } from '@shared/helpers';
+import { getMultiplierView, PercentView, TokensView, GetUsdView } from '@shared/helpers';
 import { PositionType } from '@shared/types';
 
 import styles from './market-item.module.scss';
@@ -66,8 +66,12 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 <Cell label="Profit / Loss">
                   <PercentView amount={100} pnl />
                 </Cell>
-                <Cell label="Avg Open Price">{getUsdView(100)}</Cell>
-                <Cell label="Liquidity 1 Price">{getUsdView(100)}</Cell>
+                <Cell label="Avg Open Price">
+                  <GetUsdView amount={100} />
+                </Cell>
+                <Cell label="Liquidity 1 Price">
+                  <GetUsdView amount={100} />
+                </Cell>
                 <Cell label="Laverage">{getMultiplierView(0.43)}</Cell>
               </div>
               <PositionTypeIcon type={PositionType.LONG} width={64} height={64} style={{ marginRight: 8 }} />
@@ -104,8 +108,12 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />
               </Cell>
-              <Cell label="Avg Open Price">{getUsdView(position.avgOpenPriceUsd)}</Cell>
-              <Cell label="Liquidity 1 Price">{getUsdView(position.liqPrice1Usd)}</Cell>
+              <Cell label="Avg Open Price">
+                <GetUsdView amount={position.avgOpenPriceUsd} />
+              </Cell>
+              <Cell label="Liquidity 1 Price">
+                <GetUsdView amount={position.liqPrice1Usd} />
+              </Cell>
             </div>
             <div className={styles.lastElementWrapper}>
               <Button onClick={manageHandler} className={styles.manageButton}>

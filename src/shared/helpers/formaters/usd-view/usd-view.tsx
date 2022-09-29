@@ -6,8 +6,6 @@ import cx from 'classnames';
 import { formatValueBalance } from '../format-balance';
 import styles from './usd-view.module.scss';
 
-export const getUsdView = (amount: BigNumber.Value) => `$ ${formatValueBalance(amount, 2)}`;
-
 interface Props {
   amount: BigNumber.Value;
   percentEquivalent?: BigNumber.Value;
