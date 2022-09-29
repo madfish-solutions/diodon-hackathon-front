@@ -70,7 +70,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required(),
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).required(),
       leverage: numberSchema().min(2).max(10).integer().required(),
       positionType: numberSchema().oneOf([Side.BUY, Side.SELL]).required()
     }),

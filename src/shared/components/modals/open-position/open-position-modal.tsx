@@ -66,7 +66,6 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
           <input
             type="number"
             min={0}
-            max={maxValue.toFixed()}
             step={0.01}
             name="orderAmount"
             className={cx(styles.input, styles.amount)}
