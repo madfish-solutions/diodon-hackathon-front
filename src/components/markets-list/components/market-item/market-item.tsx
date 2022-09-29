@@ -18,7 +18,9 @@ interface Props {
 }
 
 export const MarketItem: FC<Props> = observer(({ market }) => {
-  const { position, openHandler, manageHandler, isConnected } = useMarketItemViewModel(market.marketId);
+  const { position, positionBeingClosed, openHandler, closeHandler, isConnected } = useMarketItemViewModel(
+    market.marketId
+  );
 
   return (
     <div className={styles.item}>
@@ -77,8 +79,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
             </Cell>
           </div>
           <div className={styles.button}>
-            <Button onClick={manageHandler} className={styles.manageButton}>
-              Manage
+            <Button onClick={closeHandler} className={styles.manageButton} disabled={positionBeingClosed}>
+              Close
             </Button>
           </div>
         </div>
