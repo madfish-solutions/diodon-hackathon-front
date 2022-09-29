@@ -9,6 +9,7 @@ import { getUsdView } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 import { MarketId } from '@shared/types';
 
+import modalsStyles from '../modals.module.scss';
 import styles from './fin-operation-modal.module.scss';
 import { modalsStyle } from './modals-style';
 import { useFinOperationModalViewModel } from './use-fin-operation-modal.vm';
@@ -24,9 +25,9 @@ export const FinOperationModal: FC<FinOperationModalProps> = observer(({ initial
 
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
-      <h2 className={styles.heading}>
+      <h2 className={modalsStyles.heading}>
         <CloseIcon onClick={closeModalHandler} className={styles.closeButton} />
-        {operation} <span className={styles.market}>{market}</span>
+        {operation} <span className={modalsStyles.market}>{market}</span>
       </h2>
       <OperationSwitcher operation={operation} onClick={setOperation} />
       <form onSubmit={handleSubmit}>
