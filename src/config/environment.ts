@@ -14,5 +14,7 @@ export const CLEARING_HOUSE_VIEWER_ADDRESS = process.env.REACT_APP_CLEARING_HOUS
 export const AMMS = {
   [MarketId.AAPL]: '0x21f98596D0bb9da7fFcA2a3e29d47FcEA858e79B',
   [MarketId.AMD]: '0xA7675BDD2f6029e43F7EbB345da77B3deaf2B2cF',
-  [MarketId.SHOP]: '0xxxxx'
+  [MarketId.SHOP]: '0xBF01142FA45E5aC376F955b62F059D585ab42e65'
 };
+
+export const KNOWN_MARKETS = [MarketId.AAPL, MarketId.AMD, MarketId.SHOP];
