@@ -12,8 +12,12 @@
   color: rgba(255, 255, 255, 0.64)
 }
 
-.input {
+.inputWrapper {
   position: relative;
+  width: 100%;
+}
+
+.input {
   width: 100%;
   background-color: rgba(0, 43, 91, 0.32);
   border-radius: 8px;
@@ -22,13 +26,29 @@
   color: white;
   font-size: 18px;
   font-weight: 700;
-  padding-left: 30px;
+  padding-left: 16px;
+  padding-right: 70px; 
   outline: none;
-  background: url('../../../../../public/svg/dollar.svg') no-repeat scroll 15px 10px;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  -moz-appearance: textfield;
+}
+
+.inputPostfix {
+  position: absolute;
+  top: 9px;
+  right: 16px;
+  font-size: 18px;
+  color: white;
 }
 
 .amount {
-  margin-bottom: 8px;
+  margin-bottom: 32px;
 }
 
 .option {
@@ -49,6 +69,9 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  & > .opButton {
+    width: auto;
+  }
 }
 
 .closeButton {
@@ -62,6 +85,33 @@ input::-webkit-inner-spin-button {
 }
 
 .opButton {
-  width: 120px;
-  height: 32px;
+  padding: 5px 16px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.additionalInfo {
+  display: flex;
+  position: relative;
+
+  margin: 32px 0 24px;
+  padding-bottom: 16px;
+
+  & > :nth-child(2) {
+    margin-left: 50px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+
+    height: 1px;
+
+    right: 0;
+    left: 0;
+    bottom: 0px;
+    margin: 0 -20px;
+
+    background-color: rgba(255, 255, 255, 0.24);
+  }
 }

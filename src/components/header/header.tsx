@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 
 import { Socials } from '@components/socials';
+import { GiveMeMoneyButton } from '@shared/components';
 import { ConnectButton } from '@shared/components/connect-button';
 import { useAuthStore } from '@shared/hooks';
 
@@ -28,7 +29,10 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
         {address && <UserMainStats className={styles.userMainStats} />}
         <div className={styles.flex1} />
         <Socials />
-        <ConnectButton className={styles.button} />
+        <div>
+          <ConnectButton className={styles.button} />
+          <GiveMeMoneyButton className={styles.button} />
+        </div>
       </header>
     </div>
   );

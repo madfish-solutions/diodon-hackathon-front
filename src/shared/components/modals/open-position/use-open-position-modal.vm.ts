@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useCallback } from 'react';
+import { ChangeEventHandler, useCallback, useEffect } from 'react';
 
 import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber } from 'ethers';
@@ -9,10 +9,11 @@ import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch
 import { Side } from '@blockchain/facades/types';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
+import { AMMS } from '@config/environment';
 import { getFormikError } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
-import { useAccountStore, useApi, useModalsStore } from '../../../hooks';
+import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
 import { ModalType } from '../../../store/modals.store';
 import { MarketId, Undefined } from '../../../types';
@@ -32,10 +33,12 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const closeModalHandler = () => modalsStore.close();
   const marketsStore = useMarketsStore();
   const market = marketId ? marketsStore.getMarket(marketId) : null;
-  const { data } = useAccountStore();
-  const buyingPowerUsd = data?.buyingPowerUsd ?? 0;
+  const accountStore = useAccountStore();
+  const { freeCollateral } = accountStore;
+  const { address } = useAuthStore();
   const api = useApi();
   const { openPosition, getApproves } = useClearingHouse();
+  const maxValue = freeCollateral.decimalPlaces(2).toNumber();
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -57,16 +60,17 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
         );
 
         await executeTransactionsBatch(transactionsFunctions);
-      });
+        await accountStore.loadFreeCollateral(AMMS[marketId!], address!);
+      }, 'Position has been successfully opened!');
 
       actions.setSubmitting(false);
     },
-    [api, openPosition, marketId, getApproves]
+    [api, openPosition, marketId, getApproves, accountStore, address]
   );
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(buyingPowerUsd).required(),
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).required(),
       leverage: numberSchema().min(2).max(10).integer().required(),
       positionType: numberSchema().oneOf([Side.BUY, Side.SELL]).required()
     }),
@@ -78,6 +82,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const positionType = formik.values.positionType;
   const leverage = formik.values.leverage;
   const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
+  const positionTypeName = positionType === Side.BUY ? 'long' : 'short';
 
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);
@@ -87,6 +92,16 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     formik.setFieldValue('leverage', newValue, true);
   };
 
+  const setPositionType = (newPositionType: Side) => {
+    formik.setFieldValue('positionType', newPositionType, true);
+  };
+
+  useEffect(() => {
+    if (address) {
+      api.call(async () => accountStore.loadFreeCollateral(AMMS[marketId!], address));
+    }
+  }, [accountStore, api, address, marketId]);
+
   return {
     value,
     handleChange,
@@ -95,11 +110,13 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     handleLeverageChange,
     market,
     isOpen,
-    buyingPowerUsd,
+    maxValue,
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
     positionType,
+    positionTypeName,
+    setPositionType,
     values: formik.values
   };
 };
