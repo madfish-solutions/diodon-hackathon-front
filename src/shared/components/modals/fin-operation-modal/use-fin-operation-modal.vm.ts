@@ -8,7 +8,7 @@ import { number as numberSchema, object as objectSchema, string as stringSchema 
 import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
-import { AMMS } from '@config/environment';
+import { AMMS, KNOWN_MARKETS } from '@config/environment';
 import { Tab } from '@shared/components';
 import { getFormikError, isEqual } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
@@ -76,7 +76,7 @@ export const useFinOperationModalViewModel = (operation: Tab) => {
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      market: stringSchema().oneOf([MarketId.AAPL, MarketId.AMD], 'Available options: AAPL, AMD').required(),
+      market: stringSchema().oneOf(KNOWN_MARKETS, 'Must be one of markets in the list').required(),
       orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required()
     }),
     initialValues: { orderAmount: '', market: MarketId.AAPL },
