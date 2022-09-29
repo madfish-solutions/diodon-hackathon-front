@@ -3,9 +3,9 @@ import { FC, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
-import { Cell } from '@components/card-cell';
+import { Cell } from '@components/cell';
 import { Button, OperationSwitcher, Tab } from '@shared/components';
-import { getPercentView, getUsdView, isEqual } from '@shared/helpers';
+import { PercentView, getUsdView, isEqual } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 
 import styles from './fin-operation-modal.module.scss';
@@ -36,7 +36,9 @@ export const FinOperationModal: FC = observer(() => {
           <Cell label="Current price">{getUsdView(123)}</Cell>
         </div>
         <div className={styles.footer}>
-          <Cell label="Slippage">{getPercentView(0.23)}</Cell>
+          <Cell label="Slippage">
+            <PercentView amount={0.23} />
+          </Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
             {operation}
           </Button>

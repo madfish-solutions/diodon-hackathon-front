@@ -1,5 +1,5 @@
-const FISRT_INDEX = 1;
-const LEFT_LENGTH = 7;
+const FISRT_INDEX = 0;
+const LEFT_LENGTH = 6;
 const RIGHT_LENGTH = 4;
 export const shortize = (str: string, length?: number) => {
   if (!str) {

@@ -37,11 +37,12 @@ const SliderThumb: React.FC<SliderThumbProps> = ({ props, originalValue }) => {
 
 interface MarginSliderProps {
   value: number;
+  className?: string;
 }
 
-export const MarginSlider: React.FC<MarginSliderProps> = ({ value }) => {
+export const MarginSlider: React.FC<MarginSliderProps> = ({ value, className }) => {
   return (
-    <div>
+    <div className={className}>
       <ReactSlider
         className={styles.slider}
         disabled
