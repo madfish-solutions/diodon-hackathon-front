@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
 import { Button, OperationSwitcher, Tab } from '@shared/components';
-import { getUsdView } from '@shared/helpers';
+import { GetUsdView } from '@shared/helpers';
 import { CloseIcon } from '@shared/svg/close-icon';
 import { MarketId } from '@shared/types';
 
@@ -33,7 +33,9 @@ export const FinOperationModal: FC<FinOperationModalProps> = observer(({ initial
       <form onSubmit={handleSubmit}>
         <div className={styles.info}>
           <div>Amount</div>
-          <div>Balance: {getUsdView(maxValue)}</div>
+          <div>
+            Balance: <GetUsdView amount={maxValue} />
+          </div>
         </div>
         <input
           type="number"

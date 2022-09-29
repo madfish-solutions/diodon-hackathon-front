@@ -5,12 +5,12 @@ import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
 import { Side } from '@blockchain/facades/types';
-import { Cell } from '@components/card-cell';
+import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
 import { Switcher } from '@shared/components/switcher';
 import { CloseIcon } from '@shared/svg';
 
-import { formatValueBalance, getPercentView, getUsdView } from '../../../helpers';
+import { formatValueBalance, PercentView, GetUsdView } from '../../../helpers';
 import { MarketId, Undefined } from '../../../types';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
@@ -79,11 +79,17 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         <LeverageSlider value={leverage} onChange={handleLeverageChange} />
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
-          <Cell label={'Min. receive'}>{getUsdView(123)}</Cell>
-          <Cell label="Current price">{getUsdView(123)}</Cell>
+          <Cell label={'Min. receive'}>
+            <GetUsdView amount={123} />
+          </Cell>
+          <Cell label="Current price">
+            <GetUsdView amount={123} />
+          </Cell>
         </div>
         <div className={styles.footer}>
-          <Cell label="Slippage">{getPercentView(0.23)}</Cell>
+          <Cell label="Slippage">
+            <PercentView amount={0.23} />
+          </Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
             Open {positionTypeName} position
           </Button>
