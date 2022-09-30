@@ -1,8 +1,8 @@
 import { MARKETS_API_URL } from '@config/api';
 
-import { MarketResponse } from './markets.interface';
+import { MarketData } from './markets.interface';
 
-export const getMarketsApi = async (): Promise<MarketResponse> => {
+export const getMarketsApi = async (): Promise<MarketData[]> => {
   const response = await fetch(MARKETS_API_URL);
 
   return response.json();
