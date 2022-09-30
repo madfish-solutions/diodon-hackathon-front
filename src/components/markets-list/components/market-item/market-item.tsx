@@ -20,7 +20,9 @@ interface Props {
 
 export const MarketItem: FC<Props> = observer(({ market }) => {
   const [fullView, seFullView] = useState(false);
-  const { position, openHandler, manageHandler, isConnected } = useMarketItemViewModel(market.marketId);
+  const { position, positionBeingClosed, openHandler, closeHandler, isConnected } = useMarketItemViewModel(
+    market.marketId
+  );
 
   return (
     <button type="button" className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
@@ -49,7 +51,14 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           {!position ? (
             <div className={styles.button}>
               <p>
-                <Button onClick={openHandler} className={styles.openButton} disabled={!isConnected}>
+                <Button
+                  onClick={event => {
+                    event.stopPropagation();
+                    openHandler();
+                  }}
+                  className={styles.openButton}
+                  disabled={!isConnected}
+                >
                   Open
                 </Button>
               </p>
@@ -90,8 +99,15 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 </div>
                 <MarginSlider value={14} className={styles.slider} />
                 <div className={styles.lastElementWrapper}>
-                  <Button onClick={manageHandler} className={styles.manageButton}>
-                    Manage
+                  <Button
+                    onClick={event => {
+                      event.stopPropagation();
+                      closeHandler();
+                    }}
+                    className={styles.manageButton}
+                    disabled={positionBeingClosed}
+                  >
+                    Close
                   </Button>
                 </div>
               </div>
@@ -116,8 +132,15 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               </Cell>
             </div>
             <div className={styles.lastElementWrapper}>
-              <Button onClick={manageHandler} className={styles.manageButton}>
-                Manage
+              <Button
+                onClick={event => {
+                  event.stopPropagation();
+                  closeHandler();
+                }}
+                className={styles.manageButton}
+                disabled={positionBeingClosed}
+              >
+                Close
               </Button>
             </div>
           </div>
