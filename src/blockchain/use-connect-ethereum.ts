@@ -8,6 +8,7 @@ import { useAuthStore } from '@shared/hooks';
 import { ConnectedStatus, ConnectionType } from '@shared/types';
 import { useToasts } from '@shared/utils/toasts';
 
+import { addToken } from './add-token';
 import { switchChain } from './switch-chain';
 
 export const useConnectEthereum = () => {
@@ -57,6 +58,8 @@ export const useConnectEthereum = () => {
     [authStore]
   );
 
+  const doAddToken = useCallback(async () => await addToken(ethereum), [ethereum]);
+
   useEffect(() => {
     if (!account || !ethereum) {
       return authStore.resetStore();
@@ -78,6 +81,7 @@ export const useConnectEthereum = () => {
     disconnect: disconnectEthereum,
     isConnected: isConnected(),
     blockNumber: wallet.getBlockNumber?.() ?? null,
-    status
+    status,
+    addToken: doAddToken
   };
 };

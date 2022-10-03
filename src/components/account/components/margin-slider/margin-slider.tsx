@@ -37,16 +37,17 @@ const SliderThumb: React.FC<SliderThumbProps> = ({ props, originalValue }) => {
 
 interface MarginSliderProps {
   value: number;
+  className?: string;
 }
 
-export const MarginSlider: React.FC<MarginSliderProps> = ({ value }) => {
+export const MarginSlider: React.FC<MarginSliderProps> = ({ value, className }) => {
   return (
-    <div>
+    <div className={className}>
       <ReactSlider
         className={styles.slider}
         disabled
         thumbClassName={styles.thumb}
-        renderThumb={(props, state) => <SliderThumb props={props} originalValue={value} />}
+        renderThumb={(props, state) => <SliderThumb key={state.index} props={props} originalValue={value} />}
         min={0}
         max={MAX_SLIDER_VALUE}
         step={SLIDER_STEP}

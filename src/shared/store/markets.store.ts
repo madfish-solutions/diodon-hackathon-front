@@ -19,7 +19,7 @@ export class MarketsStore {
   }
 
   async loadMarkets() {
-    const { markets } = await getMarketsApi();
+    const markets = await getMarketsApi();
     this.setMarkets(markets);
   }
 

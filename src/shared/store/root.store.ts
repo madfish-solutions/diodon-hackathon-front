@@ -10,7 +10,7 @@ export class RootStore {
   authStore = new AuthStore(this);
   marketsStore = new MarketsStore();
   accountStore = new AccountStore(this);
-  positionsStore = new PositionsStore();
+  positionsStore = new PositionsStore(this);
 
   modalsStore = new ModalsStore();
 
