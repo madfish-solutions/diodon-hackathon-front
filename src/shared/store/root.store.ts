@@ -8,7 +8,7 @@ import { PositionsStore } from './positions.store';
 
 export class RootStore {
   authStore = new AuthStore(this);
-  marketsStore = new MarketsStore();
+  marketsStore = new MarketsStore(this);
   accountStore = new AccountStore(this);
   positionsStore = new PositionsStore(this);
 

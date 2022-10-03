@@ -20,9 +20,15 @@ interface Props {
 
 export const MarketItem: FC<Props> = observer(({ market }) => {
   const [fullView, seFullView] = useState(false);
-  const { position, positionBeingClosed, openHandler, closeHandler, isConnected } = useMarketItemViewModel(
-    market.marketId
-  );
+  const {
+    position,
+    positionBeingClosed,
+    openHandler,
+    closeHandler,
+    isConnected,
+    marketPriceChangePercentage,
+    indexPriceChangePercentage
+  } = useMarketItemViewModel(market);
 
   return (
     <button type="button" className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
@@ -36,16 +42,16 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           </div>
           <div className={styles.details}>
             <Cell label="Market Price" className={styles.Cell}>
-              <GetUsdView amount={market.marketPriceUsd} percentEquivalent={10} />
+              <GetUsdView amount={market.marketPriceUsd} percentEquivalent={marketPriceChangePercentage} />
             </Cell>
             <Cell label="Index Price" className={styles.Cell}>
-              <GetUsdView amount={market.indexPriceUsd} percentEquivalent={12} />
+              <GetUsdView amount={market.indexPriceUsd} percentEquivalent={indexPriceChangePercentage} />
             </Cell>
             <Cell label="Funding rate 8h" className={styles.Cell}>
-              <PercentView amount={market.fundingRateChange8Percent} />
+              <PercentView amount={market.fundingRateChange8Percent} decimalPlaces={4} />
             </Cell>
             <Cell label="Volume 24h" className={styles.Cell}>
-              <GetUsdView amount={market.volume24Usd} percentEquivalent={14} />
+              <TokensView amount={market.volume24Tokens} dollarEquivalent={market.volume24Usd} />
             </Cell>
           </div>
           {!position ? (

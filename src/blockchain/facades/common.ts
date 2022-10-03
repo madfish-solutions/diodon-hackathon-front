@@ -5,13 +5,13 @@ import { address } from './types';
 
 export class CommonFacade {
   static address: address;
-  provider: ethers.providers.Web3Provider;
+  provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider;
   contract: Contract;
   signer: ethers.providers.JsonRpcSigner;
   public static PRECISION = 1e18;
 
   constructor(
-    provider: ethers.providers.Web3Provider,
+    provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     contractAddress: address,
     abi: ethers.ContractInterface,
     signer: ethers.providers.JsonRpcSigner
