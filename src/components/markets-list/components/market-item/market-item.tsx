@@ -67,21 +67,23 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
             <div className={styles.lastElementWrapper} />
           )}
         </div>
-        {fullView && (
+        {fullView && position && (
           <div className={styles.positionFull}>
             <div className={styles.sidePanel}>
               <div className={styles.detailsPositionFull}>
-                <Cell label="Amount">{<TokensView amount={1} dollarEquivalent={40} />}</Cell>
+                <Cell label="Amount">
+                  <TokensView amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
+                </Cell>
                 <Cell label="Profit / Loss">
-                  <PercentView amount={100} pnl />
+                  <PercentView amount={position.pnlPercent} pnl />
                 </Cell>
                 <Cell label="Avg Open Price">
-                  <GetUsdView amount={100} />
+                  <GetUsdView amount={position.avgOpenPriceUsd} />
                 </Cell>
                 <Cell label="Liquidity 1 Price">
-                  <GetUsdView amount={100} />
+                  <GetUsdView amount={position.liqPrice1Usd} />
                 </Cell>
-                <Cell label="Laverage">{getMultiplierView(0.43)}</Cell>
+                <Cell label="Leverage">{getMultiplierView(0.43)}</Cell>
               </div>
               <PositionTypeIcon type={PositionType.LONG} width={64} height={64} style={{ marginRight: 8 }} />
             </div>
@@ -120,7 +122,9 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
             </div>
             <div className={styles.detailsPosition}>
-              <Cell label="Amount">{<TokensView amount={12345} dollarEquivalent={30673} />}</Cell>
+              <Cell label="Amount">
+                <TokensView amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
+              </Cell>
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />
               </Cell>

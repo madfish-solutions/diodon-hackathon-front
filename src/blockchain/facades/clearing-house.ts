@@ -8,6 +8,12 @@ import { valueToBigNumber } from '@shared/helpers/bignumber';
 import { CommonFacade } from './common';
 import { address, Side } from './types';
 
+export enum PNLCalcOption {
+  SPOT_PRICE = 0,
+  TWAP = 1,
+  ORACLE = 2
+}
+
 interface RawPositionResponse {
   [i: number]: EthersBigNumber | [EthersBigNumber];
   length: number;
@@ -62,6 +68,21 @@ export class ClearingHouse extends CommonFacade {
       lastUpdatedCumulativePremiumFraction: valueToBigNumber(rawLastUpdatedCumulativePremiumFraction),
       liquidityHistoryIndex: valueToBigNumber(rawLiquidityHistoryIndex),
       blockNumber: valueToBigNumber(rawBlockNumber)
+    };
+  }
+
+  public async getPositionNotionalAndUnrealizedPnl(amm: address, trader: string, pnlCalcOption: PNLCalcOption) {
+    const rawResponse: ArrayLike<[EthersBigNumber]> = await this.contract.getPositionNotionalAndUnrealizedPnl(
+      amm,
+      trader,
+      pnlCalcOption
+    );
+
+    const [rawPositionNotional, rawUnrealizedPnl] = Array.from(rawResponse);
+
+    return {
+      positionNotional: valueToBigNumber(rawPositionNotional),
+      unrealizedPnl: valueToBigNumber(rawUnrealizedPnl)
     };
   }
 
