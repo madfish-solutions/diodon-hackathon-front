@@ -1,15 +1,18 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
 
+import { MarketData } from '@api/markets';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { ZERO_AMOUNT } from '@config/constants';
 import { AMMS } from '@config/environment';
+import { valueChangeToPercentage } from '@shared/helpers/bignumber';
 import { useApi, useAuthStore, useModalsStore, usePositionsStore } from '@shared/hooks';
 import { ModalType } from '@shared/store/modals.store';
-import { MarketId } from '@shared/types';
 
-export const useMarketItemViewModel = (marketId: MarketId) => {
+export const useMarketItemViewModel = (market: MarketData) => {
+  const { marketId, marketPriceUsd, marketPriceChange24Usd, indexPriceChange24Usd, indexPriceUsd } = market;
+
   const modalsStore = useModalsStore();
   const { isConnected, address } = useAuthStore();
   const api = useApi();
@@ -18,6 +21,16 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
 
   const positionsStore = usePositionsStore();
   const position = isConnected ? positionsStore.getPosition(marketId) : null;
+
+  const marketPriceChangePercentage = useMemo(
+    () => valueChangeToPercentage(marketPriceUsd, marketPriceChange24Usd).toNumber(),
+    [marketPriceChange24Usd, marketPriceUsd]
+  );
+
+  const indexPriceChangePercentage = useMemo(
+    () => valueChangeToPercentage(indexPriceUsd, indexPriceChange24Usd).toNumber(),
+    [indexPriceChange24Usd, indexPriceUsd]
+  );
 
   const openHandler = () => {
     modalsStore.open(ModalType.OpenPosition, { marketId });
@@ -40,5 +53,13 @@ export const useMarketItemViewModel = (marketId: MarketId) => {
     }
   }, [api, clearingHouse, marketId, modalsStore, address, positionsStore]);
 
-  return { position, positionBeingClosed, isConnected, openHandler, closeHandler };
+  return {
+    position,
+    positionBeingClosed,
+    isConnected,
+    openHandler,
+    closeHandler,
+    marketPriceChangePercentage,
+    indexPriceChangePercentage
+  };
 };

@@ -8,7 +8,7 @@ import { address } from './types';
 
 export class Amm extends CommonFacade {
   constructor(
-    provider: ethers.providers.Web3Provider,
+    provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     contractAddress: address,
     signer: ethers.providers.JsonRpcSigner
   ) {
@@ -22,7 +22,7 @@ export class Amm extends CommonFacade {
   }
 
   public async getUnderlyingPrice() {
-    return await this.contract.getUnderlyingPrice();
+    return valueToBigNumber(await this.contract.getUnderlyingPrice());
   }
 
   public async setPriceFeed(priceFeed: address) {
