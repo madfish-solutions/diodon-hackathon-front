@@ -2,12 +2,15 @@ import { useState } from 'react';
 
 import axios from 'axios';
 
+import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
+
 import { useAuthStore } from '../../hooks';
 import { useToasts } from '../../utils/toasts';
 
 export const useGiveMeMoneyButtonViewModel = () => {
   const { address } = useAuthStore();
   const { showErrorToast, showSuccessToast } = useToasts();
+  const { addToken } = useConnectEthereum();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,6 +25,8 @@ export const useGiveMeMoneyButtonViewModel = () => {
         throw new Error(resp.statusText);
       }
       showSuccessToast(`Klay & dDAI Successfully sent to ${address}`);
+      await addToken();
+      showSuccessToast(`dDAI Successfully added to the wallet`);
     } catch (error) {
       showErrorToast(`Error: ${(error as Error).message}`);
     }
