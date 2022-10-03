@@ -13,7 +13,7 @@ import { AMMS } from '@config/environment';
 import { getFormikError } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
-import { useAccountStore, useApi, useAuthStore, useModalsStore } from '../../../hooks';
+import { useAccountStore, useApi, useAuthStore, useModalsStore, usePositionsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
 import { ModalType } from '../../../store/modals.store';
 import { MarketId, Undefined } from '../../../types';
@@ -34,6 +34,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const marketsStore = useMarketsStore();
   const market = marketId ? marketsStore.getMarket(marketId) : null;
   const accountStore = useAccountStore();
+  const positionsStore = usePositionsStore();
   const { dDAIBalance } = accountStore;
   const { address } = useAuthStore();
   const api = useApi();
@@ -61,12 +62,16 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
         );
 
         await executeTransactionsBatch(transactionsFunctions);
-        await accountStore.loadFreeCollateral(AMMS[marketId!], address!);
+        modalsStore.close();
+        await Promise.all([
+          accountStore.loadFreeCollateral(AMMS[marketId!], address!),
+          positionsStore.loadPositions(address!)
+        ]);
       }, 'Position has been successfully opened!');
 
       actions.setSubmitting(false);
     },
-    [api, openPosition, marketId, getApproves, accountStore, address]
+    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore]
   );
 
   const formik = useFormik<FormValues>({

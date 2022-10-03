@@ -3,11 +3,12 @@ import { action, makeObservable, observable } from 'mobx';
 import { getPositionsApi } from '@api/positions';
 
 import { Position } from '../../api';
+import { RootStore } from './root.store';
 
 export class PositionsStore {
   positions: Position[] = [];
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this, {
       positions: observable,
 
@@ -20,8 +21,14 @@ export class PositionsStore {
   }
 
   async loadPositions(accountPkh: string) {
-    const { positions } = await getPositionsApi(accountPkh);
-    this.setPositions(positions);
+    const { connection } = this.rootStore.authStore;
+
+    if (connection) {
+      const { positions } = await getPositionsApi(accountPkh, connection.provider);
+      this.setPositions(positions);
+    } else {
+      this.setPositions([]);
+    }
   }
 
   getPosition(marketId: string) {

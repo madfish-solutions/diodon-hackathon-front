@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber } from 'ethers';
 
-export const valueToBigNumber = (value: BigNumber.Value | EthersBigNumber | [EthersBigNumber]) => {
+export const valueToBigNumber = (value: BigNumber.Value | EthersBigNumber | [EthersBigNumber | number]) => {
   if (value instanceof Array) {
     return new BigNumber(value[0].toString());
   }
