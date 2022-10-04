@@ -34,8 +34,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
     <button type="button" className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
       <div className={styles.item}>
         <div className={styles.market}>
-          <div style={{ textAlign: 'start', minWidth: '175px' }}>
-            <MarketIcon marketId={market.marketId} width={48} height={48} />
+          <div style={{ textAlign: 'start', minWidth: '150px' }}>
+            <MarketIcon className={styles.marketItem} marketId={market.marketId} width={48} height={48} />
             <div>
               <b>{market.marketId}</b>
             </div>
@@ -55,19 +55,17 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
             </Cell>
           </div>
           {!position ? (
-            <div className={styles.button}>
-              <p>
-                <Button
-                  onClick={event => {
-                    event.stopPropagation();
-                    openHandler();
-                  }}
-                  className={styles.openButton}
-                  disabled={!isConnected}
-                >
-                  Open
-                </Button>
-              </p>
+            <div className={styles.lastElementWrapper}>
+              <Button
+                onClick={event => {
+                  event.stopPropagation();
+                  openHandler();
+                }}
+                className={styles.openButton}
+                disabled={!isConnected}
+              >
+                Open
+              </Button>
             </div>
           ) : (
             <div className={styles.lastElementWrapper} />
@@ -77,7 +75,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           <div className={styles.positionFull}>
             <div className={styles.sidePanel}>
               <div className={styles.detailsPositionFull}>
-                <Cell label="Amount">
+                <Cell label="Position Amount">
                   <TokensView amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
                 </Cell>
                 <Cell label="Profit / Loss">
