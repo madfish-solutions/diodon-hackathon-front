@@ -6,6 +6,7 @@ import { MarketId, PositionType } from '@shared/types';
 
 export interface Position {
   marketId: MarketId;
+  margin: number;
   type: PositionType;
   amountTokens: number;
   amountUsd: number;

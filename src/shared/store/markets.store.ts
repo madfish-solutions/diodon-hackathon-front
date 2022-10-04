@@ -1,12 +1,15 @@
 import { action, makeObservable, observable } from 'mobx';
 
+import { FALLBACK_PROVIDER } from '@config/constants';
+
 import { MarketData, getMarketsApi } from '../../api';
 import { MarketId } from '../types';
+import { RootStore } from './root.store';
 
 export class MarketsStore {
   markets: MarketData[] = [];
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this, {
       markets: observable,
 
@@ -19,7 +22,7 @@ export class MarketsStore {
   }
 
   async loadMarkets() {
-    const markets = await getMarketsApi();
+    const markets = await getMarketsApi(this.rootStore.authStore.connection?.provider ?? FALLBACK_PROVIDER);
     this.setMarkets(markets);
   }
 

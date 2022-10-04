@@ -15,6 +15,10 @@
   };
 }
 
+.marketItem {
+  padding-left: 8px;
+}
+
 .market {
   display: flex;
   justify-content: space-between;
@@ -31,7 +35,9 @@
 }
 
 .lastElementWrapper {
-  min-width: 80px;
+  display: flex;
+  justify-content: end;
+  min-width: 100px;
 }
 
 .manageButton,
@@ -57,7 +63,7 @@
   align-items: center;
 
   & > :nth-child(n) {
-    width: 175px;
+    max-width: 125px;
   }
 }
 
@@ -74,7 +80,7 @@
 }
 
 .positionTypeWrapper {
-  min-width: 175px;
+  min-width: 150px;
 }
 
 .morePositionInfo {
