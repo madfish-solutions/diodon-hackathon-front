@@ -23,9 +23,10 @@ export const getPositionsApi = async (
         await clearingHouseViewer.methods.getPersonalPositionWithFundingPayment(amm, accountPkh)
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [rawSize] = position;
+      const [rawSize, rawMargin] = position;
       // eslint-disable-next-line no-console
       const size = valueToBigNumber(rawSize);
+      const margin = toReal(valueToBigNumber(rawMargin), DDAI_DECIMALS);
 
       if (size.eq(ZERO_AMOUNT)) {
         return null;
@@ -40,6 +41,7 @@ export const getPositionsApi = async (
 
       return {
         marketId,
+        margin: margin.toNumber(),
         type: size.lt(ZERO_AMOUNT) ? PositionType.SHORT : PositionType.LONG,
         amountTokens: amountTokens.toNumber(),
         amountUsd: amountUsd.toNumber(),
