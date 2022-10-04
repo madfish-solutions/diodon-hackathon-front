@@ -21,7 +21,7 @@ export const useMarketsViewModel = () => {
       });
     })();
     // eslint-disable-next-line
-  }, []);
+  }, [address]);
 
   // Load positions
   useEffect(() => {
