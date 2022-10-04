@@ -21,7 +21,11 @@ export const UserMainStats: FC<Props> = observer(({ className }) => {
       <Cell contentClassName={{ amountClassName: styles.amount }} label="Net collateral">
         <TokensView amount={netCollateral} dollarEquivalent={netCollateralUsd} />
       </Cell>
-      <Cell contentClassName={{ amountClassName: styles.amount }} label="Opened positions">
+      <Cell
+        className={styles.openedPositions}
+        contentClassName={{ amountClassName: styles.amount }}
+        label="Opened positions"
+      >
         <TokensView amount={openedPositionsSum} dollarEquivalent={openedPositionsSumUsd} />
       </Cell>
     </div>
