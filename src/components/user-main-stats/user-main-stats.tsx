@@ -22,7 +22,11 @@ export const UserMainStats: FC<Props> = ({ className }) => {
       <Cell contentClassName={{ amountClassName: styles.amount }} label="Net collateral">
         <TokensView amount={MOCK_MAIN_STATS.netCollateral} dollarEquivalent={1000} />
       </Cell>
-      <Cell contentClassName={{ amountClassName: styles.amount }} label="Opened positions">
+      <Cell
+        className={styles.openedPositions}
+        contentClassName={{ amountClassName: styles.amount }}
+        label="Opened positions"
+      >
         <TokensView amount={MOCK_MAIN_STATS.openedPositions} dollarEquivalent={1000} />
       </Cell>
     </div>
