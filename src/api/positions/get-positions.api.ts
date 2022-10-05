@@ -22,9 +22,7 @@ export const getPositionsApi = async (
       const position = Array.from(
         await clearingHouseViewer.methods.getPersonalPositionWithFundingPayment(amm, accountPkh)
       );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [rawSize, rawMargin] = position;
-      // eslint-disable-next-line no-console
       const size = valueToBigNumber(rawSize);
       const margin = toReal(valueToBigNumber(rawMargin), DDAI_DECIMALS);
 
