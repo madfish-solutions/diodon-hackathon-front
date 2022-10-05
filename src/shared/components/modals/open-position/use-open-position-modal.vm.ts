@@ -1,17 +1,19 @@
-import { ChangeEventHandler, useCallback, useEffect } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber } from 'ethers';
 import { FormikHelpers, useFormik } from 'formik';
+import { debounce } from 'throttle-debounce';
 import { number as numberSchema, object as objectSchema } from 'yup';
 
 import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
-import { Side } from '@blockchain/facades/types';
+import { Amm } from '@blockchain/facades/amm';
+import { Dir, Side } from '@blockchain/facades/types';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
-import { DDAI_DECIMALS } from '@config/constants';
+import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
 import { AMMS } from '@config/environment';
 import { getFormikError } from '@shared/helpers';
-import { toAtomic } from '@shared/helpers/bignumber';
+import { toAtomic, toReal } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useAuthStore, useModalsStore, usePositionsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
@@ -26,6 +28,7 @@ export interface FormValues {
 
 const FORM_FIELDS = ['orderAmount', 'positionType', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
+const SLIPPAGE_PERCENTAGE = 3;
 
 export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
   const modalsStore = useModalsStore();
@@ -36,11 +39,41 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const accountStore = useAccountStore();
   const positionsStore = usePositionsStore();
   const { dDAIBalance } = accountStore;
-  const { address } = useAuthStore();
+  const { address, connection } = useAuthStore();
+  const [positionSize, setPositionSize] = useState(ZERO_AMOUNT);
   const api = useApi();
   const { openPosition, getApproves } = useClearingHouse();
 
   const maxValue = dDAIBalance.decimalPlaces(2).toNumber();
+
+  const amm = useMemo(() => {
+    if (market && connection) {
+      return new Amm(connection.provider, AMMS[market.marketId], connection.signer);
+    }
+
+    return null;
+  }, [market, connection]);
+
+  const getPositionSize = useCallback(
+    async (collateral: BigNumber, positionType: Side, leverage: number) => {
+      return api.call(async () => {
+        if (!collateral.isFinite() || collateral.eq(ZERO_AMOUNT) || !amm) {
+          return new BigNumber(ZERO_AMOUNT);
+        }
+
+        // bullshit
+        const notional = collateral.times(leverage);
+
+        const sizeWithoutSlippage = await amm.getInputPrice(
+          positionType === Side.BUY ? Dir.AddToAmm : Dir.RemoveFromAmm,
+          notional
+        );
+
+        return sizeWithoutSlippage.times(100 - SLIPPAGE_PERCENTAGE).idiv(100);
+      });
+    },
+    [amm, api]
+  );
 
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
@@ -90,6 +123,28 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
   const positionTypeName = positionType === Side.BUY ? 'long' : 'short';
 
+  const updatePositionSize = useMemo(
+    () =>
+      debounce(100, async () => {
+        try {
+          const rawPositionSize = await getPositionSize(
+            toAtomic(new BigNumber(formik.values.orderAmount), DDAI_DECIMALS),
+            formik.values.positionType,
+            formik.values.leverage
+          );
+
+          setPositionSize(toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber());
+        } finally {
+          // do nothing
+        }
+      }),
+    [getPositionSize, formik]
+  );
+
+  useEffect(() => {
+    updatePositionSize();
+  }, [value, positionType, leverage, updatePositionSize]);
+
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);
   };
@@ -120,9 +175,12 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
+    positionSize,
     positionType,
     positionTypeName,
     setPositionType,
-    values: formik.values
+    values: formik.values,
+    slippagePercentage: SLIPPAGE_PERCENTAGE,
+    minReceiveAmount: positionSize
   };
 };

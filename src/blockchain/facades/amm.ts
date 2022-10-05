@@ -1,10 +1,11 @@
+import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import ammABI from '@abis/amm.json';
 import { valueToBigNumber } from '@shared/helpers/bignumber';
 
 import { CommonFacade } from './common';
-import { address } from './types';
+import { address, Dir } from './types';
 
 export class Amm extends CommonFacade {
   constructor(
@@ -33,5 +34,12 @@ export class Amm extends CommonFacade {
     const rawPrice = await this.contract.getSpotPrice();
 
     return valueToBigNumber(rawPrice);
+  }
+
+  public async getInputPrice(_dirOfQuote: Dir, _quoteAssetAmount: BigNumber) {
+    // eslint-disable-next-line no-console
+    console.log(_dirOfQuote, _quoteAssetAmount.toFixed());
+
+    return valueToBigNumber(await this.contract.getInputPrice(_dirOfQuote, [_quoteAssetAmount.toFixed()]));
   }
 }
