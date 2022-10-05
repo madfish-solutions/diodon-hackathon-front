@@ -61,8 +61,8 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
           return new BigNumber(ZERO_AMOUNT);
         }
 
-        // bullshit
-        const notional = collateral.times(leverage);
+        // even don't ask me why
+        const notional = toReal(collateral.times(leverage), DDAI_DECIMALS).integerValue(BigNumber.ROUND_DOWN);
 
         const sizeWithoutSlippage = await amm.getInputPrice(
           positionType === Side.BUY ? Dir.AddToAmm : Dir.RemoveFromAmm,
@@ -90,7 +90,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
               Number(values.positionType),
               rawMargin,
               new BigNumber(values.leverage),
-              new BigNumber(0) // TODO: implement parameter calculation with slippage
+              await getPositionSize(rawMargin, values.positionType, values.leverage)
             ))!
         );
 
@@ -104,7 +104,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
       actions.setSubmitting(false);
     },
-    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore]
+    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore, getPositionSize]
   );
 
   const formik = useFormik<FormValues>({
