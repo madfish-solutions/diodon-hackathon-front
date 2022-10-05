@@ -19,9 +19,9 @@ export const PercentView: FC<Props> = ({ amount, pnl, decimalPlaces = DEFAULT_DE
   const isProfit = amount > 0 ? true : false;
 
   return (
-    <span className={cx({ [styles.root]: pnl, [styles.red]: !isProfit && pnl })}>{`${formatValueBalance(
-      amount,
-      decimalPlaces
-    )}%`}</span>
+    <span className={cx({ [styles.root]: pnl, [styles.red]: !isProfit && pnl })}>
+      {formatValueBalance(amount, decimalPlaces)}
+      <span className={styles.suffix}>%</span>
+    </span>
   );
 };

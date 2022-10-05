@@ -23,7 +23,8 @@ export const GetUsdView: FC<Props> = ({ amount, percentEquivalent }) => {
 
   return (
     <span className={styles.root}>
-      {`$ ${formatValueBalance(amount, 2)}`}
+      <span className={styles.prefix}>$</span>
+      {formatValueBalance(amount, 2)}
       {percentEquivalent && (
         <span className={cx(styles.percentEquivalent, { [styles.red]: isProfit })}>{`${sign} ${formatValueBalance(
           percentEquivalent,

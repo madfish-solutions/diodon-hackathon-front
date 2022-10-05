@@ -26,9 +26,9 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
         <Link to="/">
           <DiodonHeaderLogo />
         </Link>
-        {address && <UserMainStats className={styles.userMainStats} />}
-        <div className={styles.flex1} />
         <Socials />
+        <div className={styles.flex1} />
+        {address && <UserMainStats className={styles.userMainStats} />}
         <div>
           <ConnectButton className={styles.button} />
           <GiveMeMoneyButton className={styles.button} />
