@@ -139,10 +139,10 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />
               </Cell>
-              <Cell label="Avg Open Price">
+              <Cell label="Open Price">
                 <GetUsdView amount={position.avgOpenPriceUsd} />
               </Cell>
-              <Cell label="Liquidity 1 Price">
+              <Cell label="Liquidation Price">
                 <GetUsdView amount={position.liqPrice1Usd} />
               </Cell>
             </div>
