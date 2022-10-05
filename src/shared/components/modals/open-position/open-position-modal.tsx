@@ -10,7 +10,7 @@ import { Button } from '@shared/components/button';
 import { Switcher } from '@shared/components/switcher';
 import { CloseIcon } from '@shared/svg';
 
-import { formatValueBalance, PercentView, GetUsdView } from '../../../helpers';
+import { formatValueBalance, PercentView, GetUsdView, TokensView } from '../../../helpers';
 import { MarketId, Undefined } from '../../../types';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
@@ -42,7 +42,9 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
     handleChange,
     leverage,
     setPositionType,
-    handleLeverageChange
+    handleLeverageChange,
+    slippagePercentage,
+    minReceiveAmount
   } = useOpenPositionModalViewModel(marketId);
 
   if (!market) {
@@ -80,15 +82,15 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
           <Cell label={'Min. receive'}>
-            <GetUsdView amount={123} />
+            <TokensView amount={minReceiveAmount} />
           </Cell>
           <Cell label="Current price">
-            <GetUsdView amount={123} />
+            <GetUsdView amount={market?.indexPriceUsd ?? 0} />
           </Cell>
         </div>
         <div className={styles.footer}>
           <Cell label="Slippage">
-            <PercentView amount={0.23} />
+            <PercentView amount={slippagePercentage} />
           </Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
             Open {positionTypeName} position
