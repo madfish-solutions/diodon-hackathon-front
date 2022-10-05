@@ -14,19 +14,22 @@ interface Props {
 }
 
 export const UserMainStats: FC<Props> = observer(({ className }) => {
-  const { netCollateralUsd, openedPositionsSumUsd } = useUserMainStatsViewModel();
+  const { netCollateralUsd, openedPositionsSumUsd, dDAIBalanceInUSD } = useUserMainStatsViewModel();
 
   return (
     <div className={cx(styles.root, className)}>
-      <Cell contentClassName={{ amountClassName: styles.amount }} label="Net collateral">
+      <Cell contentClassName={{ amountClassName: styles.cell }} label="Net collateral">
         <TokensView prefix="$" amount={netCollateralUsd} />
       </Cell>
       <Cell
         className={styles.openedPositions}
-        contentClassName={{ amountClassName: styles.amount }}
+        contentClassName={{ amountClassName: styles.cell }}
         label="Opened positions"
       >
         <TokensView prefix="$" amount={openedPositionsSumUsd} />
+      </Cell>
+      <Cell className={styles.cell} contentClassName={{ amountClassName: styles.amount }} label="Balance">
+        <TokensView suffix="DDAI" amount={dDAIBalanceInUSD} />
       </Cell>
     </div>
   );
