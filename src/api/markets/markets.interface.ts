@@ -6,15 +6,11 @@ import { MarketId } from '@shared/types';
 
 export interface MarketData {
   marketId: MarketId;
-  marketPriceUsd: number;
+  marketPriceUsd: string;
   marketPriceChange24Usd: number;
   indexPriceUsd: number;
   indexPriceChange24Usd: number;
-  volume24Tokens: number;
+  volume24Tokens: string;
   volume24Usd: number;
   fundingRateChange8Percent: number;
-}
-
-export interface MarketResponse {
-  markets: MarketData[];
 }

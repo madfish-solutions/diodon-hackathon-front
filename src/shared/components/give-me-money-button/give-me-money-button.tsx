@@ -8,15 +8,17 @@ interface Props {
 }
 
 export const GiveMeMoneyButton: FC<Props> = props => {
-  const { handleClick, isLoading, isVisible } = useGiveMeMoneyButtonViewModel();
+  const { handleClick, isLoading, isVisible, buttonLabel, disabled } = useGiveMeMoneyButtonViewModel();
 
   if (!isVisible) {
     return null;
   }
 
   return (
-    <Button loading={isLoading} onClick={handleClick} {...props}>
-      Give me money
-    </Button>
+    <div>
+      <Button loading={isLoading} disabled={disabled} onClick={handleClick} {...props}>
+        {buttonLabel}
+      </Button>
+    </div>
   );
 };

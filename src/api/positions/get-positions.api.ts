@@ -1,13 +1,59 @@
-import { POSITIONS_API_URL } from '@config/api';
+import { providers } from 'ethers';
 
-import { AccountPositionResponse } from './positions.interface';
+import { ClearingHouseViewerContractWrapper, PNLCalcOption } from '@blockchain/clearing-house-viewer-wrapper';
+import { Amm } from '@blockchain/facades/amm';
+import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
+import { AMMS, CLEARING_HOUSE_VIEWER_ADDRESS, KNOWN_MARKETS } from '@config/environment';
+import { isExist } from '@shared/helpers';
+import { toPercent, toReal, valueToBigNumber } from '@shared/helpers/bignumber';
+import { PositionType } from '@shared/types';
 
-export const getPositionsApi = async (accountPkh: string): Promise<AccountPositionResponse> => {
-  const response = await fetch(POSITIONS_API_URL, {
-    headers: new Headers({
-      AccountPKH: accountPkh
+import { AccountPositionResponse, Position } from './positions.interface';
+
+export const getPositionsApi = async (
+  accountPkh: string,
+  provider: providers.Web3Provider
+): Promise<AccountPositionResponse> => {
+  const clearingHouseViewer = new ClearingHouseViewerContractWrapper(CLEARING_HOUSE_VIEWER_ADDRESS, provider);
+  const rawPositions = await Promise.all(
+    KNOWN_MARKETS.map(async marketId => {
+      const amm = AMMS[marketId];
+      const ammInstance = new Amm(provider, amm, provider.getSigner());
+      const position = Array.from(
+        await clearingHouseViewer.methods.getPersonalPositionWithFundingPayment(amm, accountPkh)
+      );
+      const [rawSize, rawMargin] = position;
+      const size = valueToBigNumber(rawSize);
+      const margin = toReal(valueToBigNumber(rawMargin), DDAI_DECIMALS);
+
+      if (size.eq(ZERO_AMOUNT)) {
+        return null;
+      }
+
+      const spotPrice = await ammInstance.getSpotPrice();
+      const rawPnl = await clearingHouseViewer.methods.getUnrealizedPnl(amm, accountPkh, PNLCalcOption.SPOT_PRICE);
+      const pnlUsd = toReal(valueToBigNumber(rawPnl), DDAI_DECIMALS);
+      const amountTokens = toReal(size.abs(), DDAI_DECIMALS);
+      const amountUsd = amountTokens.times(spotPrice).decimalPlaces(2);
+      const pnlPercentage = toPercent(pnlUsd.div(amountUsd));
+
+      return {
+        marketId,
+        margin: margin.toNumber(),
+        type: size.lt(ZERO_AMOUNT) ? PositionType.SHORT : PositionType.LONG,
+        amountTokens: amountTokens.toNumber(),
+        amountUsd: amountUsd.toNumber(),
+        pnlPercent: pnlPercentage.toNumber(),
+        pnlUsd: pnlUsd.toNumber(),
+        avgOpenPriceUsd: 8,
+        liqPrice1Usd: 50,
+        liqPrice2Usd: 40
+      };
     })
-  });
+  );
 
-  return response.json();
+  return {
+    accountPkh,
+    positions: rawPositions.filter((value): value is Position => isExist(value))
+  };
 };

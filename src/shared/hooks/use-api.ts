@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { transformMetamaskError } from '@shared/helpers';
+
 import { useToasts } from '../utils/toasts';
 
 export const useApi = () => {
@@ -16,8 +18,9 @@ export const useApi = () => {
 
           return result;
         } catch (error) {
-          showErrorToast(error as Error);
-          throw error;
+          const prettyError = transformMetamaskError(error as Error);
+          showErrorToast(prettyError);
+          throw prettyError;
         }
       }
     }),

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, computed } from 'mobx';
 
 import { getAccountDataApi } from '@api/account';
 import { ClearingHouseViewerContractWrapper } from '@blockchain/clearing-house-viewer-wrapper';
@@ -24,6 +24,8 @@ export class AccountStore {
       data: observable,
       dDAIBalance: observable,
       freeCollateral: observable,
+
+      dDAIBalanceInUSD: computed,
 
       setData: action,
       setDDAIBalance: action,
@@ -65,5 +67,9 @@ export class AccountStore {
     );
     const rawFreeCollateral = await clearingHouseViewerContract.methods.getFreeCollateral(amm, accountPkh);
     this.setFreeCollateral(toReal(new BigNumber(rawFreeCollateral.toString()), DDAI_DECIMALS));
+  }
+
+  get dDAIBalanceInUSD() {
+    return this.dDAIBalance.decimalPlaces(2, BigNumber.ROUND_DOWN).toNumber();
   }
 }
