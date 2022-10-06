@@ -6,7 +6,6 @@ import { FormikHelpers, useFormik } from 'formik';
 import { debounce } from 'throttle-debounce';
 import { number as numberSchema, object as objectSchema, string } from 'yup';
 
-import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { Amm } from '@blockchain/facades/amm';
 import { Dir, Side } from '@blockchain/facades/types';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
@@ -83,20 +82,16 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
       await api.call(async () => {
         const rawMargin = toAtomic(new BigNumber(values.orderAmount), DDAI_DECIMALS);
-        const transactionsFunctions = await getApproves(EthersBigNumber.from(rawMargin.toFixed()));
+        await getApproves(EthersBigNumber.from(rawMargin.toFixed()));
 
-        transactionsFunctions.push(
-          async () =>
-            (await openPosition(
-              marketId!,
-              values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
-              rawMargin,
-              new BigNumber(values.leverage),
-              await getPositionSize(rawMargin, values.positionType, values.leverage)
-            ))!
+        await openPosition(
+          marketId!,
+          values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
+          rawMargin,
+          new BigNumber(values.leverage),
+          await getPositionSize(rawMargin, values.positionType, values.leverage)
         );
 
-        await executeTransactionsBatch(transactionsFunctions);
         modalsStore.close();
         await Promise.all([
           accountStore.loadFreeCollateral(AMMS[marketId!], address!),

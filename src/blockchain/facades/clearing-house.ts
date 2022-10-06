@@ -123,7 +123,9 @@ export class ClearingHouse extends CommonFacade {
    * @param amount added margin in 18 digits
    */
   public async addMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()]);
+    await this.contract.connect(this.signer).estimateGas.addMargin(amm, [amount.toFixed()]);
+
+    return await (await this.contract.connect(this.signer).addMargin(amm, [amount.toFixed()])).wait();
   }
 
   /**
@@ -136,10 +138,11 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 margin
    * @eventParam uint256 marginRatio)
    */
-  public async removeMargin(amm: address, amount: BigNumber) {
-    return await this.contract.connect(this.signer).removeMargin(amm, [amount.toFixed()]);
-  }
+  public async removeMargin(amm: address, amount: BigNumber): Promise<Transaction> {
+    await this.contract.connect(this.signer).estimateGas.removeMargin(amm, [amount.toString()]);
 
+    return await (await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()])).wait();
+  }
   /**
    * @notice settle all the positions when amm is shutdown. The settlement price is according to IAmm.settlementPrice
    * @param amm Pool address // apple/usd
@@ -177,12 +180,30 @@ export class ClearingHouse extends CommonFacade {
     quoteAssetAmount: BigNumber,
     leverage: BigNumber,
     baseAssetAmountLimit: BigNumber
-  ) {
-    return await this.contract
+  ): Promise<Transaction> {
+    await this.contract
       .connect(this.signer)
-      .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()], {
-        from: await this.signer.getAddress()
-      });
+      .estimateGas.openPosition(
+        amm,
+        side,
+        [quoteAssetAmount.toString()],
+        [leverage.toString()],
+        [baseAssetAmountLimit.toString()],
+        { gasLimit: 1000000 }
+      );
+
+    return await (
+      await this.contract
+        .connect(this.signer)
+        .openPosition(
+          amm,
+          side,
+          [quoteAssetAmount.toString()],
+          [leverage.toString()],
+          [baseAssetAmountLimit.toString()],
+          { gasLimit: 1000000 }
+        )
+    ).wait();
   }
 
   /**
