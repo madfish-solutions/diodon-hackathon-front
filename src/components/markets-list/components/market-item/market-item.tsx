@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { MarketData } from '@api/markets';
 import { MarginSlider } from '@components/account/components/margin-slider';
 import { Cell } from '@components/cell';
+import { BarChart } from '@shared/charts/bar-chart';
 import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
@@ -20,6 +21,7 @@ interface Props {
 export const MarketItem: FC<Props> = observer(({ market }) => {
   const [fullView, seFullView] = useState(false);
   const {
+    chartData,
     position,
     positionBeingClosed,
     openHandler,
@@ -100,7 +102,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 <span className={styles.secondaryText}>Index price, USD</span>
                 <span className={styles.secondaryText}>Funding rate, %</span>
               </div>
-              <div className={styles.chart} />
+              <BarChart data={chartData} />
               <div className={styles.footerInfo}>
                 <div>
                   <div className={styles.marginLevel}>Margin level:</div>

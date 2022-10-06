@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
 
 import { MarketData } from '@api/markets';
+import { getMarketPricesApi, IChartData } from '@api/positions';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { ZERO_AMOUNT } from '@config/constants';
 import { AMMS } from '@config/environment';
@@ -18,6 +19,11 @@ export const useMarketItemViewModel = (market: MarketData) => {
   const api = useApi();
   const { clearingHouse } = useClearingHouse();
   const [positionBeingClosed, setPositionBeingClosed] = useState(false);
+  const [chartData, setChartData] = useState<Array<IChartData>>([]);
+
+  useEffect(() => {
+    getMarketPricesApi(marketId).then(setChartData);
+  }, [marketId]);
 
   const positionsStore = usePositionsStore();
   const position = isConnected ? positionsStore.getPosition(marketId) : null;
@@ -54,6 +60,7 @@ export const useMarketItemViewModel = (market: MarketData) => {
   }, [api, clearingHouse, marketId, modalsStore, address, positionsStore]);
 
   return {
+    chartData,
     position,
     positionBeingClosed,
     isConnected,
