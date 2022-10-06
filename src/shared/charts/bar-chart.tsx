@@ -2,8 +2,11 @@ import { createRef, FC, useEffect } from 'react';
 
 import { ColorType, createChart } from 'lightweight-charts';
 
+import { IChartData } from '@api/positions';
+
 import styles from './bar-chart.module.scss';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const initialData = [
   { time: '2018-12-22', value: 320.51 },
   { time: '2018-12-23', value: 310.11 },
@@ -41,13 +44,17 @@ const initialData = [
   { time: '2019-3-25', value: 270.32 },
   { time: '2019-3-26', value: 250.17 },
   { time: '2019-3-27', value: 280.89 },
-  { time: '2019-3-28', value: 250.46 },
-  { time: '2019-3-29', value: 230.92 },
+  { time: '2019-3-28', value: 0 },
+  { time: '2019-3-29', value: 0 },
   { time: '2019-3-30', value: 220.68 },
   { time: '2019-3-31', value: 220.67 }
 ];
 
-export const BarChart: FC = () => {
+interface Props {
+  data: Array<IChartData>;
+}
+
+export const BarChart: FC<Props> = ({ data }) => {
   const backgroundColor = 'rgba(0, 0, 0, 0.2)';
   const textColor = 'rgba(255, 255, 255, 0.64)';
   const chartContainerRef = createRef<HTMLDivElement>();
@@ -71,6 +78,10 @@ export const BarChart: FC = () => {
         horzLines: {
           color: 'rgba(255, 255, 255, 0.4)'
         }
+      },
+      timeScale: {
+        visible: true,
+        secondsVisible: true
       }
     });
 
@@ -81,7 +92,7 @@ export const BarChart: FC = () => {
     chart.timeScale().fitContent();
 
     const newSeries = chart.addHistogramSeries({ color: 'rgba(255, 235, 128, 0.3)' });
-    newSeries.setData(initialData);
+    newSeries.setData(data);
 
     window.addEventListener('resize', handleResize);
 
@@ -90,7 +101,7 @@ export const BarChart: FC = () => {
 
       chart.remove();
     };
-  }, [backgroundColor, chartContainerRef, textColor]);
+  }, [backgroundColor, chartContainerRef, data, textColor]);
 
   return <div className={styles.root} ref={chartContainerRef} />;
 };
