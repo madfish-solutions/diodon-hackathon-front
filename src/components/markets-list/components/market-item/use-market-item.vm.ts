@@ -23,7 +23,7 @@ export const useMarketItemViewModel = (market: MarketData) => {
 
   useEffect(() => {
     getMarketPricesApi(marketId).then(setChartData);
-  }, []);
+  }, [marketId]);
 
   const positionsStore = usePositionsStore();
   const position = isConnected ? positionsStore.getPosition(marketId) : null;
