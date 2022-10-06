@@ -2,7 +2,7 @@ import { providers } from 'ethers';
 
 import { ClearingHouseViewerContractWrapper, PNLCalcOption } from '@blockchain/clearing-house-viewer-wrapper';
 import { Amm } from '@blockchain/facades/amm';
-import { API_URL_2 } from '@config/api';
+import { API_URL } from '@config/api';
 import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
 import { AMMS, CLEARING_HOUSE_VIEWER_ADDRESS, KNOWN_MARKETS } from '@config/environment';
 import { isExist } from '@shared/helpers';
@@ -60,7 +60,7 @@ export const getPositionsApi = async (
 };
 
 export const getMarketPricesApi = async (marketId: string): Promise<Array<IChartData>> => {
-  const response = await fetch(`${API_URL_2}/${marketId.toLowerCase()}/market-prices`);
+  const response = await fetch(`${API_URL}/${marketId.toLowerCase()}/market-prices`);
 
   return response.json();
 };
