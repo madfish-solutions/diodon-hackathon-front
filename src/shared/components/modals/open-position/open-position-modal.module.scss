@@ -27,7 +27,7 @@
   font-size: 18px;
   font-weight: 700;
   padding-left: 16px;
-  padding-right: 70px; 
+  padding-right: 70px;
   outline: none;
 
   &::-webkit-outer-spin-button,
@@ -88,6 +88,7 @@ input::-webkit-inner-spin-button {
   padding: 5px 16px;
   font-size: 18px;
   font-weight: 700;
+  min-width: 220px;
 }
 
 .additionalInfo {

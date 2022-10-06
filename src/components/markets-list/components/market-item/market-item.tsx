@@ -90,7 +90,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 <Cell label="Liquidation Price">
                   <GetUsdView amount={position.liqPrice1Usd} />
                 </Cell>
-                <Cell label="Leverage">{getMultiplierView(0.43)}</Cell>
+                <Cell label="Leverage">{getMultiplierView(position.margin)}</Cell>
               </div>
               <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
             </div>
