@@ -1,11 +1,10 @@
 .root {
   display: flex;
-}
-
-.amount {
-  color: #FFD700;
-}
-
-.openedPositions {
   margin-left: 24px;
+  margin-right: 24px;
+}
+
+.cell {
+  margin: 0 16px;
+  color: #FFD700;
 }

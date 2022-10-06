@@ -11,8 +11,14 @@
   line-height: 17px;
 
   color: #00FF0A;
+  white-space: nowrap;
 }
 
 .red {
-  color: #FB5959;
+  color: #000;
+}
+
+.prefix {
+  font-weight: 200;
+  margin-right: 2px;
 }

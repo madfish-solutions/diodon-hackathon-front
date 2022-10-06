@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber } from 'ethers';
 import { FormikHelpers, useFormik } from 'formik';
 import { debounce } from 'throttle-debounce';
-import { number as numberSchema, object as objectSchema } from 'yup';
+import { number as numberSchema, object as objectSchema, string } from 'yup';
 
 import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { Amm } from '@blockchain/facades/amm';
@@ -18,11 +18,11 @@ import { toAtomic, toReal } from '@shared/helpers/bignumber';
 import { useAccountStore, useApi, useAuthStore, useModalsStore, usePositionsStore } from '../../../hooks';
 import { useMarketsStore } from '../../../hooks/use-markets-store';
 import { ModalType } from '../../../store/modals.store';
-import { MarketId, Undefined } from '../../../types';
+import { MarketId, PositionType, Undefined } from '../../../types';
 
 export interface FormValues {
   orderAmount: string;
-  positionType: Side;
+  positionType: PositionType;
   leverage: number;
 }
 
@@ -30,6 +30,7 @@ const FORM_FIELDS = ['orderAmount', 'positionType', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 const SLIPPAGE_PERCENTAGE = 3;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.OpenPosition);
@@ -41,6 +42,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const { dDAIBalance } = accountStore;
   const { address, connection } = useAuthStore();
   const [positionSize, setPositionSize] = useState(ZERO_AMOUNT);
+  const [positionSizeUsd, setPositionSizeUsd] = useState(ZERO_AMOUNT);
   const api = useApi();
   const { openPosition, getApproves } = useClearingHouse();
 
@@ -55,17 +57,17 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   }, [market, connection]);
 
   const getPositionSize = useCallback(
-    async (collateral: BigNumber, positionType: Side, leverage: number) => {
+    async (collateral: BigNumber, positionType: PositionType, leverage: number) => {
       return api.call(async () => {
         if (!collateral.isFinite() || collateral.eq(ZERO_AMOUNT) || !amm) {
           return new BigNumber(ZERO_AMOUNT);
         }
 
-        // bullshit
-        const notional = collateral.times(leverage);
+        // even don't ask me why
+        const notional = toReal(collateral.times(leverage), DDAI_DECIMALS).integerValue(BigNumber.ROUND_DOWN);
 
         const sizeWithoutSlippage = await amm.getInputPrice(
-          positionType === Side.BUY ? Dir.AddToAmm : Dir.RemoveFromAmm,
+          positionType === PositionType.LONG ? Dir.AddToAmm : Dir.RemoveFromAmm,
           notional
         );
 
@@ -87,10 +89,10 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
           async () =>
             (await openPosition(
               marketId!,
-              Number(values.positionType),
+              values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
               rawMargin,
               new BigNumber(values.leverage),
-              new BigNumber(0) // TODO: implement parameter calculation with slippage
+              await getPositionSize(rawMargin, values.positionType, values.leverage)
             ))!
         );
 
@@ -104,16 +106,16 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
       actions.setSubmitting(false);
     },
-    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore]
+    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore, getPositionSize]
   );
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
       orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required(),
       leverage: numberSchema().min(2).max(10).integer().required(),
-      positionType: numberSchema().oneOf([Side.BUY, Side.SELL]).required()
+      positionType: string().oneOf([PositionType.LONG, PositionType.SHORT]).required()
     }),
-    initialValues: { orderAmount: '', positionType: Side.BUY, leverage: 2 },
+    initialValues: { orderAmount: '', positionType: PositionType.LONG, leverage: 2 },
     onSubmit: handleSubmit
   });
 
@@ -121,7 +123,6 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const positionType = formik.values.positionType;
   const leverage = formik.values.leverage;
   const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
-  const positionTypeName = positionType === Side.BUY ? 'long' : 'short';
 
   const updatePositionSize = useMemo(
     () =>
@@ -133,12 +134,20 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
             formik.values.leverage
           );
 
-          setPositionSize(toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber());
+          const _positionSize = toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber();
+          setPositionSize(_positionSize);
+          setPositionSizeUsd(_positionSize * (market?.indexPriceUsd ?? 0));
         } finally {
           // do nothing
         }
       }),
-    [getPositionSize, formik]
+    [
+      getPositionSize,
+      formik.values.orderAmount,
+      formik.values.positionType,
+      formik.values.leverage,
+      market?.indexPriceUsd
+    ]
   );
 
   useEffect(() => {
@@ -153,7 +162,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     formik.setFieldValue('leverage', newValue, true);
   };
 
-  const setPositionType = (newPositionType: Side) => {
+  const setPositionType = (newPositionType: PositionType) => {
     formik.setFieldValue('positionType', newPositionType, true);
   };
 
@@ -175,12 +184,11 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
-    positionSize,
     positionType,
-    positionTypeName,
     setPositionType,
     values: formik.values,
     slippagePercentage: SLIPPAGE_PERCENTAGE,
-    minReceiveAmount: positionSize
+    positionSize,
+    positionSizeUsd
   };
 };

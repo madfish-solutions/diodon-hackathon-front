@@ -8,8 +8,7 @@ import { Cell } from '@components/cell';
 import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { PositionTypeIcon } from '@shared/components/position-type-icon';
-import { getMultiplierView, PercentView, TokensView, GetUsdView } from '@shared/helpers';
-import { PositionType } from '@shared/types';
+import { getMultiplierView, GetUsdView, PercentView, TokensView } from '@shared/helpers';
 
 import styles from './market-item.module.scss';
 import { useMarketItemViewModel } from './use-market-item.vm';
@@ -31,13 +30,17 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
   } = useMarketItemViewModel(market);
 
   return (
-    <button type="button" className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
+    <div className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
       <div className={styles.item}>
         <div className={styles.market}>
-          <div style={{ textAlign: 'start', minWidth: '150px' }}>
-            <MarketIcon className={styles.marketItem} marketId={market.marketId} width={48} height={48} />
-            <div>
-              <b>{market.marketId}</b>
+          <div style={{ textAlign: 'start', minWidth: '100px' }}>
+            <div style={{ textAlign: 'center', width: 50 }}>
+              <div>
+                <MarketIcon className={styles.marketItem} marketId={market.marketId} width={48} height={48} />
+              </div>
+              <div>
+                <b>{market.marketId}</b>
+              </div>
             </div>
           </div>
           <div className={styles.details}>
@@ -51,7 +54,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <PercentView amount={market.fundingRateChange8Percent} decimalPlaces={4} />
             </Cell>
             <Cell label="Volume 24h" className={styles.Cell}>
-              <TokensView amount={market.volume24Tokens} dollarEquivalent={market.volume24Usd} />
+              <TokensView prefix="$" amount={market.volume24Usd} />
             </Cell>
           </div>
           {!position ? (
@@ -81,15 +84,15 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 <Cell label="Profit / Loss">
                   <PercentView amount={position.pnlPercent} pnl />
                 </Cell>
-                <Cell label="Avg Open Price">
+                <Cell label="Open Price">
                   <GetUsdView amount={position.avgOpenPriceUsd} />
                 </Cell>
-                <Cell label="Liquidity 1 Price">
+                <Cell label="Liquidation Price">
                   <GetUsdView amount={position.liqPrice1Usd} />
                 </Cell>
-                <Cell label="Leverage">{getMultiplierView(0.43)}</Cell>
+                <Cell label="Leverage">{getMultiplierView(position.margin)}</Cell>
               </div>
-              <PositionTypeIcon type={PositionType.LONG} width={64} height={64} style={{ marginRight: 8 }} />
+              <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
             </div>
             <div className={styles.mainPanel}>
               <div className={styles.headerInfo}>
@@ -126,16 +129,20 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
             </div>
             <div className={styles.detailsPosition}>
-              <Cell label="Amount">
-                <TokensView amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
+              <Cell label="Position Amount">
+                <TokensView
+                  suffix={position.marketId}
+                  amount={position.amountTokens}
+                  dollarEquivalent={position.amountUsd}
+                />
               </Cell>
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />
               </Cell>
-              <Cell label="Avg Open Price">
+              <Cell label="Open Price">
                 <GetUsdView amount={position.avgOpenPriceUsd} />
               </Cell>
-              <Cell label="Liquidity 1 Price">
+              <Cell label="Liquidation Price">
                 <GetUsdView amount={position.liqPrice1Usd} />
               </Cell>
             </div>
@@ -154,6 +161,6 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           </div>
         ) : null}
       </div>
-    </button>
+    </div>
   );
 });

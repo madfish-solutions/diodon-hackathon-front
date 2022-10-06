@@ -37,9 +37,6 @@ export class Amm extends CommonFacade {
   }
 
   public async getInputPrice(_dirOfQuote: Dir, _quoteAssetAmount: BigNumber) {
-    // eslint-disable-next-line no-console
-    console.log(_dirOfQuote, _quoteAssetAmount.toFixed());
-
     return valueToBigNumber(await this.contract.getInputPrice(_dirOfQuote, [_quoteAssetAmount.toFixed()]));
   }
 }

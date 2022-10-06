@@ -4,14 +4,14 @@ import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
-import { Side } from '@blockchain/facades/types';
 import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
 import { Switcher } from '@shared/components/switcher';
 import { CloseIcon } from '@shared/svg';
 
 import { formatValueBalance, PercentView, GetUsdView, TokensView } from '../../../helpers';
-import { MarketId, Undefined } from '../../../types';
+import { MarketId, PositionType, Undefined } from '../../../types';
+import { PositionTypeIcon } from '../../position-type-icon';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
 import { LeverageSlider } from './components';
@@ -23,8 +23,8 @@ interface Props {
 }
 
 const POSITION_OPTIONS = [
-  { label: 'Long', value: Side.BUY },
-  { label: 'Short', value: Side.SELL }
+  { label: 'Long', value: PositionType.LONG },
+  { label: 'Short', value: PositionType.SHORT }
 ];
 
 export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
@@ -37,14 +37,14 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
     isSubmitting,
     error,
     positionType,
-    positionTypeName,
     value,
     handleChange,
     leverage,
     setPositionType,
     handleLeverageChange,
     slippagePercentage,
-    minReceiveAmount
+    positionSize,
+    positionSizeUsd
   } = useOpenPositionModalViewModel(marketId);
 
   if (!market) {
@@ -58,7 +58,10 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         Open <span className={modalsStyles.market}>{marketId}</span> position
       </h2>
       <form onSubmit={handleSubmit}>
-        <Switcher value={positionType} options={POSITION_OPTIONS} onClick={setPositionType} />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Switcher value={positionType} options={POSITION_OPTIONS} onClick={setPositionType} />
+          <PositionTypeIcon type={positionType} width={32} height={32} />
+        </div>
         <div className={styles.info}>
           <div>Margin</div>
           <div>Balance: {formatValueBalance(maxValue)}</div>
@@ -82,7 +85,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
           <Cell label={'Min. receive'}>
-            <TokensView amount={minReceiveAmount} />
+            <TokensView amount={positionSize} suffix={marketId} dollarEquivalent={positionSizeUsd} />
           </Cell>
           <Cell label="Current price">
             <GetUsdView amount={market?.indexPriceUsd ?? 0} />
@@ -93,7 +96,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
             <PercentView amount={slippagePercentage} />
           </Cell>
           <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
-            Open {positionTypeName} position
+            Open {positionType} position
           </Button>
         </div>
       </form>

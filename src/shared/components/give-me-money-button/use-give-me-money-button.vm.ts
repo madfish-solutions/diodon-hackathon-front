@@ -4,13 +4,14 @@ import axios from 'axios';
 
 import { useConnectEthereum } from '@blockchain/use-connect-ethereum';
 
-import { useAuthStore } from '../../hooks';
+import { useAccountStore, useAuthStore } from '../../hooks';
 import { useToasts } from '../../utils/toasts';
 
 export const useGiveMeMoneyButtonViewModel = () => {
   const { address } = useAuthStore();
   const { showErrorToast, showSuccessToast } = useToasts();
   const { addToken } = useConnectEthereum();
+  const { dDAIBalanceInUSD } = useAccountStore();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,5 +34,25 @@ export const useGiveMeMoneyButtonViewModel = () => {
     setIsLoading(false);
   };
 
-  return { handleClick, isLoading, isVisible: !!address };
+  const getButtonLabel = () => {
+    if (!dDAIBalanceInUSD) {
+      return 'Give Me dDAI Balance';
+    }
+    if (dDAIBalanceInUSD < 30) {
+      return 'Give Me More dDAI';
+    }
+    if (dDAIBalanceInUSD < 60) {
+      return 'I want all money!';
+    }
+
+    return 'I am rich!';
+  };
+
+  return {
+    handleClick,
+    isLoading,
+    isVisible: !!address,
+    buttonLabel: getButtonLabel(),
+    disabled: dDAIBalanceInUSD >= 60
+  };
 };
