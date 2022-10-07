@@ -13,4 +13,5 @@ export interface MarketData {
   volume24Tokens: string;
   volume24Usd: number;
   fundingRateChange8Percent: number;
+  marketPriceChangePercentage: string;
 }

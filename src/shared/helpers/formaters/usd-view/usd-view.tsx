@@ -3,6 +3,8 @@ import { FC } from 'react';
 import { BigNumber } from 'bignumber.js';
 import cx from 'classnames';
 
+import { isExist } from '@shared/types';
+
 import { formatValueBalance } from '../format-balance';
 import styles from './usd-view.module.scss';
 
@@ -25,7 +27,7 @@ export const GetUsdView: FC<Props> = ({ amount, percentEquivalent }) => {
     <span className={styles.root}>
       <span className={styles.prefix}>$</span>
       {formatValueBalance(amount, 2)}
-      {percentEquivalent && (
+      {isExist(percentEquivalent) && (
         <span className={cx(styles.percentEquivalent, { [styles.red]: isProfit })}>{`${sign} ${formatValueBalance(
           percentEquivalent,
           2
