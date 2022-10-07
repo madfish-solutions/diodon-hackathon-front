@@ -56,14 +56,13 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   }, [market, connection]);
 
   const getPositionSize = useCallback(
-    async (collateral: BigNumber, positionType: PositionType, leverage: number) => {
+    async (atomicCollateral: BigNumber, positionType: PositionType, leverage: number) => {
       return api.call(async () => {
-        if (!collateral.isFinite() || collateral.eq(ZERO_AMOUNT) || !amm) {
+        if (!atomicCollateral.isFinite() || atomicCollateral.eq(ZERO_AMOUNT) || !amm) {
           return new BigNumber(ZERO_AMOUNT);
         }
 
-        // even don't ask me why
-        const notional = toReal(collateral.times(leverage), DDAI_DECIMALS).integerValue(BigNumber.ROUND_DOWN);
+        const notional = atomicCollateral.times(leverage).integerValue(BigNumber.ROUND_DOWN);
 
         const sizeWithoutSlippage = await amm.getInputPrice(
           positionType === PositionType.LONG ? Dir.AddToAmm : Dir.RemoveFromAmm,
@@ -76,19 +75,35 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     [amm, api]
   );
 
+  const getFee = useCallback(
+    async (notional: BigNumber) => {
+      if (!amm) {
+        return {
+          tollFee: new BigNumber(ZERO_AMOUNT),
+          spreadFee: new BigNumber(ZERO_AMOUNT)
+        };
+      }
+
+      return await amm.calcFee(notional);
+    },
+    [amm]
+  );
+
   const handleSubmit = useCallback(
     async (values: FormValues, actions: FormikHelpers<FormValues>) => {
       actions.setSubmitting(true);
 
       await api.call(async () => {
         const rawMargin = toAtomic(new BigNumber(values.orderAmount), DDAI_DECIMALS);
-        await getApproves(EthersBigNumber.from(rawMargin.toFixed()));
+        const { tollFee, spreadFee } = await getFee(rawMargin.times(values.leverage));
+        const allowance = rawMargin.plus(tollFee).plus(spreadFee);
+        await getApproves(EthersBigNumber.from(allowance.toFixed()));
 
         await openPosition(
           marketId!,
           values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
           rawMargin,
-          new BigNumber(values.leverage),
+          toAtomic(new BigNumber(values.leverage), DDAI_DECIMALS),
           await getPositionSize(rawMargin, values.positionType, values.leverage)
         );
 
@@ -101,7 +116,18 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
       actions.setSubmitting(false);
     },
-    [api, openPosition, marketId, getApproves, accountStore, address, positionsStore, modalsStore, getPositionSize]
+    [
+      api,
+      getFee,
+      openPosition,
+      marketId,
+      getApproves,
+      accountStore,
+      address,
+      positionsStore,
+      modalsStore,
+      getPositionSize
+    ]
   );
 
   const formik = useFormik<FormValues>({
