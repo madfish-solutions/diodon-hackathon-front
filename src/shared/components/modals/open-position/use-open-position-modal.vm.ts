@@ -28,6 +28,7 @@ export interface FormValues {
 const FORM_FIELDS = ['orderAmount', 'positionType', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 const SLIPPAGE_PERCENTAGE = 3;
+const WHOLE_PERCENTAGE = 100;
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
@@ -69,7 +70,11 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
           notional
         );
 
-        return sizeWithoutSlippage.times(100 - SLIPPAGE_PERCENTAGE).idiv(100);
+        if (positionType === PositionType.LONG) {
+          return sizeWithoutSlippage.times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
+        }
+
+        return sizeWithoutSlippage.times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
       });
     },
     [amm, api]
