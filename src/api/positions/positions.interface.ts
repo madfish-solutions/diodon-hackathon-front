@@ -1,3 +1,5 @@
+import { Time } from 'lightweight-charts';
+
 import { MarketId, PositionType } from '@shared/types';
 
 /*
@@ -20,4 +22,9 @@ export interface Position {
 export interface AccountPositionResponse {
   accountPkh: string;
   positions: Position[];
+}
+
+export interface IChartData {
+  time: Time;
+  value: number;
 }
