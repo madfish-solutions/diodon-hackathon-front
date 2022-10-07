@@ -5,7 +5,6 @@ import { BigNumber as EthersBigNumber } from 'ethers';
 import { FormikHelpers, useFormik } from 'formik';
 import { number as numberSchema, object as objectSchema, string as stringSchema } from 'yup';
 
-import { executeTransactionsBatch } from '@blockchain/execute-transactions-batch';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
 import { DDAI_DECIMALS } from '@config/constants';
 import { AMMS, KNOWN_MARKETS } from '@config/environment';
@@ -51,20 +50,11 @@ export const useFinOperationModalViewModel = (operation: Tab) => {
         }
 
         if (isEqual(Tab.DEPOSIT, operation)) {
-          const transactionsFunctions = await getApproves(rawAmount);
-
-          transactionsFunctions.push(async () =>
-            clearingHouse.addMargin(AMMS[values.market], new BigNumber(rawAmount.toString()))
-          );
-
-          await executeTransactionsBatch(transactionsFunctions);
+          await getApproves(rawAmount);
+          await clearingHouse.addMargin(AMMS[values.market], new BigNumber(rawAmount.toString()));
           await accountStore.loadDDAIBalance(address!);
         } else {
-          const transactionsFunctions = [
-            async () => clearingHouse.removeMargin(AMMS[values.market], new BigNumber(rawAmount.toString()))
-          ];
-
-          await executeTransactionsBatch(transactionsFunctions);
+          await clearingHouse.removeMargin(AMMS[values.market], new BigNumber(rawAmount.toString()));
           await accountStore.loadFreeCollateral(AMMS[values.market], address!);
         }
       });

@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 
-import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { BigNumber } from 'bignumber.js';
 
@@ -47,29 +46,27 @@ export const useClearingHouse = () => {
 
   const getApproves = useCallback(
     async (rawAmount: EthersBigNumber) => {
-      const transactionsFunctions: Array<() => Promise<TransactionResponse>> = [];
       if (!dDaiTransactionContract) {
-        return transactionsFunctions;
+        return;
       }
 
       const allowance = await getAllowance();
       if (!allowance) {
-        return transactionsFunctions;
+        return;
       }
 
       if (EthersBigNumber.from(allowance).gt(ZERO_AMOUNT) && rawAmount.gt(allowance)) {
-        transactionsFunctions.push(async () =>
-          dDaiTransactionContract.methods.approve(CLEARING_HOUSE_ADDRESS, EthersBigNumber.from(ZERO_AMOUNT))
+        const response = await dDaiTransactionContract.methods.approve(
+          CLEARING_HOUSE_ADDRESS,
+          EthersBigNumber.from(ZERO_AMOUNT)
         );
+        await response.wait();
       }
 
       if (rawAmount.gt(allowance)) {
-        transactionsFunctions.push(async () =>
-          dDaiTransactionContract.methods.approve(CLEARING_HOUSE_ADDRESS, rawAmount)
-        );
+        const response = await dDaiTransactionContract.methods.approve(CLEARING_HOUSE_ADDRESS, rawAmount);
+        await response.wait();
       }
-
-      return transactionsFunctions;
     },
     [dDaiTransactionContract, getAllowance]
   );

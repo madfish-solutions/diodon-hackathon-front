@@ -24,7 +24,11 @@ export abstract class ContractWrapper<T extends Record<string, ContractFunction>
     this.methods = {} as T;
     this.filters = {} as typeof this.filters;
     for (const fnName in this.internalContract.functions) {
-      this.methods[fnName as keyof T] = this.internalContract[fnName];
+      this.methods[fnName as keyof T] = (async (...args) => {
+        await this.estimateGas[fnName](...args);
+
+        return this.internalContract[fnName](...args);
+      }) as T[keyof T];
     }
     for (const eventName in this.internalContract.filters) {
       this.filters[eventName as keyof E] = this.internalContract.filters[eventName];
