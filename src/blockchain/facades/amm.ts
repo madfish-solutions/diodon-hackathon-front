@@ -16,6 +16,15 @@ export class Amm extends CommonFacade {
     super(provider, contractAddress, ammABI, signer);
   }
 
+  public async calcFee(quoteAssetAmount: BigNumber) {
+    const rawFees: ArrayLike<[ethers.BigNumber]> = await this.contract.calcFee([quoteAssetAmount.toFixed()]);
+
+    return {
+      tollFee: valueToBigNumber(rawFees[0]),
+      spreadFee: valueToBigNumber(rawFees[1])
+    };
+  }
+
   public async updateFundingRate() {
     const tx = await this.contract.connect(this.signer).settleFunding({ gasLimit: 1000000 });
 
