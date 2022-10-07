@@ -12,7 +12,7 @@ import { useApi, useAuthStore, useModalsStore, usePositionsStore } from '@shared
 import { ModalType } from '@shared/store/modals.store';
 
 export const useMarketItemViewModel = (market: MarketData) => {
-  const { marketId, marketPriceUsd, marketPriceChange24Usd, indexPriceChange24Usd, indexPriceUsd } = market;
+  const { marketId, marketPriceChangePercentage, indexPriceUsd, indexPriceChange24Usd } = market;
 
   const modalsStore = useModalsStore();
   const { isConnected, address } = useAuthStore();
@@ -27,11 +27,6 @@ export const useMarketItemViewModel = (market: MarketData) => {
 
   const positionsStore = usePositionsStore();
   const position = isConnected ? positionsStore.getPosition(marketId) : null;
-
-  const marketPriceChangePercentage = useMemo(
-    () => valueChangeToPercentage(marketPriceUsd, marketPriceChange24Usd).toNumber(),
-    [marketPriceChange24Usd, marketPriceUsd]
-  );
 
   const indexPriceChangePercentage = useMemo(
     () => valueChangeToPercentage(indexPriceUsd, indexPriceChange24Usd).toNumber(),

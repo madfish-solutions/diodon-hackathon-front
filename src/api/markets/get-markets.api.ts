@@ -21,7 +21,7 @@ export const getMarketsApi = async (
 
       return {
         ...marketData,
-        marketPriceUsd: (await amm.getSpotPrice()).toFixed(),
+        marketPriceUsd: toReal(await amm.getSpotPrice(), DDAI_DECIMALS).toFixed(),
         indexPriceUsd: toReal(await amm.getUnderlyingPrice(), DDAI_DECIMALS).toNumber()
       };
     })
