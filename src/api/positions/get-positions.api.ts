@@ -24,9 +24,10 @@ export const getPositionsApi = async (
       const position = Array.from(
         await clearingHouseViewer.methods.getPersonalPositionWithFundingPayment(amm, accountPkh)
       );
-      const [rawSize, rawMargin] = position;
+      const [rawSize, rawMargin, rawOpenNotional] = position;
       const size = valueToBigNumber(rawSize);
       const margin = toReal(valueToBigNumber(rawMargin), DDAI_DECIMALS);
+      const avgOpenPriceUsd = valueToBigNumber(rawOpenNotional).div(size).abs().decimalPlaces(2).toNumber();
 
       if (size.eq(ZERO_AMOUNT)) {
         return null;
@@ -51,7 +52,7 @@ export const getPositionsApi = async (
         amountUsd: amountUsd.toNumber(),
         pnlPercent: pnlPercentage.toNumber(),
         pnlUsd: pnlUsd.toNumber(),
-        avgOpenPriceUsd: 8,
+        avgOpenPriceUsd,
         liqPrice1Usd: 50,
         liqPrice2Usd: 40,
         marginRatioPercentage: marginRatio.times(WHOLE_PERCENTAGE).decimalPlaces(1).toNumber(),
