@@ -38,17 +38,17 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           onOpen={openHandler}
           position={position}
         />
-        {position &&
-          (fullView ? (
-            <PositionItemFull
-              position={position}
-              chartData={chartData}
-              onClose={closeHandler}
-              positionBeingClosed={positionBeingClosed}
-            />
-          ) : (
-            <PositionItem position={position} onClose={closeHandler} positionBeingClosed={positionBeingClosed} />
-          ))}
+        {fullView && (
+          <PositionItemFull
+            position={position}
+            chartData={chartData}
+            onClose={closeHandler}
+            positionBeingClosed={positionBeingClosed}
+          />
+        )}
+        {position && !fullView && (
+          <PositionItem position={position} onClose={closeHandler} positionBeingClosed={positionBeingClosed} />
+        )}
       </div>
     </div>
   );
