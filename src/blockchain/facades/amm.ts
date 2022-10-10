@@ -48,4 +48,8 @@ export class Amm extends CommonFacade {
   public async getInputPrice(_dirOfQuote: Dir, _quoteAssetAmount: BigNumber) {
     return valueToBigNumber(await this.contract.getInputPrice(_dirOfQuote, [_quoteAssetAmount.toFixed()]));
   }
+
+  public async getMaxHoldingBaseAsset() {
+    return valueToBigNumber(await this.contract.getMaxHoldingBaseAsset());
+  }
 }

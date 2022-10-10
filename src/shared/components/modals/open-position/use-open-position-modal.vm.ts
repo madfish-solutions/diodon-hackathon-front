@@ -41,12 +41,12 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const positionsStore = usePositionsStore();
   const { dDAIBalance } = accountStore;
   const { address, connection } = useAuthStore();
-  const [positionSize, setPositionSize] = useState(ZERO_AMOUNT);
-  const [positionSizeUsd, setPositionSizeUsd] = useState(ZERO_AMOUNT);
+  const [noSlippagePositionSize, setNoSlippagePositionSize] = useState(ZERO_AMOUNT);
+  const [maxHoldingBaseAsset, setMaxHoldingBaseAsset] = useState(Infinity);
   const api = useApi();
   const { openPosition, getApproves } = useClearingHouse();
 
-  const maxValue = dDAIBalance.decimalPlaces(2).toNumber();
+  const balance = dDAIBalance.decimalPlaces(2, BigNumber.ROUND_DOWN).toNumber();
 
   const amm = useMemo(() => {
     if (market && connection) {
@@ -56,7 +56,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     return null;
   }, [market, connection]);
 
-  const getPositionSize = useCallback(
+  const getNoSlippagePositionSize = useCallback(
     async (atomicCollateral: BigNumber, positionType: PositionType, leverage: number) => {
       return api.call(async () => {
         if (!atomicCollateral.isFinite() || atomicCollateral.eq(ZERO_AMOUNT) || !amm) {
@@ -65,16 +65,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
 
         const notional = atomicCollateral.times(leverage).integerValue(BigNumber.ROUND_DOWN);
 
-        const sizeWithoutSlippage = await amm.getInputPrice(
-          positionType === PositionType.LONG ? Dir.AddToAmm : Dir.RemoveFromAmm,
-          notional
-        );
-
-        if (positionType === PositionType.LONG) {
-          return sizeWithoutSlippage.times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
-        }
-
-        return sizeWithoutSlippage.times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
+        return await amm.getInputPrice(positionType === PositionType.LONG ? Dir.AddToAmm : Dir.RemoveFromAmm, notional);
       });
     },
     [amm, api]
@@ -109,7 +100,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
           values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
           rawMargin,
           toAtomic(new BigNumber(values.leverage), DDAI_DECIMALS),
-          await getPositionSize(rawMargin, values.positionType, values.leverage)
+          await getNoSlippagePositionSize(rawMargin, values.positionType, values.leverage)
         );
 
         modalsStore.close();
@@ -131,13 +122,13 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
       address,
       positionsStore,
       modalsStore,
-      getPositionSize
+      getNoSlippagePositionSize
     ]
   );
 
   const formik = useFormik<FormValues>({
     validationSchema: objectSchema().shape({
-      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(maxValue).required(),
+      orderAmount: numberSchema().min(MIN_ORDER_AMOUNT).max(balance, 'Balance is too low.').required(),
       leverage: numberSchema().min(2).max(10).integer().required(),
       positionType: string().oneOf([PositionType.LONG, PositionType.SHORT]).required()
     }),
@@ -148,37 +139,53 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   const value = formik.values.orderAmount;
   const positionType = formik.values.positionType;
   const leverage = formik.values.leverage;
-  const error = FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
+  const error = useMemo(() => {
+    if (noSlippagePositionSize > maxHoldingBaseAsset) {
+      return 'Position size is too big.';
+    }
+
+    return FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
+  }, [formik, maxHoldingBaseAsset, noSlippagePositionSize]);
 
   const updatePositionSize = useMemo(
     () =>
       debounce(100, async () => {
         try {
-          const rawPositionSize = await getPositionSize(
+          const rawPositionSize = await getNoSlippagePositionSize(
             toAtomic(new BigNumber(formik.values.orderAmount), DDAI_DECIMALS),
             formik.values.positionType,
             formik.values.leverage
           );
 
           const _positionSize = toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber();
-          setPositionSize(_positionSize);
-          setPositionSizeUsd(_positionSize * (market?.indexPriceUsd ?? 0));
+          setNoSlippagePositionSize(_positionSize);
         } finally {
           // do nothing
         }
       }),
-    [
-      getPositionSize,
-      formik.values.orderAmount,
-      formik.values.positionType,
-      formik.values.leverage,
-      market?.indexPriceUsd
-    ]
+    [getNoSlippagePositionSize, formik]
+  );
+
+  const updateLiquiditySizeLimit = useMemo(
+    () =>
+      debounce(100, async () => {
+        if (!amm) {
+          return;
+        }
+
+        try {
+          setMaxHoldingBaseAsset(toReal(await amm.getMaxHoldingBaseAsset(), DDAI_DECIMALS).toNumber());
+        } finally {
+          // do nothing
+        }
+      }),
+    [amm]
   );
 
   useEffect(() => {
     updatePositionSize();
-  }, [value, positionType, leverage, updatePositionSize]);
+    updateLiquiditySizeLimit();
+  }, [value, positionType, leverage, updatePositionSize, updateLiquiditySizeLimit]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);
@@ -198,6 +205,16 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     }
   }, [accountStore, api, address, marketId]);
 
+  const positionSize = useMemo(() => {
+    if (positionType === PositionType.LONG) {
+      return new BigNumber(noSlippagePositionSize).times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
+    }
+
+    return new BigNumber(noSlippagePositionSize).times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
+  }, [noSlippagePositionSize, positionType]);
+
+  const positionSizeUsd = positionSize.toNumber() * (market?.indexPriceUsd ?? 0);
+
   return {
     value,
     handleChange,
@@ -206,7 +223,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     handleLeverageChange,
     market,
     isOpen,
-    maxValue,
+    balance,
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
