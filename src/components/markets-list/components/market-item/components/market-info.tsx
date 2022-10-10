@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, HTMLProps } from 'react';
 
 import { MarketData } from '@api/markets';
 import { Position } from '@api/positions';
@@ -10,7 +10,7 @@ import { Nullable } from '@shared/types';
 import { Cell } from '../../../../cell';
 import styles from '../market-item.module.scss';
 
-interface Props {
+interface Props extends HTMLProps<HTMLDivElement> {
   market: MarketData;
   marketPriceChangePercentage: number;
   indexPriceChangePercentage: number;
@@ -25,10 +25,11 @@ export const MarketInfo: FC<Props> = ({
   indexPriceChangePercentage,
   isConnected,
   onOpen,
-  position
+  position,
+  ...props
 }) => {
   return (
-    <div className={styles.market}>
+    <div className={styles.market} {...props}>
       <div style={{ textAlign: 'start', minWidth: '100px' }}>
         <div style={{ textAlign: 'center', width: 50 }}>
           <div>

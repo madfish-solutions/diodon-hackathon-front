@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
+import { MarketData } from '@api/markets';
 import { useApi, useAuthStore, usePositionsStore } from '@shared/hooks';
 import { useMarketsStore } from '@shared/hooks/use-markets-store';
 
@@ -9,7 +10,7 @@ export const useMarketsViewModel = () => {
   const { address } = useAuthStore();
 
   const marketsStore = useMarketsStore();
-  const { markets } = marketsStore;
+  const { markets, openedMarket } = marketsStore;
 
   const positionsStore = usePositionsStore();
 
@@ -36,5 +37,7 @@ export const useMarketsViewModel = () => {
     // eslint-disable-next-line
   }, [address]);
 
-  return { markets };
+  const toggleMarketHandler = useCallback((market: MarketData) => marketsStore.toggleMarket(market), [marketsStore]);
+
+  return { markets, openedMarket, toggleMarketHandler };
 };

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
@@ -12,10 +12,11 @@ import { useMarketItemViewModel } from './use-market-item.vm';
 
 interface Props {
   market: MarketData;
+  isOpened: boolean;
+  toggleMarketHandler: () => void;
 }
 
-export const MarketItem: FC<Props> = observer(({ market }) => {
-  const [fullView, seFullView] = useState(false);
+export const MarketItem: FC<Props> = observer(({ market, isOpened, toggleMarketHandler }) => {
   const {
     chartData,
     position,
@@ -28,7 +29,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
   } = useMarketItemViewModel(market);
 
   return (
-    <div className={styles.itemButton} onClick={() => seFullView(prev => !prev)}>
+    <div className={styles.itemButton}>
       <div className={styles.item}>
         <MarketInfo
           market={market}
@@ -37,8 +38,9 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           isConnected={isConnected}
           onOpen={openHandler}
           position={position}
+          onClick={toggleMarketHandler}
         />
-        {fullView && (
+        {isOpened && (
           <PositionItemFull
             position={position}
             chartData={chartData}
@@ -46,7 +48,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
             positionBeingClosed={positionBeingClosed}
           />
         )}
-        {position && !fullView && (
+        {position && !isOpened && (
           <PositionItem position={position} onClose={closeHandler} positionBeingClosed={positionBeingClosed} />
         )}
       </div>
