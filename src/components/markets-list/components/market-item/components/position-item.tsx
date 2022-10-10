@@ -30,7 +30,7 @@ export const PositionItem: FC<Props> = ({ position, positionBeingClosed, onClose
           <GetUsdView amount={position.avgOpenPriceUsd} />
         </Cell>
         <Cell label="Margin Level">
-          <PercentView amount={12} />
+          <PercentView amount={position.marginRatioPercentage} />
         </Cell>
       </div>
       <div className={styles.lastElementWrapper}>
