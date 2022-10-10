@@ -31,7 +31,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
   const {
     market,
     isOpen,
-    maxValue,
+    balance,
     closeModalHandler,
     handleSubmit,
     isSubmitting,
@@ -64,7 +64,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
         </div>
         <div className={styles.info}>
           <div>Margin</div>
-          <div>Balance: {formatValueBalance(maxValue)}</div>
+          <div>Balance: {formatValueBalance(balance)}</div>
         </div>
         <div className={styles.inputWrapper}>
           <span className={styles.inputPostfix}>KDAI</span>
