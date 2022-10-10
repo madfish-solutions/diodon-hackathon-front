@@ -22,7 +22,8 @@ export const getMarketsApi = async (
       return {
         ...marketData,
         marketPriceUsd: toReal(await amm.getSpotPrice(), DDAI_DECIMALS).toFixed(),
-        indexPriceUsd: toReal(await amm.getUnderlyingPrice(), DDAI_DECIMALS).toNumber()
+        indexPriceUsd: toReal(await amm.getUnderlyingPrice(), DDAI_DECIMALS).toNumber(),
+        marketPriceChangePercentage: toReal(marketData.marketPriceChangePercentage, DDAI_DECIMALS).toNumber()
       };
     })
   );
