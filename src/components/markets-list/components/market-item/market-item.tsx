@@ -89,8 +89,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
                 <Cell label="Open Price">
                   <GetUsdView amount={position.avgOpenPriceUsd} />
                 </Cell>
-                <Cell label="Liquidation Price">
-                  <GetUsdView amount={position.liqPrice1Usd} />
+                <Cell label="Margin Level">
+                  <PercentView amount={13} />
                 </Cell>
                 <Cell label="Leverage">{getMultiplierView(position.margin)}</Cell>
               </div>
@@ -144,8 +144,8 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
               <Cell label="Open Price">
                 <GetUsdView amount={position.avgOpenPriceUsd} />
               </Cell>
-              <Cell label="Liquidation Price">
-                <GetUsdView amount={position.liqPrice1Usd} />
+              <Cell label="Margin Level">
+                <PercentView amount={12} />
               </Cell>
             </div>
             <div className={styles.lastElementWrapper}>
