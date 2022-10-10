@@ -60,7 +60,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Switcher value={positionType} options={POSITION_OPTIONS} onClick={setPositionType} />
-          <PositionTypeIcon type={positionType} width={32} height={32} />
+          <PositionTypeIcon type={positionType} />
         </div>
         <div className={styles.info}>
           <div>Margin</div>
