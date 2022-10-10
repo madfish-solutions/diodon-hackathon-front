@@ -29,6 +29,8 @@
     "ethers": "^5.7.0",
     "formik": "^2.2.9",
     "https-browserify": "^1.0.0",
+    "intro.js": "^6.0.0",
+    "intro.js-react": "^0.7.0",
     "lightweight-charts": "^3.8.0",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",

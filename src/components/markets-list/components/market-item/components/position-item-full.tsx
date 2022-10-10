@@ -25,7 +25,11 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
           <>
             <div className={styles.detailsPositionFull}>
               <Cell label="Position Amount">
-                <TokensView amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
+                <TokensView
+                  amount={position.amountTokens}
+                  suffix={position.marketId}
+                  dollarEquivalent={position.amountUsd}
+                />
               </Cell>
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />

@@ -9,7 +9,7 @@ export const MarketsList: FC = observer(() => {
   const { markets, openedMarket, toggleMarketHandler } = useMarketsViewModel();
 
   return (
-    <div>
+    <div id="markets-list">
       {markets.map(market => (
         <MarketItem
           market={market}

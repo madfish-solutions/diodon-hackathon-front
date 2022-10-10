@@ -16,7 +16,7 @@ export const GiveMeMoneyButton: FC<Props> = props => {
 
   return (
     <div>
-      <Button loading={isLoading} disabled={disabled} onClick={handleClick} {...props}>
+      <Button loading={isLoading} disabled={disabled} onClick={handleClick} {...props} id="give-me-money">
         {buttonLabel}
       </Button>
     </div>

@@ -23,14 +23,14 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
   return (
     <div className={styles.wrapper}>
       <header className={cx(styles.root, className)} data-test-id="header">
-        <Link to="/">
+        <Link to="/" id="top-logo">
           <DiodonHeaderLogo />
         </Link>
         <Socials />
         <div className={styles.flex1} />
         {address && <UserMainStats className={styles.userMainStats} />}
         <div>
-          <ConnectButton className={styles.button} />
+          <ConnectButton className={styles.button} id="connect-button" />
           <GiveMeMoneyButton className={styles.button} />
         </div>
       </header>
