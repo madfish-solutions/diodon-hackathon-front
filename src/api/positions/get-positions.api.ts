@@ -1,9 +1,10 @@
+import BigNumber from 'bignumber.js';
 import { providers } from 'ethers';
 
 import { ClearingHouseViewerContractWrapper, PNLCalcOption } from '@blockchain/clearing-house-viewer-wrapper';
 import { Amm } from '@blockchain/facades/amm';
 import { API_URL } from '@config/api';
-import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
+import { DDAI_DECIMALS, WHOLE_PERCENTAGE, ZERO_AMOUNT } from '@config/constants';
 import { AMMS, CLEARING_HOUSE_VIEWER_ADDRESS, KNOWN_MARKETS } from '@config/environment';
 import { isExist } from '@shared/helpers';
 import { toPercent, toReal, valueToBigNumber } from '@shared/helpers/bignumber';
@@ -23,9 +24,10 @@ export const getPositionsApi = async (
       const position = Array.from(
         await clearingHouseViewer.methods.getPersonalPositionWithFundingPayment(amm, accountPkh)
       );
-      const [rawSize, rawMargin] = position;
+      const [rawSize, rawMargin, rawOpenNotional] = position;
       const size = valueToBigNumber(rawSize);
       const margin = toReal(valueToBigNumber(rawMargin), DDAI_DECIMALS);
+      const avgOpenPriceUsd = valueToBigNumber(rawOpenNotional).div(size).abs().decimalPlaces(2).toNumber();
 
       if (size.eq(ZERO_AMOUNT)) {
         return null;
@@ -37,6 +39,10 @@ export const getPositionsApi = async (
       const amountTokens = toReal(size.abs(), DDAI_DECIMALS);
       const amountUsd = amountTokens.times(spotPrice).decimalPlaces(2);
       const pnlPercentage = toPercent(pnlUsd.div(amountUsd));
+      const marginRatio = toReal(
+        valueToBigNumber(await clearingHouseViewer.methods.getMarginRatio(amm, accountPkh)),
+        DDAI_DECIMALS
+      );
 
       return {
         marketId,
@@ -46,9 +52,11 @@ export const getPositionsApi = async (
         amountUsd: amountUsd.toNumber(),
         pnlPercent: pnlPercentage.toNumber(),
         pnlUsd: pnlUsd.toNumber(),
-        avgOpenPriceUsd: 8,
+        avgOpenPriceUsd,
         liqPrice1Usd: 50,
-        liqPrice2Usd: 40
+        liqPrice2Usd: 40,
+        marginRatioPercentage: marginRatio.times(WHOLE_PERCENTAGE).decimalPlaces(1).toNumber(),
+        leverage: marginRatio.gt(0) ? new BigNumber(1).div(marginRatio).decimalPlaces(2).toNumber() : Infinity
       };
     })
   );

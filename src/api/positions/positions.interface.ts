@@ -2,10 +2,6 @@ import { Time } from 'lightweight-charts';
 
 import { MarketId, PositionType } from '@shared/types';
 
-/*
-  URL: https://diodon-mock-data.fly.dev/api/v1/positions
- */
-
 export interface Position {
   marketId: MarketId;
   margin: number;
@@ -17,6 +13,8 @@ export interface Position {
   avgOpenPriceUsd: number;
   liqPrice1Usd: number;
   liqPrice2Usd: number;
+  leverage: number;
+  marginRatioPercentage: number;
 }
 
 export interface AccountPositionResponse {

@@ -21,6 +21,7 @@ export const HEX_BASE = 16;
 export const CHAIN_ID_AS_HEX = `0x${CHAIN_ID.toString(HEX_BASE)}`;
 export const ZERO_AMOUNT = 0;
 export const DDAI_DECIMALS = 18;
+export const WHOLE_PERCENTAGE = 100;
 
 export const DDAI_TOKEN = {
   address: DDAI_ADDRESS, // The address that the token is at.

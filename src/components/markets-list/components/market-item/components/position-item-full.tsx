@@ -40,7 +40,7 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
               <Cell label="Margin Level">
                 <PercentView amount={13} />
               </Cell>
-              <Cell label="Leverage">{getMultiplierView(position.margin)}</Cell>
+              <Cell label="Leverage">{getMultiplierView(position.leverage)}</Cell>
             </div>
             <PositionTypeIcon type={position.type} width={64} height={64} style={{ marginRight: 8 }} />
           </>
@@ -61,7 +61,7 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
               <div className={styles.marginLevel}>Margin level:</div>
               <div className={styles.explanation}>Low risk – you’re going to get a good night’s sleep.</div>
             </div>
-            <MarginSlider value={14} className={styles.slider} />
+            <MarginSlider value={position.marginRatioPercentage} className={styles.slider} />
             <div className={styles.lastElementWrapper}>
               <Button
                 onClick={event => {
