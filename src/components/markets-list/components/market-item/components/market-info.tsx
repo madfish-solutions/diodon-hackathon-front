@@ -15,7 +15,7 @@ interface Props {
   marketPriceChangePercentage: number;
   indexPriceChangePercentage: number;
   isConnected: boolean;
-  openHandler: () => void;
+  onOpen: () => void;
   position: Nullable<Position>;
 }
 
@@ -24,7 +24,7 @@ export const MarketInfo: FC<Props> = ({
   marketPriceChangePercentage,
   indexPriceChangePercentage,
   isConnected,
-  openHandler,
+  onOpen,
   position
 }) => {
   return (
@@ -54,11 +54,11 @@ export const MarketInfo: FC<Props> = ({
         </Cell>
       </div>
       <div className={styles.lastElementWrapper}>
-        {position && (
+        {!position && (
           <Button
             onClick={event => {
               event.stopPropagation();
-              openHandler();
+              onOpen();
             }}
             className={styles.openButton}
             disabled={!isConnected}

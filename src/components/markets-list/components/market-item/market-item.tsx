@@ -35,7 +35,7 @@ export const MarketItem: FC<Props> = observer(({ market }) => {
           marketPriceChangePercentage={marketPriceChangePercentage}
           indexPriceChangePercentage={indexPriceChangePercentage}
           isConnected={isConnected}
-          openHandler={openHandler}
+          onOpen={openHandler}
           position={position}
         />
         {position &&
