@@ -24,10 +24,10 @@ export const MarginRisk: FC<Props> = ({ marginRatioPercentage }) => {
       return '#000000';
     }
     if (marginRatioPercentage <= 50) {
-      return '#FFA500';
+      return '#FFD700';
     }
 
-    return '#00FF00';
+    return '#00FF0A';
   };
 
   return (
