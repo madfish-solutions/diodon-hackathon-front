@@ -37,7 +37,7 @@ export const BarChart: FC<Props> = ({ data }) => {
       },
       timeScale: {
         visible: true,
-        secondsVisible: true
+        timeVisible: true
       }
     });
 
