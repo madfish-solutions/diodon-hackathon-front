@@ -1,16 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import BigNumber from 'bignumber.js';
-import { BigNumber as EthersBigNumber } from 'ethers';
-
 import { MarketData } from '@api/markets';
 import { getMarketPricesApi, IChartData } from '@api/positions';
-import { Amm } from '@blockchain/facades/amm';
-import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
-import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
-import { AMMS } from '@config/environment';
-import { toAtomic, valueChangeToPercentage } from '@shared/helpers/bignumber';
-import { useApi, useAuthStore, useModalsStore, usePositionsStore } from '@shared/hooks';
+import { valueChangeToPercentage } from '@shared/helpers/bignumber';
+import { useAuthStore, useModalsStore, usePositionsStore } from '@shared/hooks';
 import { ModalType } from '@shared/store/modals.store';
 import { PositionType } from '@shared/types';
 
@@ -18,10 +11,7 @@ export const useMarketItemViewModel = (market: MarketData) => {
   const { marketId, marketPriceChangePercentage, indexPriceUsd, marketPriceUsd, indexPriceChange24Usd } = market;
 
   const modalsStore = useModalsStore();
-  const { isConnected, address, connection } = useAuthStore();
-  const api = useApi();
-  const { clearingHouse, getApproves } = useClearingHouse();
-  const [positionBeingClosed, setPositionBeingClosed] = useState(false);
+  const { isConnected } = useAuthStore();
   const [chartData, setChartData] = useState<Array<IChartData>>([]);
 
   useEffect(() => {
@@ -37,58 +27,20 @@ export const useMarketItemViewModel = (market: MarketData) => {
   );
 
   const openPositionHandler = () => {
-    const recommendedPositionType = indexPriceUsd > marketPriceUsd ? PositionType.LONG : PositionType.SHORT;
+    const recommendedPositionType = indexPriceUsd > Number(marketPriceUsd) ? PositionType.LONG : PositionType.SHORT;
     modalsStore.open(ModalType.OpenPosition, { marketId, recommendedPositionType });
   };
 
-  const amm = useMemo(() => {
-    if (market && connection) {
-      return new Amm(connection.provider, AMMS[market.marketId], connection.signer);
-    }
-
-    return null;
-  }, [market, connection]);
-
-  const getFee = useCallback(
-    async (notional: BigNumber) => {
-      if (!amm) {
-        return {
-          tollFee: new BigNumber(ZERO_AMOUNT),
-          spreadFee: new BigNumber(ZERO_AMOUNT)
-        };
-      }
-
-      return await amm.calcFee(notional);
-    },
-    [amm]
-  );
-
-  const closePositionHandler = useCallback(async () => {
-    try {
-      setPositionBeingClosed(true);
-      await api.call(async () => {
-        if (!clearingHouse || !marketId) {
-          return;
-        }
-
-        const { tollFee, spreadFee } = await getFee(toAtomic(new BigNumber(position!.amountUsd), DDAI_DECIMALS));
-        await getApproves(EthersBigNumber.from(tollFee.plus(spreadFee).toFixed()));
-        await clearingHouse.closePosition(AMMS[marketId], new BigNumber(ZERO_AMOUNT));
-        modalsStore.close();
-        await positionsStore.loadPositions(address!);
-      });
-    } finally {
-      setPositionBeingClosed(false);
-    }
-  }, [api, clearingHouse, marketId, modalsStore, address, positionsStore, getApproves, getFee, position]);
+  const openManageModal = useCallback(async () => {
+    modalsStore.open(ModalType.ManagePosition, { marketId });
+  }, [modalsStore, marketId]);
 
   return {
     chartData,
     position,
-    positionBeingClosed,
     isConnected,
+    openManageModal,
     openPositionHandler,
-    closePositionHandler,
     marketPriceChangePercentage,
     indexPriceChangePercentage
   };

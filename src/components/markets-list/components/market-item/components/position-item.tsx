@@ -9,11 +9,10 @@ import styles from '../market-item.module.scss';
 
 interface Props {
   position: Position;
-  onClose: () => void;
-  positionBeingClosed: boolean;
+  openManageModal: () => void;
 }
 
-export const PositionItem: FC<Props> = ({ position, positionBeingClosed, onClose }) => {
+export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
   return (
     <div className={styles.position}>
       <div className={styles.positionTypeWrapper}>
@@ -37,12 +36,11 @@ export const PositionItem: FC<Props> = ({ position, positionBeingClosed, onClose
         <Button
           onClick={event => {
             event.stopPropagation();
-            onClose();
+            openManageModal();
           }}
           className={styles.manageButton}
-          disabled={positionBeingClosed}
         >
-          Close
+          Manage
         </Button>
       </div>
     </div>
