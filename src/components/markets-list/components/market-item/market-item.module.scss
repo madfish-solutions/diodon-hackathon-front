@@ -37,6 +37,7 @@
 .lastElementWrapper {
   display: flex;
   justify-content: end;
+  align-items: center;
   min-width: 100px;
 }
 
@@ -172,7 +173,6 @@
 
 .footerInfo {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   margin-top: 24px;
 }
@@ -201,4 +201,5 @@
 .slider {
   width: 362px;
   align-self: flex-start;
+  margin-top: 6px;
 }

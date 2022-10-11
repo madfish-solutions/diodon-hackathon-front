@@ -6,9 +6,9 @@ import { Button, PositionTypeIcon } from '@shared/components';
 import { getMultiplierView, GetUsdView, PercentView, TokensView } from '@shared/helpers';
 import { Optional } from '@shared/types';
 
-import { MarginSlider } from '../../../../account/components/margin-slider';
 import { Cell } from '../../../../cell';
 import styles from '../market-item.module.scss';
+import { MarginRisk } from './margin-risk';
 
 interface Props {
   position: Optional<Position>;
@@ -60,11 +60,7 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
 
         {position && (
           <div className={styles.footerInfo}>
-            <div>
-              <div className={styles.marginLevel}>Margin level:</div>
-              <div className={styles.explanation}>Low risk – you’re going to get a good night’s sleep.</div>
-            </div>
-            <MarginSlider value={position.marginRatioPercentage} className={styles.slider} />
+            <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
             <div className={styles.lastElementWrapper}>
               <Button
                 onClick={event => {
