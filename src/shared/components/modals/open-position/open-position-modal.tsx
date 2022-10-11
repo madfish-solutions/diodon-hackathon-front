@@ -34,7 +34,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
     balance,
     closeModalHandler,
     handleSubmit,
-    isSubmitting,
+    submitDisabled,
     error,
     positionType,
     value,
@@ -95,7 +95,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
           <Cell label="Slippage">
             <PercentView amount={slippagePercentage} />
           </Cell>
-          <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
+          <Button type="submit" disabled={submitDisabled} className={styles.opButton}>
             Open {positionType} position
           </Button>
         </div>
