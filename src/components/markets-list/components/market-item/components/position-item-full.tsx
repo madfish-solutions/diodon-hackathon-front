@@ -38,7 +38,7 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
                 <GetUsdView amount={position.avgOpenPriceUsd} />
               </Cell>
               <Cell label="Margin Level">
-                <PercentView amount={13} />
+                <PercentView amount={position.marginRatioPercentage} />
               </Cell>
               <Cell label="Leverage">{getMultiplierView(position.leverage)}</Cell>
             </div>
