@@ -1,0 +1,31 @@
+.tooltipOnboarding {
+    background: linear-gradient(45deg,#0099ff,#01bfae);
+    color: #fff;
+}
+
+.tooltipOnboarding .introjs-tooltip-title {
+    font-size: 1.8rem
+}
+
+.tooltipOnboarding .introjs-tooltiptext {
+    padding: 10px 20px;
+}
+
+.tooltipOnboarding .introjs-skipbutton {
+    padding: 0;
+    font-size: 2rem;
+    color: #fff;
+    opacity: 0.65;
+}
+
+.tooltipOnboarding .introjs-bullets ul li a {
+    background: #fff;
+}
+
+.tooltipOnboarding .introjs-bullets ul li a.active {
+    background: #e9ff00;
+}
+
+.tooltipOnboarding .introjs-arrow {
+    border-bottom-color: #e9ff00;
+}

@@ -17,7 +17,7 @@ export const UserMainStats: FC<Props> = observer(({ className }) => {
   const { netCollateralUsd, openedPositionsSumUsd, dDAIBalanceInUSD } = useUserMainStatsViewModel();
 
   return (
-    <div className={cx(styles.root, className)}>
+    <div className={cx(styles.root, className)} id="top-stats">
       <Cell contentClassName={{ amountClassName: styles.cell }} label="Net collateral">
         <TokensView prefix="$" amount={netCollateralUsd} />
       </Cell>

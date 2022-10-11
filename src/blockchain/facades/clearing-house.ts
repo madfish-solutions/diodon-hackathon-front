@@ -40,10 +40,6 @@ export class ClearingHouse extends CommonFacade {
     return valueToBigNumber(await this.contract.maintenanceMarginRatio());
   }
 
-  public async getPartialLiqudationRatio(): Promise<BigNumber> {
-    return valueToBigNumber(await this.contract.partialLiqudationRatio());
-  }
-
   public async getPosition(amm: address, trader: address) {
     const rawResponse: RawPositionResponse = await this.contract.getPosition(amm, trader);
 
@@ -98,7 +94,7 @@ export class ClearingHouse extends CommonFacade {
   }
 
   public async getPartialLiquidationRatio(): Promise<BigNumber> {
-    return await this.contract.partialLiquidationRatio();
+    return valueToBigNumber(await this.contract.partialLiquidationRatio());
   }
   public async getInsuranceFund(): Promise<address> {
     return await this.contract.insuranceFund();
@@ -139,9 +135,9 @@ export class ClearingHouse extends CommonFacade {
    * @eventParam uint256 marginRatio)
    */
   public async removeMargin(amm: address, amount: BigNumber): Promise<Transaction> {
-    await this.contract.connect(this.signer).estimateGas.removeMargin(amm, [amount.toString()]);
+    await this.contract.connect(this.signer).estimateGas.removeMargin(amm, [amount.toFixed()]);
 
-    return await (await this.contract.connect(this.signer).removeMargin(amm, [amount.toString()])).wait();
+    return await (await this.contract.connect(this.signer).removeMargin(amm, [amount.toFixed()])).wait();
   }
   /**
    * @notice settle all the positions when amm is shutdown. The settlement price is according to IAmm.settlementPrice
@@ -186,23 +182,18 @@ export class ClearingHouse extends CommonFacade {
       .estimateGas.openPosition(
         amm,
         side,
-        [quoteAssetAmount.toString()],
-        [leverage.toString()],
-        [baseAssetAmountLimit.toString()],
+        [quoteAssetAmount.toFixed()],
+        [leverage.toFixed()],
+        [baseAssetAmountLimit.toFixed()],
         { gasLimit: 1000000 }
       );
 
     return await (
       await this.contract
         .connect(this.signer)
-        .openPosition(
-          amm,
-          side,
-          [quoteAssetAmount.toString()],
-          [leverage.toString()],
-          [baseAssetAmountLimit.toString()],
-          { gasLimit: 1000000 }
-        )
+        .openPosition(amm, side, [quoteAssetAmount.toFixed()], [leverage.toFixed()], [baseAssetAmountLimit.toFixed()], {
+          gasLimit: 1000000
+        })
     ).wait();
   }
 

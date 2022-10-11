@@ -3,18 +3,25 @@ import { action, makeObservable, observable } from 'mobx';
 import { FALLBACK_PROVIDER } from '@config/constants';
 
 import { MarketData, getMarketsApi } from '../../api';
-import { MarketId } from '../types';
+import { MarketId, Nullable } from '../types';
 import { RootStore } from './root.store';
 
 export class MarketsStore {
+  openedMarket: Nullable<MarketData> = null;
   markets: MarketData[] = [];
 
   constructor(private rootStore: RootStore) {
     makeObservable(this, {
       markets: observable,
+      openedMarket: observable,
 
-      setMarkets: action
+      setMarkets: action,
+      toggleMarket: action
     });
+  }
+
+  toggleMarket(market: MarketData) {
+    this.openedMarket = this.openedMarket?.marketId === market.marketId ? null : market;
   }
 
   setMarkets(markets: MarketData[]) {

@@ -26,12 +26,12 @@ export const GetUsdView: FC<Props> = ({ amount, percentEquivalent }) => {
   return (
     <span className={styles.root}>
       <span className={styles.prefix}>$</span>
-      {formatValueBalance(amount, 2)}
+      <span title={`${amount}`}>{formatValueBalance(amount, 2)}</span>
       {isExist(percentEquivalent) && (
-        <span className={cx(styles.percentEquivalent, { [styles.red]: isProfit })}>{`${sign} ${formatValueBalance(
-          percentEquivalent,
-          2
-        )}%`}</span>
+        <span
+          title={`${percentEquivalent}`}
+          className={cx(styles.percentEquivalent, { [styles.red]: isProfit })}
+        >{`${sign} ${formatValueBalance(percentEquivalent, 2)}%`}</span>
       )}
     </span>
   );

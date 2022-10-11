@@ -6,12 +6,17 @@ import { MarketItem } from './components/market-item';
 import { useMarketsViewModel } from './use-markets.vm';
 
 export const MarketsList: FC = observer(() => {
-  const { markets } = useMarketsViewModel();
+  const { markets, openedMarket, toggleMarketHandler } = useMarketsViewModel();
 
   return (
-    <div>
+    <div id="markets-list">
       {markets.map(market => (
-        <MarketItem market={market} key={market.marketId} />
+        <MarketItem
+          market={market}
+          key={market.marketId}
+          isOpened={market.marketId === openedMarket?.marketId}
+          toggleMarketHandler={element => toggleMarketHandler(market, element)}
+        />
       ))}
     </div>
   );

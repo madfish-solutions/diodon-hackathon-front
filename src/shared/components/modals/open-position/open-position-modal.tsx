@@ -31,10 +31,10 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
   const {
     market,
     isOpen,
-    maxValue,
+    balance,
     closeModalHandler,
     handleSubmit,
-    isSubmitting,
+    submitDisabled,
     error,
     positionType,
     value,
@@ -60,11 +60,11 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Switcher value={positionType} options={POSITION_OPTIONS} onClick={setPositionType} />
-          <PositionTypeIcon type={positionType} width={32} height={32} />
+          <PositionTypeIcon type={positionType} />
         </div>
         <div className={styles.info}>
           <div>Margin</div>
-          <div>Balance: {formatValueBalance(maxValue)}</div>
+          <div>Balance: {formatValueBalance(balance)}</div>
         </div>
         <div className={styles.inputWrapper}>
           <span className={styles.inputPostfix}>KDAI</span>
@@ -79,7 +79,9 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
           />
         </div>
         <div className={styles.info}>
-          <div>Leverage</div>
+          <div>
+            Leverage: <b style={{ color: '#fff' }}>{leverage}</b>
+          </div>
         </div>
         <LeverageSlider value={leverage} onChange={handleLeverageChange} />
         <p style={{ color: 'red' }}>{error}</p>
@@ -95,7 +97,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
           <Cell label="Slippage">
             <PercentView amount={slippagePercentage} />
           </Cell>
-          <Button type="submit" disabled={isSubmitting} className={styles.opButton}>
+          <Button type="submit" disabled={submitDisabled} className={styles.opButton}>
             Open {positionType} position
           </Button>
         </div>
