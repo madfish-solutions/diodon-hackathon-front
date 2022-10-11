@@ -40,10 +40,6 @@ export class ClearingHouse extends CommonFacade {
     return valueToBigNumber(await this.contract.maintenanceMarginRatio());
   }
 
-  public async getPartialLiqudationRatio(): Promise<BigNumber> {
-    return valueToBigNumber(await this.contract.partialLiqudationRatio());
-  }
-
   public async getPosition(amm: address, trader: address) {
     const rawResponse: RawPositionResponse = await this.contract.getPosition(amm, trader);
 
@@ -98,7 +94,7 @@ export class ClearingHouse extends CommonFacade {
   }
 
   public async getPartialLiquidationRatio(): Promise<BigNumber> {
-    return await this.contract.partialLiquidationRatio();
+    return valueToBigNumber(await this.contract.partialLiquidationRatio());
   }
   public async getInsuranceFund(): Promise<address> {
     return await this.contract.insuranceFund();

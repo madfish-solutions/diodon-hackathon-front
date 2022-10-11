@@ -9,9 +9,9 @@ import { number as numberSchema, object as objectSchema, string } from 'yup';
 import { Amm } from '@blockchain/facades/amm';
 import { Dir, Side } from '@blockchain/facades/types';
 import { useClearingHouse } from '@blockchain/hooks/use-clearing-house';
-import { DDAI_DECIMALS, ZERO_AMOUNT } from '@config/constants';
+import { DDAI_DECIMALS, WHOLE_PERCENTAGE, ZERO_AMOUNT } from '@config/constants';
 import { AMMS } from '@config/environment';
-import { getFormikError } from '@shared/helpers';
+import { getFormikError, isExist } from '@shared/helpers';
 import { toAtomic, toReal } from '@shared/helpers/bignumber';
 
 import { useAccountStore, useApi, useAuthStore, useModalsStore, usePositionsStore } from '../../../hooks';
@@ -28,7 +28,14 @@ export interface FormValues {
 const FORM_FIELDS = ['orderAmount', 'positionType', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 const SLIPPAGE_PERCENTAGE = 3;
-const WHOLE_PERCENTAGE = 100;
+
+const getPositionSizeWithSlippage = (noSlippageSize: BigNumber, positionType: PositionType) => {
+  if (positionType === PositionType.LONG) {
+    return new BigNumber(noSlippageSize).times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).div(WHOLE_PERCENTAGE);
+  }
+
+  return new BigNumber(noSlippageSize).times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).div(WHOLE_PERCENTAGE);
+};
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
@@ -100,7 +107,10 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
           values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
           rawMargin,
           toAtomic(new BigNumber(values.leverage), DDAI_DECIMALS),
-          await getNoSlippagePositionSize(rawMargin, values.positionType, values.leverage)
+          getPositionSizeWithSlippage(
+            await getNoSlippagePositionSize(rawMargin, values.positionType, values.leverage),
+            values.positionType
+          ).integerValue(BigNumber.ROUND_DOWN)
         );
 
         modalsStore.close();
@@ -157,8 +167,8 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
             formik.values.leverage
           );
 
-          const _positionSize = toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber();
-          setNoSlippagePositionSize(_positionSize);
+          const realPositionSize = toReal(rawPositionSize, DDAI_DECIMALS).decimalPlaces(6).toNumber();
+          setNoSlippagePositionSize(realPositionSize);
         } finally {
           // do nothing
         }
@@ -206,11 +216,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
   }, [accountStore, api, address, marketId]);
 
   const positionSize = useMemo(() => {
-    if (positionType === PositionType.LONG) {
-      return new BigNumber(noSlippagePositionSize).times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
-    }
-
-    return new BigNumber(noSlippagePositionSize).times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).idiv(WHOLE_PERCENTAGE);
+    return getPositionSizeWithSlippage(new BigNumber(noSlippagePositionSize), positionType);
   }, [noSlippagePositionSize, positionType]);
 
   const positionSizeUsd = positionSize.toNumber() * (market?.indexPriceUsd ?? 0);
@@ -226,7 +232,7 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
     balance,
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
-    isSubmitting: formik.isSubmitting,
+    submitDisabled: formik.isSubmitting || isExist(error),
     positionType,
     setPositionType,
     values: formik.values,
