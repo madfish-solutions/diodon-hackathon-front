@@ -12,9 +12,10 @@ import { AMMS } from '@config/environment';
 import { toAtomic, valueChangeToPercentage } from '@shared/helpers/bignumber';
 import { useApi, useAuthStore, useModalsStore, usePositionsStore } from '@shared/hooks';
 import { ModalType } from '@shared/store/modals.store';
+import { PositionType } from '@shared/types';
 
 export const useMarketItemViewModel = (market: MarketData) => {
-  const { marketId, marketPriceChangePercentage, indexPriceUsd, indexPriceChange24Usd } = market;
+  const { marketId, marketPriceChangePercentage, indexPriceUsd, marketPriceUsd, indexPriceChange24Usd } = market;
 
   const modalsStore = useModalsStore();
   const { isConnected, address, connection } = useAuthStore();
@@ -35,8 +36,9 @@ export const useMarketItemViewModel = (market: MarketData) => {
     [indexPriceChange24Usd, indexPriceUsd]
   );
 
-  const openHandler = () => {
-    modalsStore.open(ModalType.OpenPosition, { marketId });
+  const openPositionHandler = () => {
+    const recommendedPositionType = indexPriceUsd > marketPriceUsd ? PositionType.LONG : PositionType.SHORT;
+    modalsStore.open(ModalType.OpenPosition, { marketId, recommendedPositionType });
   };
 
   const amm = useMemo(() => {
@@ -61,7 +63,7 @@ export const useMarketItemViewModel = (market: MarketData) => {
     [amm]
   );
 
-  const closeHandler = useCallback(async () => {
+  const closePositionHandler = useCallback(async () => {
     try {
       setPositionBeingClosed(true);
       await api.call(async () => {
@@ -85,8 +87,8 @@ export const useMarketItemViewModel = (market: MarketData) => {
     position,
     positionBeingClosed,
     isConnected,
-    openHandler,
-    closeHandler,
+    openPositionHandler,
+    closePositionHandler,
     marketPriceChangePercentage,
     indexPriceChangePercentage
   };

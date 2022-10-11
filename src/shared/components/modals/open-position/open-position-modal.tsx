@@ -20,6 +20,7 @@ import { useOpenPositionModalViewModel } from './use-open-position-modal.vm';
 
 interface Props {
   marketId: Undefined<MarketId>;
+  recommendedPositionType: Undefined<PositionType>;
 }
 
 const POSITION_OPTIONS = [
@@ -27,7 +28,7 @@ const POSITION_OPTIONS = [
   { label: 'Short', value: PositionType.SHORT }
 ];
 
-export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
+export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPositionType }) => {
   const {
     market,
     isOpen,
@@ -45,7 +46,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
     slippagePercentage,
     positionSize,
     positionSizeUsd
-  } = useOpenPositionModalViewModel(marketId);
+  } = useOpenPositionModalViewModel(marketId, recommendedPositionType);
 
   if (!market) {
     throw new Error('Market is not defined');

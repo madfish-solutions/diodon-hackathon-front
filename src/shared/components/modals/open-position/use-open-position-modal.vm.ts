@@ -37,8 +37,11 @@ const getPositionSizeWithSlippage = (noSlippageSize: BigNumber, positionType: Po
   return new BigNumber(noSlippageSize).times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).div(WHOLE_PERCENTAGE);
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => {
+export const useOpenPositionModalViewModel = (
+  marketId: Undefined<MarketId>,
+  recommendedPositionType: Undefined<PositionType>
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+) => {
   const modalsStore = useModalsStore();
   const isOpen = modalsStore.isOpen(ModalType.OpenPosition);
   const closeModalHandler = () => modalsStore.close();
@@ -142,7 +145,11 @@ export const useOpenPositionModalViewModel = (marketId: Undefined<MarketId>) => 
       leverage: numberSchema().min(2).max(10).integer().required(),
       positionType: string().oneOf([PositionType.LONG, PositionType.SHORT]).required()
     }),
-    initialValues: { orderAmount: '', positionType: PositionType.LONG, leverage: 2 },
+    initialValues: {
+      orderAmount: '',
+      positionType: recommendedPositionType ? recommendedPositionType : PositionType.LONG,
+      leverage: 2
+    },
     onSubmit: handleSubmit
   });
 
