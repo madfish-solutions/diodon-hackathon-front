@@ -5,9 +5,10 @@ import { getMarketPricesApi, IChartData } from '@api/positions';
 import { valueChangeToPercentage } from '@shared/helpers/bignumber';
 import { useAuthStore, useModalsStore, usePositionsStore } from '@shared/hooks';
 import { ModalType } from '@shared/store/modals.store';
+import { PositionType } from '@shared/types';
 
 export const useMarketItemViewModel = (market: MarketData) => {
-  const { marketId, marketPriceChangePercentage, indexPriceUsd, indexPriceChange24Usd } = market;
+  const { marketId, marketPriceChangePercentage, indexPriceUsd, marketPriceUsd, indexPriceChange24Usd } = market;
 
   const modalsStore = useModalsStore();
   const { isConnected } = useAuthStore();
@@ -25,8 +26,9 @@ export const useMarketItemViewModel = (market: MarketData) => {
     [indexPriceChange24Usd, indexPriceUsd]
   );
 
-  const openHandler = () => {
-    modalsStore.open(ModalType.OpenPosition, { marketId });
+  const openPositionHandler = () => {
+    const recommendedPositionType = indexPriceUsd > Number(marketPriceUsd) ? PositionType.LONG : PositionType.SHORT;
+    modalsStore.open(ModalType.OpenPosition, { marketId, recommendedPositionType });
   };
 
   const openManageModal = useCallback(async () => {
@@ -37,8 +39,8 @@ export const useMarketItemViewModel = (market: MarketData) => {
     chartData,
     position,
     isConnected,
-    openHandler,
     openManageModal,
+    openPositionHandler,
     marketPriceChangePercentage,
     indexPriceChangePercentage
   };

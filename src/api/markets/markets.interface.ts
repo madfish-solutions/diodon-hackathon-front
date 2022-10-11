@@ -6,7 +6,7 @@ import { MarketId } from '@shared/types';
 
 export interface MarketData {
   marketId: MarketId;
-  marketPriceUsd: string;
+  marketPriceUsd: number;
   marketPriceChange24Usd: string;
   indexPriceUsd: number;
   indexPriceChange24Usd: number;

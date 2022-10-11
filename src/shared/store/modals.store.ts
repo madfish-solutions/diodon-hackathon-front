@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { MarketId, Nullable } from '../types';
+import { MarketId, Nullable, PositionType } from '../types';
 
 export enum ModalType {
   OpenPosition,
@@ -9,10 +9,11 @@ export enum ModalType {
   Withdraw
 }
 
-interface OpenPositionPayload {
+export interface OpenPositionPayload {
   marketId: MarketId;
+  recommendedPositionType: PositionType;
 }
-interface ManagePositionPayload {
+export interface ManagePositionPayload {
   marketId: MarketId;
 }
 
