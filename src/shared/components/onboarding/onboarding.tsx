@@ -24,17 +24,17 @@ export const Onboarding: FC = () => {
 
   const onChange = async (nextStepIndex: number) => {
     // eslint-disable-next-line no-console
-    console.log('nextStepIndex', nextStepIndex);
+    // console.log('nextStepIndex', nextStepIndex);
   };
 
   const onExit = () => {
     // eslint-disable-next-line no-console
-    console.log('onExit');
+    // console.log('onExit');
   };
 
   const onStart = () => {
     // eslint-disable-next-line no-console
-    console.log('onStart');
+    // console.log('onStart');
   };
 
   return (

@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
 import { MarketData } from '@api/markets';
+import { defined } from '@shared/types';
 
 import { MarketInfo } from './components/market-info';
 import { PositionItem } from './components/position-item';
@@ -13,10 +14,11 @@ import { useMarketItemViewModel } from './use-market-item.vm';
 interface Props {
   market: MarketData;
   isOpened: boolean;
-  toggleMarketHandler: () => void;
+  toggleMarketHandler: (element: HTMLDivElement) => void;
 }
 
 export const MarketItem: FC<Props> = observer(({ market, isOpened, toggleMarketHandler }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const {
     chartData,
     position,
@@ -29,7 +31,7 @@ export const MarketItem: FC<Props> = observer(({ market, isOpened, toggleMarketH
   } = useMarketItemViewModel(market);
 
   return (
-    <div className={styles.itemButton}>
+    <div className={styles.itemButton} ref={ref}>
       <div className={styles.item}>
         <MarketInfo
           market={market}
@@ -38,7 +40,7 @@ export const MarketItem: FC<Props> = observer(({ market, isOpened, toggleMarketH
           isConnected={isConnected}
           onOpen={openHandler}
           position={position}
-          onClick={toggleMarketHandler}
+          onClick={() => toggleMarketHandler(defined(ref.current))}
         />
         {isOpened && (
           <PositionItemFull

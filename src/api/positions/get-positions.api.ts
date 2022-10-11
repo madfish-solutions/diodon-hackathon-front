@@ -35,8 +35,6 @@ export const getPositionsApi = async (
 
       const spotPrice = toReal(await ammInstance.getSpotPrice(), DDAI_DECIMALS);
       const rawPnl = await clearingHouseViewer.methods.getUnrealizedPnl(amm, accountPkh, PNLCalcOption.SPOT_PRICE);
-      // eslint-disable-next-line no-console
-      console.log(amm, 'rawPnl', rawPnl.toString());
       const pnlUsd = toReal(valueToBigNumber(rawPnl), DDAI_DECIMALS);
       const amountTokens = toReal(size.abs(), DDAI_DECIMALS);
       const amountUsd = amountTokens.times(spotPrice).decimalPlaces(2);

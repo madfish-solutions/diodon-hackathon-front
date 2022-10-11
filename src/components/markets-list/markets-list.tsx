@@ -15,7 +15,7 @@ export const MarketsList: FC = observer(() => {
           market={market}
           key={market.marketId}
           isOpened={market.marketId === openedMarket?.marketId}
-          toggleMarketHandler={() => toggleMarketHandler(market)}
+          toggleMarketHandler={element => toggleMarketHandler(market, element)}
         />
       ))}
     </div>

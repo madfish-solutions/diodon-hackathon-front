@@ -37,7 +37,13 @@ export const useMarketsViewModel = () => {
     // eslint-disable-next-line
   }, [address]);
 
-  const toggleMarketHandler = useCallback((market: MarketData) => marketsStore.toggleMarket(market), [marketsStore]);
+  const toggleMarketHandler = useCallback(
+    (market: MarketData, element: HTMLDivElement) => {
+      marketsStore.toggleMarket(market);
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+    [marketsStore]
+  );
 
   return { markets, openedMarket, toggleMarketHandler };
 };
