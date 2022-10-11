@@ -33,6 +33,9 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
               </Cell>
               <Cell label="Profit / Loss">
                 <PercentView amount={position.pnlPercent} pnl />
+                <span style={{ fontSize: '90%', marginLeft: 8 }}>
+                  <GetUsdView amount={position.pnlUsd} />
+                </span>
               </Cell>
               <Cell label="Open Price">
                 <GetUsdView amount={position.avgOpenPriceUsd} />

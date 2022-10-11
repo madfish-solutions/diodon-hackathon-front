@@ -118,9 +118,10 @@
 .positionFull {
   display: flex;
 
-  padding: 26px 64px;
+  padding: 26px 40px;
 
   border-top: 1px solid rgba(255, 255, 255, 0.24);
+  overflow-x: auto;
 }
 
 .detailsPositionFull {
