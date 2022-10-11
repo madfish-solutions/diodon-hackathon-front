@@ -79,7 +79,9 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
           />
         </div>
         <div className={styles.info}>
-          <div>Leverage</div>
+          <div>
+            Leverage: <b style={{ color: '#fff' }}>{leverage}</b>
+          </div>
         </div>
         <LeverageSlider value={leverage} onChange={handleLeverageChange} />
         <p style={{ color: 'red' }}>{error}</p>
