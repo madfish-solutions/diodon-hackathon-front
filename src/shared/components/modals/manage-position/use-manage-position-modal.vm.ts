@@ -213,7 +213,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     prevMarketIdRef.current = marketId;
   }, [marketId, updateDDAIBalance]);
 
-  const positionSizeUsd = positionSize.toNumber() * Number(market?.indexPriceUsd ?? ZERO_AMOUNT);
+  const positionSizeUsd = positionSize.toNumber() * Number(market?.marketPriceUsd ?? ZERO_AMOUNT);
 
   return {
     closePosition,
