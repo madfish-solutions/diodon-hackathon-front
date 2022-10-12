@@ -8,6 +8,7 @@ import { Socials } from '@components/socials';
 import { GiveMeMoneyButton } from '@shared/components';
 import { ConnectButton } from '@shared/components/connect-button';
 import { useAuthStore } from '@shared/hooks';
+import { FeedbackIcon } from '@shared/svg';
 
 import { DiodonHeaderLogo } from '../diodon-header-logo';
 import { UserMainStats } from '../user-main-stats';
@@ -27,6 +28,11 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
           <DiodonHeaderLogo />
         </Link>
         <Socials />
+        <div id="feedback">
+          <a href="https://quipuswap.com/" target="_blank" rel="noreferrer">
+            <FeedbackIcon />
+          </a>
+        </div>
         <div className={styles.flex1} />
         {address && <UserMainStats className={styles.userMainStats} />}
         <div>

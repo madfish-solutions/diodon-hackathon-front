@@ -5,3 +5,4 @@ export * from './logo-blue';
 export * from './logo-green';
 export * from './logo-red';
 export * from './logo-yellow';
+export * from './feedback-icon';
