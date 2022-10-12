@@ -170,7 +170,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     [noSlippageAddedPositionSize, position]
   );
   const error = useMemo(() => {
-    if (noSlippagePositionSize > maxHoldingBaseAsset) {
+    if (noSlippagePositionSize.gt(maxHoldingBaseAsset)) {
       return 'Position size is too big.';
     }
 
