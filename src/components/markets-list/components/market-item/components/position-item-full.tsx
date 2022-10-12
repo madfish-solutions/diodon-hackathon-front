@@ -13,10 +13,16 @@ import { MarginRisk } from './margin-risk';
 interface Props {
   position: Optional<Position>;
   chartData: IChartData[];
-  openManageModal: () => void;
+  openManagePositionModal: () => void;
+  openOpenPositionModal: () => void;
 }
 
-export const PositionItemFull: FC<Props> = ({ position, chartData, openManageModal }) => {
+export const PositionItemFull: FC<Props> = ({
+  position,
+  chartData,
+  openManagePositionModal,
+  openOpenPositionModal
+}) => {
   return (
     <div className={styles.positionFull}>
       <div className={styles.sidePanel}>
@@ -57,22 +63,39 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, openManageMod
 
         <BarChart data={chartData} />
 
-        {position && (
-          <div className={styles.footerInfo}>
-            <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
-            <div className={styles.lastElementWrapper}>
-              <Button
-                onClick={event => {
-                  event.stopPropagation();
-                  openManageModal();
-                }}
-                className={styles.manageButton}
-              >
-                Manage
-              </Button>
-            </div>
-          </div>
-        )}
+        <div className={styles.footerInfo}>
+          {position ? (
+            <>
+              <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
+              <div className={styles.lastElementWrapper}>
+                <Button
+                  onClick={event => {
+                    event.stopPropagation();
+                    openManagePositionModal();
+                  }}
+                  className={styles.manageButton}
+                >
+                  Manage position
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ flex: 1 }} />
+              <div className={styles.lastElementWrapper}>
+                <Button
+                  onClick={event => {
+                    event.stopPropagation();
+                    openOpenPositionModal();
+                  }}
+                  className={styles.openButton}
+                >
+                  Open position
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

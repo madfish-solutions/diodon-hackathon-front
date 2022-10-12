@@ -37,11 +37,17 @@ export const MarketItem: FC<Props> = observer(({ market, isOpened, toggleMarketH
           marketPriceChangePercentage={marketPriceChangePercentage}
           indexPriceChangePercentage={indexPriceChangePercentage}
           isConnected={isConnected}
-          onOpen={openPositionHandler}
-          position={position}
+          isOpened={isOpened}
           onClick={() => toggleMarketHandler(defined(ref.current))}
         />
-        {isOpened && <PositionItemFull position={position} chartData={chartData} openManageModal={openManageModal} />}
+        {isOpened && (
+          <PositionItemFull
+            position={position}
+            chartData={chartData}
+            openManagePositionModal={openManageModal}
+            openOpenPositionModal={openPositionHandler}
+          />
+        )}
         {position && !isOpened && <PositionItem position={position} openManageModal={openManageModal} />}
       </div>
     </div>

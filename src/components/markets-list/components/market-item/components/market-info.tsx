@@ -1,11 +1,10 @@
 import { FC, HTMLProps } from 'react';
 
 import { MarketData } from '@api/markets';
-import { Position } from '@api/positions';
-import { Button } from '@shared/components';
 import { MarketIcon } from '@shared/components/market-icon';
 import { GetUsdView, PercentView, TokensView } from '@shared/helpers';
-import { Nullable } from '@shared/types';
+import { CloseIcon } from '@shared/svg';
+import { DownIcon } from '@shared/svg/down-icon';
 
 import { Cell } from '../../../../cell';
 import styles from '../market-item.module.scss';
@@ -15,8 +14,7 @@ interface Props extends HTMLProps<HTMLDivElement> {
   marketPriceChangePercentage: number;
   indexPriceChangePercentage: number;
   isConnected: boolean;
-  onOpen: () => void;
-  position: Nullable<Position>;
+  isOpened: boolean;
 }
 
 export const MarketInfo: FC<Props> = ({
@@ -24,8 +22,7 @@ export const MarketInfo: FC<Props> = ({
   marketPriceChangePercentage,
   indexPriceChangePercentage,
   isConnected,
-  onOpen,
-  position,
+  isOpened,
   ...props
 }) => {
   return (
@@ -54,19 +51,8 @@ export const MarketInfo: FC<Props> = ({
           <TokensView prefix="$" amount={market.volume24Usd} />
         </Cell>
       </div>
-      <div className={styles.lastElementWrapper}>
-        {!position && (
-          <Button
-            onClick={event => {
-              event.stopPropagation();
-              onOpen();
-            }}
-            className={styles.openButton}
-            disabled={!isConnected}
-          >
-            Open
-          </Button>
-        )}
+      <div className={styles.lastElementWrapper} style={{ cursor: 'pointer' }}>
+        {isOpened ? <CloseIcon /> : <DownIcon />}
       </div>
     </div>
   );
