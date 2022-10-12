@@ -8,10 +8,10 @@ import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
 import { LeverageSlider } from '@shared/components/leverage-slider';
 import { Switcher } from '@shared/components/switcher';
-import { CloseIcon } from '@shared/svg';
 
-import { formatValueBalance, PercentView, GetUsdView, TokensView } from '../../../helpers';
+import { formatValueBalance, GetUsdView, PercentView, TokensView } from '../../../helpers';
 import { MarketId, PositionType, Undefined } from '../../../types';
+import { CloseButton } from '../../close-button';
 import { PositionTypeIcon } from '../../position-type-icon';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
@@ -55,7 +55,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
       <h2 className={modalsStyles.heading}>
-        <CloseIcon onClick={closeModalHandler} className={modalsStyles.closeButton} />
+        <CloseButton onClick={closeModalHandler} className={modalsStyles.closeButton} />
         Open <span className={modalsStyles.market}>{marketId}</span> position
       </h2>
       <form onSubmit={handleSubmit}>

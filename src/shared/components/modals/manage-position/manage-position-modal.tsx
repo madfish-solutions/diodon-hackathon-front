@@ -7,10 +7,10 @@ import Modal from 'react-modal';
 import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
 import { LeverageSlider } from '@shared/components/leverage-slider';
-import { CloseIcon } from '@shared/svg';
 
 import { formatValueBalance, GetUsdView, TokensView } from '../../../helpers';
 import { MarketId, Undefined } from '../../../types';
+import { CloseButton } from '../../close-button';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
 import styles from '../open-position/open-position-modal.module.scss';
@@ -45,7 +45,7 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
       <h2 className={modalsStyles.heading}>
-        <CloseIcon onClick={closeModalHandler} className={modalsStyles.closeButton} />
+        <CloseButton onClick={closeModalHandler} className={modalsStyles.closeButton} />
         Manage position <span className={modalsStyles.market}>{marketId}</span>
       </h2>
 

@@ -4,9 +4,8 @@ import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 import Modal from 'react-modal';
 
-import { Button, OperationSwitcher, Tab } from '@shared/components';
+import { Button, CloseButton, OperationSwitcher, Tab } from '@shared/components';
 import { GetUsdView } from '@shared/helpers';
-import { CloseIcon } from '@shared/svg/close-icon';
 import { MarketId } from '@shared/types';
 
 import modalsStyles from '../modals.module.scss';
@@ -26,7 +25,7 @@ export const FinOperationModal: FC<FinOperationModalProps> = observer(({ initial
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
       <h2 className={modalsStyles.heading}>
-        <CloseIcon onClick={closeModalHandler} className={styles.closeButton} />
+        <CloseButton onClick={closeModalHandler} className={styles.closeButton} />
         {operation} <span className={modalsStyles.market}>{market}</span>
       </h2>
       <OperationSwitcher operation={operation} onClick={setOperation} />
