@@ -59,8 +59,8 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
 
   {
     ...DEFAULT_STEP,
-    element: '#top-logo',
-    id: '#top-logo',
+    element: '#feedback',
+    id: '#feedback',
     intro: 'Share your experience and help us make the platform better for you!',
     title: '🐡 Feedback'
   }
