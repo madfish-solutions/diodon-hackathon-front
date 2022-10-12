@@ -45,7 +45,7 @@ export const MarketInfo: FC<Props> = ({
           <GetUsdView amount={market.indexPriceUsd} percentEquivalent={indexPriceChangePercentage} />
         </Cell>
         <Cell label="Funding rate 1h" className={styles.Cell}>
-          <PercentView amount={market.fundingRateChange8Percent} decimalPlaces={4} />
+          <PercentView amount={market.fundingRateChangePercentage} decimalPlaces={4} />
         </Cell>
         <Cell label="Volume 24h" className={styles.Cell}>
           <TokensView prefix="$" amount={market.volume24Usd} />
