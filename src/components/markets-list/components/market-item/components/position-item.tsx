@@ -6,14 +6,14 @@ import { GetUsdView, PercentView, TokensView } from '@shared/helpers';
 
 import { Cell } from '../../../../cell';
 import styles from '../market-item.module.scss';
-import { getMarginRiskColor } from './margin-risk';
 
 interface Props {
   position: Position;
-  openManageModal: () => void;
+  onClose: () => void;
+  positionBeingClosed: boolean;
 }
 
-export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
+export const PositionItem: FC<Props> = ({ position, positionBeingClosed, onClose }) => {
   return (
     <div className={styles.position}>
       <div className={styles.positionTypeWrapper}>
@@ -29,22 +29,20 @@ export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
         <Cell label="Open Price">
           <GetUsdView amount={position.avgOpenPriceUsd} />
         </Cell>
-        <Cell label="Margin level">
-          <PercentView
-            amount={position.marginRatioPercentage}
-            style={{ color: getMarginRiskColor(position.marginRatioPercentage) }}
-          />
+        <Cell label="Liquidation Price">
+          <GetUsdView amount={position.liqPrice1Usd} />
         </Cell>
       </div>
       <div className={styles.lastElementWrapper}>
         <Button
           onClick={event => {
             event.stopPropagation();
-            openManageModal();
+            onClose();
           }}
           className={styles.manageButton}
+          disabled={positionBeingClosed}
         >
-          Manage position
+          Close
         </Button>
       </div>
     </div>

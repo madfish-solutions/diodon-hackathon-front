@@ -1,5 +1,4 @@
 import { ConnectorConfig } from '@keshan3262/use-wallet/dist/cjs/types';
-import BigNumber from 'bignumber.js';
 import { providers } from 'ethers';
 
 import { BASE_URL, CHAIN_ID, DDAI_ADDRESS, RPC_URL } from './environment';
@@ -23,8 +22,6 @@ export const CHAIN_ID_AS_HEX = `0x${CHAIN_ID.toString(HEX_BASE)}`;
 export const ZERO_AMOUNT = 0;
 export const DDAI_DECIMALS = 18;
 export const WHOLE_PERCENTAGE = 100;
-export const BN_ZERO_AMOUNT = new BigNumber(ZERO_AMOUNT);
-export const SLIPPAGE_PERCENTAGE = 3;
 
 export const DDAI_TOKEN = {
   address: DDAI_ADDRESS, // The address that the token is at.
