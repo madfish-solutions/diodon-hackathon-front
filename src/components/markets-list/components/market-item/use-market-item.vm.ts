@@ -11,8 +11,14 @@ export const useMarketItemViewModel = (market: MarketData) => {
   const { marketId, marketPriceChangePercentage, indexPriceUsd, marketPriceUsd, indexPriceChange24Usd } = market;
 
   const modalsStore = useModalsStore();
-  const { isConnected } = useAuthStore();
-  const [chartData, setChartData] = useState<Array<IChartData>>([]);
+  const { isConnected, address, connection } = useAuthStore();
+  const api = useApi();
+  const { clearingHouse, getApproves } = useClearingHouse();
+  const [positionBeingClosed, setPositionBeingClosed] = useState(false);
+  const [chartData, setChartData] = useState<{
+    volumeData: Array<IChartData>;
+    spotPriceData: Array<IChartData>;
+  }>({ volumeData: [], spotPriceData: [] });
 
   useEffect(() => {
     getMarketPricesApi(marketId).then(setChartData);
