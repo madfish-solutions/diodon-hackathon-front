@@ -7,3 +7,13 @@
 .market {
   color: #FFD700;
 }
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  padding: 0;
+
+  cursor: pointer;
+}

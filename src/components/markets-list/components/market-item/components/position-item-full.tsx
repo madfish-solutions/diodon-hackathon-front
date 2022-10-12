@@ -13,11 +13,10 @@ import { MarginRisk } from './margin-risk';
 interface Props {
   position: Optional<Position>;
   chartData: IChartData[];
-  onClose: () => void;
-  positionBeingClosed: boolean;
+  openManageModal: () => void;
 }
 
-export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeingClosed, onClose }) => {
+export const PositionItemFull: FC<Props> = ({ position, chartData, openManageModal }) => {
   return (
     <div className={styles.positionFull}>
       <div className={styles.sidePanel}>
@@ -65,12 +64,11 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
               <Button
                 onClick={event => {
                   event.stopPropagation();
-                  onClose();
+                  openManageModal();
                 }}
                 className={styles.manageButton}
-                disabled={positionBeingClosed}
               >
-                Close
+                Manage
               </Button>
             </div>
           </div>
