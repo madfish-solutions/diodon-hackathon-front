@@ -87,8 +87,13 @@ export const getPositionsApi = async (
   };
 };
 
-export const getMarketPricesApi = async (marketId: string): Promise<Array<IChartData>> => {
+export const getMarketPricesApi = async (
+  marketId: string
+): Promise<{
+  volumeData: Array<IChartData>;
+  spotPriceData: Array<IChartData>;
+}> => {
   const response = await fetch(`${API_URL}/${marketId.toLowerCase()}/market-prices`);
 
-  return response.json();
+  return await response.json();
 };
