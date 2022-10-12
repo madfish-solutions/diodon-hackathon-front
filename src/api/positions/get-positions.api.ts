@@ -29,6 +29,9 @@ export const getPositionsApi = async (
 ): Promise<AccountPositionResponse> => {
   const clearingHouseViewer = new ClearingHouseViewerContractWrapper(CLEARING_HOUSE_VIEWER_ADDRESS, provider);
   const clearingHouse = new ClearingHouse(provider, CLEARING_HOUSE_ADDRESS, provider.getSigner());
+  const maintenanceMarginRatio = toReal(await clearingHouse.getMaintenanceMarginRatio(), DDAI_DECIMALS);
+  const partialLiqRatio = toReal(await clearingHouse.getPartialLiquidationRatio(), DDAI_DECIMALS);
+  const liquidationFeeRatio = toReal(await clearingHouse.getLiquidationFeeRatio(), DDAI_DECIMALS);
   const rawPositions = await Promise.all(
     KNOWN_MARKETS.map(async marketId => {
       const amm = AMMS[marketId];
@@ -55,9 +58,6 @@ export const getPositionsApi = async (
         valueToBigNumber(await clearingHouseViewer.methods.getMarginRatio(amm, accountPkh)),
         DDAI_DECIMALS
       );
-      const maintenanceMarginRatio = toReal(await clearingHouse.getMaintenanceMarginRatio(), DDAI_DECIMALS);
-      const partialLiqRatio = toReal(await clearingHouse.getPartialLiquidationRatio(), DDAI_DECIMALS);
-      const liquidationFeeRatio = toReal(await clearingHouse.getLiquidationFeeRatio(), DDAI_DECIMALS);
 
       const partialLiqPriceUsd = getLiquidationPrice(maintenanceMarginRatio, position).toNumber();
       const fullLiqPriceUsd = partialLiqRatio.eq(1)
