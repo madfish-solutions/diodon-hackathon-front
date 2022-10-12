@@ -8,3 +8,4 @@ export * from './operation-switcher';
 export * from './position-type-icon';
 export * from './give-me-money-button';
 export * from './onboarding';
+export * from './close-button';

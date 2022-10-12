@@ -38,10 +38,12 @@ export const useGiveMeMoneyButtonViewModel = () => {
     if (!dDAIBalanceInUSD) {
       return 'Give Me dDAI Balance';
     }
-    if (dDAIBalanceInUSD < 30) {
+
+    if (dDAIBalanceInUSD < 15000) {
       return 'Give Me More dDAI';
     }
-    if (dDAIBalanceInUSD < 60) {
+
+    if (dDAIBalanceInUSD < 20000) {
       return 'I want all money!';
     }
 
@@ -53,6 +55,6 @@ export const useGiveMeMoneyButtonViewModel = () => {
     isLoading,
     isVisible: !!address,
     buttonLabel: getButtonLabel(),
-    disabled: dDAIBalanceInUSD >= 60
+    disabled: dDAIBalanceInUSD >= 30000
   };
 };

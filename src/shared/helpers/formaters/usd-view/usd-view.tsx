@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, HTMLProps } from 'react';
 
 import { BigNumber } from 'bignumber.js';
 import cx from 'classnames';
@@ -8,7 +8,7 @@ import { isExist } from '@shared/types';
 import { formatValueBalance } from '../format-balance';
 import styles from './usd-view.module.scss';
 
-interface Props {
+interface Props extends HTMLProps<HTMLDivElement> {
   amount: BigNumber.Value;
   percentEquivalent?: BigNumber.Value;
 }
@@ -18,13 +18,13 @@ enum Sign {
   MINUS = '-'
 }
 
-export const GetUsdView: FC<Props> = ({ amount, percentEquivalent }) => {
+export const GetUsdView: FC<Props> = ({ amount, percentEquivalent, ...props }) => {
   // only for view on front different styles
   const isProfit = amount > 100 ? true : false;
   const sign = isProfit ? Sign.MINUS : Sign.PLUS;
 
   return (
-    <span className={styles.root}>
+    <span className={styles.root} {...props}>
       <span className={styles.prefix}>$</span>
       <span title={`${amount}`}>{formatValueBalance(amount, 2)}</span>
       {isExist(percentEquivalent) && (

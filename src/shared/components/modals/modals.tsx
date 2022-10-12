@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { useModalsStore } from '../../hooks';
-import { ModalType } from '../../store/modals.store';
+import { ModalType, OpenPositionPayload } from '../../store/modals.store';
 import { Tab } from '../operation-switcher';
 import { FinOperationModal } from './fin-operation-modal';
 import { ManagePositionModal } from './manage-position';
@@ -14,7 +14,9 @@ export const Modals: FC = observer(() => {
 
   switch (modal) {
     case ModalType.OpenPosition:
-      return <OpenPositionModal marketId={payload?.marketId} />;
+      const { marketId, recommendedPositionType } = payload as OpenPositionPayload;
+
+      return <OpenPositionModal marketId={marketId} recommendedPositionType={recommendedPositionType} />;
     case ModalType.ManagePosition:
       return <ManagePositionModal marketId={payload?.marketId} />;
     case ModalType.Deposit:

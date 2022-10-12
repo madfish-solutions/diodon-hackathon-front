@@ -6,20 +6,21 @@ import Modal from 'react-modal';
 
 import { Cell } from '@components/cell';
 import { Button } from '@shared/components/button';
+import { LeverageSlider } from '@shared/components/leverage-slider';
 import { Switcher } from '@shared/components/switcher';
-import { CloseIcon } from '@shared/svg';
 
-import { formatValueBalance, PercentView, GetUsdView, TokensView } from '../../../helpers';
+import { formatValueBalance, GetUsdView, PercentView, TokensView } from '../../../helpers';
 import { MarketId, PositionType, Undefined } from '../../../types';
+import { CloseButton } from '../../close-button';
 import { PositionTypeIcon } from '../../position-type-icon';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
-import { LeverageSlider } from './components';
 import styles from './open-position-modal.module.scss';
 import { useOpenPositionModalViewModel } from './use-open-position-modal.vm';
 
 interface Props {
   marketId: Undefined<MarketId>;
+  recommendedPositionType: Undefined<PositionType>;
 }
 
 const POSITION_OPTIONS = [
@@ -27,7 +28,7 @@ const POSITION_OPTIONS = [
   { label: 'Short', value: PositionType.SHORT }
 ];
 
-export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
+export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPositionType }) => {
   const {
     market,
     isOpen,
@@ -45,7 +46,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
     slippagePercentage,
     positionSize,
     positionSizeUsd
-  } = useOpenPositionModalViewModel(marketId);
+  } = useOpenPositionModalViewModel(marketId, recommendedPositionType);
 
   if (!market) {
     throw new Error('Market is not defined');
@@ -54,7 +55,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
   return (
     <Modal isOpen={isOpen} onRequestClose={closeModalHandler} style={modalsStyle}>
       <h2 className={modalsStyles.heading}>
-        <CloseIcon onClick={closeModalHandler} className={styles.closeButton} />
+        <CloseButton onClick={closeModalHandler} className={modalsStyles.closeButton} />
         Open <span className={modalsStyles.market}>{marketId}</span> position
       </h2>
       <form onSubmit={handleSubmit}>
@@ -90,7 +91,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId }) => {
             <TokensView amount={positionSize} suffix={marketId} dollarEquivalent={positionSizeUsd} />
           </Cell>
           <Cell label="Current price">
-            <GetUsdView amount={market?.indexPriceUsd ?? 0} />
+            <GetUsdView amount={market?.marketPriceUsd ?? 0} />
           </Cell>
         </div>
         <div className={styles.footer}>

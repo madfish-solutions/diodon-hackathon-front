@@ -20,7 +20,12 @@ interface Props {
   positionBeingClosed: boolean;
 }
 
-export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeingClosed, onClose }) => {
+export const PositionItemFull: FC<Props> = ({
+  position,
+  chartData,
+  openManagePositionModal,
+  openOpenPositionModal
+}) => {
   return (
     <div className={styles.positionFull}>
       <div className={styles.sidePanel}>
@@ -54,30 +59,44 @@ export const PositionItemFull: FC<Props> = ({ position, chartData, positionBeing
       </div>
       <div className={styles.mainPanel}>
         <div className={styles.headerInfo}>
-          <span className={styles.mainText}>Market price, USD</span>
-          <span className={styles.secondaryText}>Index price, USD</span>
-          <span className={styles.secondaryText}>Funding rate, %</span>
+          <span className={styles.mainText}>Market price & Volume, USD</span>
         </div>
 
         <BarChart volumeData={chartData.volumeData} spotPriceData={chartData.spotPriceData} />
 
-        {position && (
-          <div className={styles.footerInfo}>
-            <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
-            <div className={styles.lastElementWrapper}>
-              <Button
-                onClick={event => {
-                  event.stopPropagation();
-                  onClose();
-                }}
-                className={styles.manageButton}
-                disabled={positionBeingClosed}
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        )}
+        <div className={styles.footerInfo}>
+          {position ? (
+            <>
+              <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
+              <div className={styles.lastElementWrapper} style={{ marginLeft: 8 }}>
+                <Button
+                  onClick={event => {
+                    event.stopPropagation();
+                    openManagePositionModal();
+                  }}
+                  className={styles.manageButton}
+                >
+                  Manage position
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ flex: 1 }} />
+              <div className={styles.lastElementWrapper}>
+                <Button
+                  onClick={event => {
+                    event.stopPropagation();
+                    openOpenPositionModal();
+                  }}
+                  className={styles.openButton}
+                >
+                  Open position
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
