@@ -42,9 +42,8 @@ export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
             event.stopPropagation();
             openManageModal();
           }}
-          className={styles.manageButton}
         >
-          Manage position
+          Manage
         </Button>
       </div>
     </div>

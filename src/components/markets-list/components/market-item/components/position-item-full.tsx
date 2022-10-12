@@ -74,9 +74,8 @@ export const PositionItemFull: FC<Props> = ({
                     event.stopPropagation();
                     openManagePositionModal();
                   }}
-                  className={styles.manageButton}
                 >
-                  Manage position
+                  Manage
                 </Button>
               </div>
             </>
@@ -89,7 +88,6 @@ export const PositionItemFull: FC<Props> = ({
                     event.stopPropagation();
                     openOpenPositionModal();
                   }}
-                  className={styles.openButton}
                 >
                   Open position
                 </Button>

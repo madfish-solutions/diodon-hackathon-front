@@ -108,7 +108,7 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
               <PercentView amount={SLIPPAGE_PERCENTAGE} />
             </Cell>
             {isDeposit ? (
-              <Button type="submit" disabled={positionBeingChanged}>
+              <Button type="submit" className={styles.lastElementWrapper} disabled={positionBeingChanged}>
                 Increase position
               </Button>
             ) : (

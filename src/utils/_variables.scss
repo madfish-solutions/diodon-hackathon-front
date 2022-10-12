@@ -1,0 +1,13 @@
+$primary-btn-background: linear-gradient(268.24deg, #00b4ed -0.23%, #236ee0 100%);
+$primary-hover-btn-background: linear-gradient(188.24deg, #00b4ed -0.23%, #236ee0 100%);
+$project-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+$time-transition: 250ms;
+$bcg-time-transition: 500ms;
+
+$color-transition: color $time-transition $project-cubic;
+$fill-transition: fill $bcg-time-transition $project-cubic;
+$bcg-color-transition: background-color $bcg-time-transition $project-cubic;
+$shadow-transition: box-shadow $time-transition $project-cubic;
+$border-color-transition: border-color $time-transition $project-cubic;
+$transform-transition: transform $time-transition $project-cubic;
+$opacity-transition: opacity $bcg-time-transition;
