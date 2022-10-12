@@ -21,7 +21,7 @@ interface RawPositionResponse {
 
 export class ClearingHouse extends CommonFacade {
   constructor(
-    provider: ethers.providers.Web3Provider,
+    provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     contractAddress: address,
     signer: ethers.providers.JsonRpcSigner
   ) {

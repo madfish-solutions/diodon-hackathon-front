@@ -117,7 +117,8 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
           modalsStore.close();
           await Promise.all([
             accountStore.loadFreeCollateral(AMMS[marketId!], address!),
-            positionsStore.loadPositions(address!)
+            positionsStore.loadPositions(address!),
+            accountStore.loadDDAIBalance(address!)
           ]);
         }, 'Position has been successfully opened!');
       } finally {
