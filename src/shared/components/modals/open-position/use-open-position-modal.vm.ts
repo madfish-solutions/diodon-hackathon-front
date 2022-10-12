@@ -139,7 +139,7 @@ export const useOpenPositionModalViewModel = (
   const positionType = formik.values.positionType;
   const leverage = formik.values.leverage;
   const error = useMemo(() => {
-    if (noSlippagePositionSize > maxHoldingBaseAsset) {
+    if (noSlippagePositionSize.gt(maxHoldingBaseAsset)) {
       return 'Position size is too big.';
     }
 
