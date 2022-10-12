@@ -16,8 +16,8 @@ interface Props {
     volumeData: Array<IChartData>;
     spotPriceData: Array<IChartData>;
   };
-  onClose: () => void;
-  positionBeingClosed: boolean;
+  openManagePositionModal: () => void;
+  openOpenPositionModal: () => void;
 }
 
 export const PositionItemFull: FC<Props> = ({
@@ -62,7 +62,7 @@ export const PositionItemFull: FC<Props> = ({
           <span className={styles.mainText}>Market price & Volume, USD</span>
         </div>
 
-        <BarChart volumeData={chartData.volumeData} spotPriceData={chartData.spotPriceData} />
+        <BarChart spotPriceData={chartData.spotPriceData} volumeData={chartData.volumeData} />
 
         <div className={styles.footerInfo}>
           {position ? (

@@ -37,7 +37,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     ...DEFAULT_STEP,
     element: '#markets-list',
     id: '#markets-list',
-    intro: 'TPlay with markets, bet on price moves and score profit!',
+    intro: 'Play with markets, bet on price moves and score profit!',
     title: '🔥 Trading'
   },
 
