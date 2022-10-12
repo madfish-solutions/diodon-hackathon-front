@@ -56,9 +56,7 @@ export const PositionItemFull: FC<Props> = ({
       </div>
       <div className={styles.mainPanel}>
         <div className={styles.headerInfo}>
-          <span className={styles.mainText}>Market price, USD</span>
-          <span className={styles.secondaryText}>Index price, USD</span>
-          <span className={styles.secondaryText}>Funding rate, %</span>
+          <span className={styles.mainText}>Market price & Volume, USD</span>
         </div>
 
         <BarChart data={chartData} />
@@ -67,7 +65,7 @@ export const PositionItemFull: FC<Props> = ({
           {position ? (
             <>
               <MarginRisk marginRatioPercentage={position.marginRatioPercentage} />
-              <div className={styles.lastElementWrapper}>
+              <div className={styles.lastElementWrapper} style={{ marginLeft: 8 }}>
                 <Button
                   onClick={event => {
                     event.stopPropagation();

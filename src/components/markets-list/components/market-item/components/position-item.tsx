@@ -40,7 +40,7 @@ export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
           }}
           className={styles.manageButton}
         >
-          Manage
+          Manage position
         </Button>
       </div>
     </div>
