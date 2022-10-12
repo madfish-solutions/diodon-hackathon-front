@@ -37,6 +37,16 @@ export interface FormValues {
 const FORM_FIELDS = ['orderAmount', 'leverage'] as const;
 const MIN_ORDER_AMOUNT = 0.01;
 
+enum FormType {
+  Deposit = 'deposit',
+  Withdraw = 'withdraw'
+}
+
+export const FORMS_OPTIONS = [
+  { label: 'Deposit', value: FormType.Deposit },
+  { label: 'Withdraw', value: FormType.Withdraw }
+];
+
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) => {
   const modalsStore = useModalsStore();
@@ -53,6 +63,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
   const [positionBeingChanged, setPositionBeingChanged] = useState(false);
   const { balance, updateDDAIBalance } = useDDAIBalance();
   const prevMarketIdRef = useRef(marketId);
+  const [formType, setFormType] = useState(FormType.Deposit);
 
   const amm = useMemo(() => {
     if (market && connection) {
@@ -215,6 +226,11 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
 
   const positionSizeUsd = positionSize.toNumber() * Number(market?.marketPriceUsd ?? ZERO_AMOUNT);
 
+  const toggleFormType = (ft: FormType) => {
+    setFormType(ft);
+    formik.setFieldValue('orderAmount', 0, true);
+  };
+
   return {
     closePosition,
     value,
@@ -230,6 +246,9 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     isSubmitting: formik.isSubmitting,
     positionBeingChanged,
     positionSize,
-    positionSizeUsd
+    positionSizeUsd,
+    formType,
+    toggleFormType,
+    isDeposit: formType === FormType.Deposit
   };
 };
