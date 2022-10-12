@@ -1,5 +1,4 @@
 export * from './diodon-logo';
-export * from './diodon-logo-header';
 export * from './social-icons';
 export * from './close-icon';
 export * from './logo-blue';
