@@ -12,7 +12,10 @@ import { MarginRisk } from './margin-risk';
 
 interface Props {
   position: Optional<Position>;
-  chartData: IChartData[];
+  chartData: {
+    volumeData: Array<IChartData>;
+    spotPriceData: Array<IChartData>;
+  };
   openManagePositionModal: () => void;
   openOpenPositionModal: () => void;
 }
@@ -59,7 +62,7 @@ export const PositionItemFull: FC<Props> = ({
           <span className={styles.mainText}>Market price & Volume, USD</span>
         </div>
 
-        <BarChart data={chartData} />
+        <BarChart spotPriceData={chartData.spotPriceData} volumeData={chartData.volumeData} />
 
         <div className={styles.footerInfo}>
           {position ? (

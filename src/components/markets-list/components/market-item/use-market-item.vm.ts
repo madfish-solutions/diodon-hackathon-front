@@ -12,7 +12,10 @@ export const useMarketItemViewModel = (market: MarketData) => {
 
   const modalsStore = useModalsStore();
   const { isConnected } = useAuthStore();
-  const [chartData, setChartData] = useState<Array<IChartData>>([]);
+  const [chartData, setChartData] = useState<{
+    volumeData: Array<IChartData>;
+    spotPriceData: Array<IChartData>;
+  }>({ volumeData: [], spotPriceData: [] });
 
   useEffect(() => {
     getMarketPricesApi(marketId).then(setChartData);
