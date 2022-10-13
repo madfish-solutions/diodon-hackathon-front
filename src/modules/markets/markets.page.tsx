@@ -14,7 +14,8 @@ export const MarketsPage = () => {
           alignItems: 'center',
           justifyItems: 'center',
           justifyContent: 'center',
-          marginTop: 64
+          marginTop: 64,
+          marginBottom: 24
         }}
       >
         <BannerIcon />
