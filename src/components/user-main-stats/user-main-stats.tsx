@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { observer } from 'mobx-react-lite';
 
 import { Cell } from '@components/cell';
-import { TokensView } from '@shared/helpers';
+import { GetUsdView, TokensView } from '@shared/helpers';
 
 import { useUserMainStatsViewModel } from './use-user-main-stats.vm';
 import styles from './user-main-stats.module.scss';
@@ -19,14 +19,14 @@ export const UserMainStats: FC<Props> = observer(({ className }) => {
   return (
     <div className={cx(styles.root, className)} id="top-stats">
       <Cell contentClassName={{ amountClassName: styles.cell }} label="Net collateral">
-        <TokensView prefix="$" amount={netCollateralUsd} />
+        <GetUsdView prefix="$" amount={netCollateralUsd} />
       </Cell>
       <Cell
         className={styles.openedPositions}
         contentClassName={{ amountClassName: styles.cell }}
         label="Opened positions"
       >
-        <TokensView prefix="$" amount={openedPositionsSumUsd} />
+        <GetUsdView prefix="$" amount={openedPositionsSumUsd} />
       </Cell>
       <Cell className={styles.cell} contentClassName={{ amountClassName: styles.amount }} label="Balance">
         <TokensView suffix="DDAI" amount={dDAIBalanceInUSD} />
