@@ -75,7 +75,7 @@ export const PositionItemFull: FC<Props> = ({
                     openManagePositionModal();
                   }}
                 >
-                  Manage
+                  Manage position
                 </Button>
               </div>
             </>
