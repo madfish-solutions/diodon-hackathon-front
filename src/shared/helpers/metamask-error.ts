@@ -11,9 +11,9 @@ export const transformMetamaskError = (e: Error) => {
     const { reason } = e;
 
     if (reason.startsWith(EXECUTION_ERROR_PREFIX)) {
-      const [, errorMessage] = reason.split(EXECUTION_ERROR_PREFIX);
+      const [, description] = reason.split(EXECUTION_ERROR_PREFIX);
 
-      return new OperationExecutionError(`Execution failed with error "${errorMessage.trim()}"`);
+      return new OperationExecutionError(description);
     }
 
     if (USER_REJECTION_ERRORS.includes(reason)) {
