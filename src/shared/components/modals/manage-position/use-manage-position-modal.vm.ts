@@ -13,10 +13,10 @@ import { AMMS } from '@config/environment';
 import { getFormikError, isExist } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 import {
-  getNoSlippagePositionSize,
-  getPositionSizeWithSlippage,
+  getNoSlippagePositionLimit,
+  getPositionLimitWithSlippage,
   useAccountStore,
-  useAddedPositionSize,
+  useAddedPositionLimit,
   useApi,
   useAuthStore,
   useDDAIBalance,
@@ -108,8 +108,8 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
             position!.type === PositionType.LONG ? Side.LONG : Side.SHORT,
             rawMargin,
             toAtomic(new BigNumber(values.leverage), DDAI_DECIMALS),
-            getPositionSizeWithSlippage(
-              await getNoSlippagePositionSize(amm, rawMargin, position!.type, values.leverage),
+            getPositionLimitWithSlippage(
+              await getNoSlippagePositionLimit(amm, rawMargin, position!.type, values.leverage),
               position!.type
             ).integerValue(BigNumber.ROUND_DOWN)
           );
@@ -168,18 +168,21 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     [formik.values, position]
   );
   const {
-    positionSize: addedPositionSize,
-    updatePositionSize,
-    noSlippagePositionSize: noSlippageAddedPositionSize
-  } = useAddedPositionSize(order, amm);
+    positionLimit: addedPositionLimit,
+    updatePositionLimit,
+    noSlippagePositionLimit: noSlippageAddedPositionLimit
+  } = useAddedPositionLimit(order, amm);
 
-  const positionSize = useMemo(
-    () => addedPositionSize.plus(position?.amountTokens ?? ZERO_AMOUNT),
-    [addedPositionSize, position]
-  );
+  const positionSize = useMemo(() => {
+    if (position?.type === PositionType.LONG) {
+      return addedPositionLimit.plus(position?.amountTokens ?? ZERO_AMOUNT);
+    }
+
+    return noSlippageAddedPositionLimit.plus(position?.amountTokens ?? ZERO_AMOUNT);
+  }, [addedPositionLimit, noSlippageAddedPositionLimit, position]);
   const noSlippagePositionSize = useMemo(
-    () => noSlippageAddedPositionSize.plus(position?.amountTokens ?? ZERO_AMOUNT),
-    [noSlippageAddedPositionSize, position]
+    () => noSlippageAddedPositionLimit.plus(position?.amountTokens ?? ZERO_AMOUNT),
+    [noSlippageAddedPositionLimit, position]
   );
   const error = useMemo(() => {
     if (noSlippagePositionSize.gt(maxHoldingBaseAsset)) {
@@ -216,9 +219,9 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
   }, [address, api, clearingHouse, formik, getApproves, getFee, marketId, modalsStore, position, positionsStore]);
 
   useEffect(() => {
-    updatePositionSize();
+    updatePositionLimit();
     updateMaxHoldingBaseAsset();
-  }, [value, leverage, updatePositionSize, updateMaxHoldingBaseAsset]);
+  }, [value, leverage, updatePositionLimit, updateMaxHoldingBaseAsset]);
 
   useEffect(() => {
     if (prevMarketIdRef.current !== marketId) {
@@ -227,7 +230,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     prevMarketIdRef.current = marketId;
   }, [marketId, updateDDAIBalance]);
 
-  const positionSizeUsd = positionSize.toNumber() * Number(market?.marketPriceUsd ?? ZERO_AMOUNT);
+  const positionSizeUsd = positionSize.times(market?.marketPriceUsd ?? ZERO_AMOUNT).toNumber();
 
   const toggleFormType = (ft: FormType) => {
     setFormType(ft);
