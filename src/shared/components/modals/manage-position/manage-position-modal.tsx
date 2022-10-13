@@ -13,6 +13,7 @@ import { formatValueBalance, GetUsdView, PercentView, TokensView } from '../../.
 import { MarketId, Undefined } from '../../../types';
 import { CloseButton } from '../../close-button';
 import { Switcher } from '../../switcher';
+import { Tooltip } from '../../tooltip';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
 import styles from '../open-position/open-position-modal.module.scss';
@@ -63,11 +64,13 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
           {isDeposit ? (
             <>
               <div className={styles.info}>
-                <div>Margin</div>
-                <div>Balance: {formatValueBalance(balance)}</div>
+                <div>
+                  Margin <Tooltip content="Wished collateral amount to open a position" />
+                </div>
+                <div>Balance: {formatValueBalance(balance)} DDAI</div>
               </div>
               <div className={styles.inputWrapper}>
-                <span className={styles.inputPostfix}>KDAI</span>
+                <span className={styles.inputPostfix}>DDAI</span>
                 <input
                   type="number"
                   min={0}
@@ -80,7 +83,10 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
                 />
               </div>
               <div className={styles.info}>
-                <div>Leverage: {leverage}</div>
+                <div>
+                  Leverage: <b style={{ color: '#fff', marginRight: 8 }}>{leverage}</b>{' '}
+                  <Tooltip content="Multiplier of the open position value in relation to the collateral provided" />
+                </div>
               </div>
               <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading} />
               <p style={{ color: 'red' }}>{error}</p>

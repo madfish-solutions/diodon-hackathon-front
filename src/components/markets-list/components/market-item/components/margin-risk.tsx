@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import { Tooltip } from '@shared/components';
+
 import { MarginSlider } from '../../../../account/components/margin-slider';
 import styles from '../market-item.module.scss';
 
@@ -33,7 +35,9 @@ export const MarginRisk: FC<Props> = ({ marginRatioPercentage }) => {
   return (
     <>
       <div style={{ marginRight: 8 }}>
-        <div className={styles.marginLevel}>Margin level:</div>
+        <div className={styles.marginLevel}>
+          Margin level: <Tooltip content="The ratio between position value and used margin" />
+        </div>
         <div className={styles.explanation} style={{ color: getMarginRiskColor(marginRatioPercentage) }}>
           {getMessage(marginRatioPercentage)}
         </div>
