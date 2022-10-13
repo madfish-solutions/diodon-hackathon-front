@@ -6,9 +6,9 @@ import { shortNumberWithLetters } from './short-number-with-letters';
 
 const FIRST_POSITION = 0;
 const ONE_ELEMENT = 1;
-export const DEFAULT_BALANCE_LENGTH = 3;
+export const DEFAULT_BALANCE_LENGTH = 7;
 const DEFAULT_NEGATIVE_BALANCE_LENGTH = 8;
-const ZERO_STRING = '0'; // 0
+const ZERO_STRING = '0';
 const MAX_AMOUNT_WITHOUT_LETTERS = 1e6; // 1M
 const ZERO_STRING_LENGTH = 2;
 const SIGN_PASS = 0;
