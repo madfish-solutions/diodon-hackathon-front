@@ -8,7 +8,8 @@ export const modalsStyle = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    width: 400
   },
   overlay: {
     background: 'linear-gradient(56.03deg, rgba(0, 36, 77, 0.96) 0%, rgba(0, 64, 100, 0.96) 100%)',
