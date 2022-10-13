@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import Modal from 'react-modal';
 
 import 'reflect-metadata';
+import 'tippy.js/dist/tippy.css';
 
 import './index.css';
 import { App } from './app';
