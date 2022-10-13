@@ -7,3 +7,4 @@ export * from './logo-red';
 export * from './logo-yellow';
 export * from './feedback-icon';
 export * from './welcome-icon';
+export * from './banner';
