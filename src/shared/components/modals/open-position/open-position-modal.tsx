@@ -78,7 +78,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
             className={cx(styles.input, styles.amount)}
             value={value}
             onChange={handleChange}
-            disabled={isLoading || submitDisabled}
+            disabled={isLoading}
           />
         </div>
         <div className={styles.info}>
@@ -86,7 +86,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
             Leverage: <b style={{ color: '#fff' }}>{leverage}</b>
           </div>
         </div>
-        <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading || submitDisabled} />
+        <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading} />
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
           <Cell label={'Min. receive'}>
