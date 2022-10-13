@@ -1,8 +1,11 @@
 import { MetamaskError } from './metamask.error';
 
 export class OperationExecutionError extends MetamaskError {
-  constructor(message: string) {
-    super(message);
+  description: string;
+
+  constructor(description: string) {
+    super(`Execution failed with error "${description.trim()}"`);
+    this.description = description.trim();
     this.name = this.constructor.name;
   }
 }

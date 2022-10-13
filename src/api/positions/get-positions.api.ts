@@ -7,7 +7,8 @@ import { Amm } from '@blockchain/facades/amm';
 import { API_URL } from '@config/api';
 import { DDAI_DECIMALS, WHOLE_PERCENTAGE, ZERO_AMOUNT } from '@config/constants';
 import { AMMS, CLEARING_HOUSE_ADDRESS, CLEARING_HOUSE_VIEWER_ADDRESS, KNOWN_MARKETS } from '@config/environment';
-import { isExist } from '@shared/helpers';
+import { isErrorWithReason, OperationExecutionError } from '@shared/errors';
+import { isExist, transformMetamaskError } from '@shared/helpers';
 import { toPercent, toReal, valueToBigNumber } from '@shared/helpers/bignumber';
 import { PositionType } from '@shared/types';
 
@@ -54,10 +55,25 @@ export const getPositionsApi = async (
       const amountTokens = toReal(size.abs(), DDAI_DECIMALS);
       const amountUsd = amountTokens.times(spotPrice).decimalPlaces(2);
       const pnlPercentage = toPercent(pnlUsd.div(amountUsd));
-      const marginRatio = toReal(
-        valueToBigNumber(await clearingHouseViewer.methods.getMarginRatio(amm, accountPkh)),
-        DDAI_DECIMALS
-      );
+      let marginRatio: BigNumber;
+      try {
+        marginRatio = toReal(
+          valueToBigNumber(await clearingHouseViewer.methods.getMarginRatio(amm, accountPkh)),
+          DDAI_DECIMALS
+        );
+      } catch (e) {
+        if (isErrorWithReason(e as Error)) {
+          const transformedError = transformMetamaskError(e as Error);
+          if (
+            transformedError instanceof OperationExecutionError &&
+            transformedError.description === 'positionSize is 0'
+          ) {
+            return null;
+          }
+        }
+
+        throw e;
+      }
 
       const partialLiqPriceUsd = getLiquidationPrice(maintenanceMarginRatio, position).toNumber();
       const fullLiqPriceUsd = partialLiqRatio.eq(1)
