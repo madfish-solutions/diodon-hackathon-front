@@ -43,7 +43,7 @@ export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
             openManageModal();
           }}
         >
-          Manage Position
+          Manage position
         </Button>
       </div>
     </div>
