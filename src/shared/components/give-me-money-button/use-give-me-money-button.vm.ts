@@ -36,11 +36,11 @@ export const useGiveMeMoneyButtonViewModel = () => {
 
   const getButtonLabel = () => {
     if (!dDAIBalanceInUSD) {
-      return 'Give Me dDAI Balance';
+      return 'Give me test money';
     }
 
     if (dDAIBalanceInUSD < 15000) {
-      return 'Give Me More dDAI';
+      return 'Give me more money';
     }
 
     if (dDAIBalanceInUSD < 20000) {

@@ -42,7 +42,8 @@ export const PositionItemFull: FC<Props> = ({
               <Cell label="Profit / Loss">
                 <GetUsdView amount={position.pnlUsd} pnl />
                 <span style={{ fontSize: '85%', marginLeft: 8, opacity: 0.8 }}>
-                  <span style={{ opacity: 0.5 }}>/</span> <PercentView amount={position.pnlPercent} pnl />
+                  <span style={{ opacity: 0.5 }}>/</span>{' '}
+                  <PercentView amount={position.pnlPercent} decimalPlaces={2} pnl />
                 </span>
               </Cell>
               <Cell label="Open Price">

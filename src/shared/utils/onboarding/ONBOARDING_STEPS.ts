@@ -72,6 +72,6 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     element: '#welcome',
     id: '#welcome',
     intro: 'Open Onboarding again.',
-    title: '🤝 Onboarding'
+    title: '🤝'
   }
 ];

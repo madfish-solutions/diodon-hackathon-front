@@ -49,7 +49,7 @@ export const MarketInfo: FC<Props> = ({
           className={styles.Cell}
           tooltip="Variable used to balance open long and short positions. Longs pay shorts if positive, shorts pay longs if negative"
         >
-          <PercentView amount={market.fundingRateChangePercentage} decimalPlaces={4} />
+          <PercentView amount={market.fundingRateChangePercentage} decimalPlaces={8} />
         </Cell>
         <Cell
           label="Volume 24h"
