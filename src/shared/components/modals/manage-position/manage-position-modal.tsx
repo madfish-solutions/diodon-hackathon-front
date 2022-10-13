@@ -80,7 +80,7 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
                 />
               </div>
               <div className={styles.info}>
-                <div>Leverage</div>
+                <div>Leverage: {leverage}</div>
               </div>
               <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading} />
               <p style={{ color: 'red' }}>{error}</p>
