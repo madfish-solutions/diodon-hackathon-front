@@ -24,7 +24,7 @@ export const PositionItem: FC<Props> = ({ position, openManageModal }) => {
           <TokensView suffix={position.marketId} amount={position.amountTokens} dollarEquivalent={position.amountUsd} />
         </Cell>
         <Cell label="Profit / Loss">
-          <PercentView amount={position.pnlPercent} pnl />
+          <GetUsdView amount={position.pnlUsd} pnl />
         </Cell>
         <Cell label="Open Price">
           <GetUsdView amount={position.avgOpenPriceUsd} />

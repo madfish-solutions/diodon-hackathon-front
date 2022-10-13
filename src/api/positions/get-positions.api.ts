@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { BigNumber as EthersBigNumber, providers } from 'ethers';
+import { unionBy } from 'lodash';
 
 import { ClearingHouseViewerContractWrapper, PNLCalcOption } from '@blockchain/clearing-house-viewer-wrapper';
 import { ClearingHouse } from '@blockchain/facades';
@@ -103,13 +104,18 @@ export const getPositionsApi = async (
   };
 };
 
-export const getMarketPricesApi = async (
-  marketId: string
-): Promise<{
+interface ChartRsponse {
   volumeData: Array<IChartData>;
   spotPriceData: Array<IChartData>;
-}> => {
+}
+
+export const getMarketPricesApi = async (marketId: string): Promise<ChartRsponse> => {
   const response = await fetch(`${API_URL}/${marketId.toLowerCase()}/market-prices`);
 
-  return await response.json();
+  const data: ChartRsponse = await response.json();
+
+  data.volumeData = unionBy(data.volumeData, 'time');
+  data.spotPriceData = unionBy(data.spotPriceData, 'time');
+
+  return data;
 };

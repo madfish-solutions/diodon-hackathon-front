@@ -107,7 +107,10 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
           )}
 
           <div className={styles.footer}>
-            <Cell label="Slippage">
+            <Cell
+              label="Slippage"
+              tooltip="Maximum price deviation between the current price and when the transaction is confirmed on the blockchain"
+            >
               <PercentView amount={SLIPPAGE_PERCENTAGE} />
             </Cell>
             {isDeposit ? (

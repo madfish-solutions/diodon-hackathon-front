@@ -13,6 +13,7 @@ import { formatValueBalance, GetUsdView, PercentView, TokensView } from '../../.
 import { MarketId, PositionType, Undefined } from '../../../types';
 import { CloseButton } from '../../close-button';
 import { PositionTypeIcon } from '../../position-type-icon';
+import { Tooltip } from '../../tooltip';
 import { modalsStyle } from '../modals-style';
 import modalsStyles from '../modals.module.scss';
 import styles from './open-position-modal.module.scss';
@@ -65,8 +66,10 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
           <PositionTypeIcon type={positionType} />
         </div>
         <div className={styles.info}>
-          <div>Margin</div>
-          <div>Balance: {formatValueBalance(balance)}</div>
+          <div>
+            Margin <Tooltip content="Wished collateral amount to open a position" />
+          </div>
+          <div>Balance: {formatValueBalance(balance)} KDAI</div>
         </div>
         <div className={styles.inputWrapper}>
           <span className={styles.inputPostfix}>KDAI</span>
@@ -83,21 +86,25 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
         </div>
         <div className={styles.info}>
           <div>
-            Leverage: <b style={{ color: '#fff' }}>{leverage}</b>
+            Leverage: <b style={{ color: '#fff', marginRight: 8 }}>{leverage}</b>
+            <Tooltip content="Multiplier of the open position value in relation to the collateral provided" />
           </div>
         </div>
         <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading} />
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
-          <Cell label={'Min. receive'}>
+          <Cell label="Min. receive" tooltip="Minimum amount of the received asset">
             <TokensView amount={positionSize} suffix={marketId} dollarEquivalent={positionSizeUsd} />
           </Cell>
-          <Cell label="Current price">
+          <Cell label="Current price" tooltip="Current market price of the asset">
             <GetUsdView amount={market?.marketPriceUsd ?? 0} />
           </Cell>
         </div>
         <div className={styles.footer}>
-          <Cell label="Slippage">
+          <Cell
+            label="Slippage"
+            tooltip="Maximum price deviation between the current price and when the transaction is confirmed on the blockchain"
+          >
             <PercentView amount={slippagePercentage} />
           </Cell>
           <Button type="submit" disabled={submitDisabled} className={styles.opButton} loading={isLoading}>

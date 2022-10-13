@@ -9,3 +9,4 @@ export * from './feedback-icon';
 export * from './welcome-icon';
 export * from './banner';
 export * from './madfish';
+export * from './info';

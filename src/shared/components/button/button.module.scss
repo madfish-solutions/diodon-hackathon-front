@@ -64,8 +64,8 @@
     z-index: -100;
     transition: $opacity-transition;
   }
-  &:hover,
-  &:focus {
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
     -webkit-transform: scale(1.01);
     -ms-transform: scale(1.01);
     transform: scale(1.01);
