@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { Steps } from 'intro.js-react';
 
 import './onboarding.css';
-import { ONBOARDING_STEPS } from '../../utils/onboarding/ONBOARDING_STEPS';
+import { ONBOARDING_LS_KEY, ONBOARDING_STEPS } from '../../utils/onboarding/ONBOARDING_STEPS';
 
 export const Onboarding: FC = () => {
   const [enabled, setEnabled] = useState(false);
@@ -17,8 +17,6 @@ export const Onboarding: FC = () => {
         return;
       }
       setEnabled(true);
-      // eslint-disable-next-line no-console
-      console.log('show');
     }, 1000);
   }, [enabled]);
 
@@ -28,14 +26,31 @@ export const Onboarding: FC = () => {
   };
 
   const onExit = () => {
-    // eslint-disable-next-line no-console
-    // console.log('onExit');
+    try {
+      if (enabled) {
+        localStorage.setItem(ONBOARDING_LS_KEY, '1');
+      }
+    } catch (_) {}
   };
 
   const onStart = () => {
     // eslint-disable-next-line no-console
     // console.log('onStart');
   };
+
+  const checkOnboarding = () => {
+    try {
+      return localStorage.getItem(ONBOARDING_LS_KEY) === '1';
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const isSeen = checkOnboarding();
+
+  if (isSeen) {
+    return null;
+  }
 
   return (
     <Steps
