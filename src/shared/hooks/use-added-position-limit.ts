@@ -20,7 +20,7 @@ interface Order {
 
 const SLIPPAGE_PERCENTAGE = 3;
 
-export const getPositionSizeWithSlippage = (noSlippageSize: BigNumber, positionType: PositionType) => {
+export const getPositionLimitWithSlippage = (noSlippageSize: BigNumber, positionType: PositionType) => {
   if (positionType === PositionType.LONG) {
     return new BigNumber(noSlippageSize).times(WHOLE_PERCENTAGE - SLIPPAGE_PERCENTAGE).div(WHOLE_PERCENTAGE);
   }
@@ -28,7 +28,7 @@ export const getPositionSizeWithSlippage = (noSlippageSize: BigNumber, positionT
   return new BigNumber(noSlippageSize).times(WHOLE_PERCENTAGE + SLIPPAGE_PERCENTAGE).div(WHOLE_PERCENTAGE);
 };
 
-export const getNoSlippagePositionSize = async (
+export const getNoSlippagePositionLimit = async (
   amm: Nullable<Amm>,
   atomicCollateral: BigNumber,
   positionType: PositionType,
@@ -43,18 +43,18 @@ export const getNoSlippagePositionSize = async (
   return await amm.getInputPrice(positionType === PositionType.LONG ? Dir.AddToAmm : Dir.RemoveFromAmm, notional);
 };
 
-export const useAddedPositionSize = (order: Order, amm: Nullable<Amm>) => {
+export const useAddedPositionLimit = (order: Order, amm: Nullable<Amm>) => {
   const api = useApi();
-  const [noSlippagePositionSize, setNoSlippagePositionSize] = useState(BN_ZERO_AMOUNT);
+  const [noSlippagePositionLimit, setNoSlippagePositionSize] = useState(BN_ZERO_AMOUNT);
 
   const localGetNoSlippagePositionSize = useCallback(
     async (atomicCollateral: BigNumber, positionType: PositionType, leverage: number) => {
-      return api.call(async () => getNoSlippagePositionSize(amm, atomicCollateral, positionType, leverage));
+      return api.call(async () => getNoSlippagePositionLimit(amm, atomicCollateral, positionType, leverage));
     },
     [amm, api]
   );
 
-  const updatePositionSize = useMemo(
+  const updatePositionLimit = useMemo(
     () =>
       debounce(100, async () => {
         try {
@@ -73,13 +73,13 @@ export const useAddedPositionSize = (order: Order, amm: Nullable<Amm>) => {
     [localGetNoSlippagePositionSize, order]
   );
 
-  const positionSize = useMemo(() => {
-    return getPositionSizeWithSlippage(new BigNumber(noSlippagePositionSize), order.positionType);
-  }, [noSlippagePositionSize, order.positionType]);
+  const positionLimit = useMemo(() => {
+    return getPositionLimitWithSlippage(new BigNumber(noSlippagePositionLimit), order.positionType);
+  }, [noSlippagePositionLimit, order.positionType]);
 
   return {
-    noSlippagePositionSize,
-    positionSize,
-    updatePositionSize
+    noSlippagePositionLimit,
+    positionLimit,
+    updatePositionLimit
   };
 };

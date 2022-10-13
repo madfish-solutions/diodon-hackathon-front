@@ -14,10 +14,10 @@ import { getFormikError, isExist } from '@shared/helpers';
 import { toAtomic } from '@shared/helpers/bignumber';
 
 import {
-  getNoSlippagePositionSize,
-  getPositionSizeWithSlippage,
+  getNoSlippagePositionLimit,
+  getPositionLimitWithSlippage,
   useAccountStore,
-  useAddedPositionSize,
+  useAddedPositionLimit,
   useApi,
   useAuthStore,
   useDDAIBalance,
@@ -100,8 +100,8 @@ export const useOpenPositionModalViewModel = (
             values.positionType === PositionType.LONG ? Side.LONG : Side.SHORT,
             rawMargin,
             toAtomic(new BigNumber(values.leverage), DDAI_DECIMALS),
-            getPositionSizeWithSlippage(
-              await getNoSlippagePositionSize(amm, rawMargin, values.positionType, values.leverage),
+            getPositionLimitWithSlippage(
+              await getNoSlippagePositionLimit(amm, rawMargin, values.positionType, values.leverage),
               values.positionType
             ).integerValue(BigNumber.ROUND_DOWN)
           );
@@ -134,23 +134,24 @@ export const useOpenPositionModalViewModel = (
     onSubmit: handleSubmit
   });
 
-  const { noSlippagePositionSize, positionSize, updatePositionSize } = useAddedPositionSize(formik.values, amm);
+  const { positionLimit, updatePositionLimit, noSlippagePositionLimit } = useAddedPositionLimit(formik.values, amm);
 
   const value = formik.values.orderAmount;
   const positionType = formik.values.positionType;
   const leverage = formik.values.leverage;
+  const positionSize = positionType === PositionType.LONG ? positionLimit : noSlippagePositionLimit;
   const error = useMemo(() => {
-    if (noSlippagePositionSize.gt(maxHoldingBaseAsset)) {
+    if (noSlippagePositionLimit.gt(maxHoldingBaseAsset)) {
       return 'Position size is too big.';
     }
 
     return FORM_FIELDS.map(fieldName => getFormikError(formik, fieldName)).find(Boolean) ?? null;
-  }, [formik, maxHoldingBaseAsset, noSlippagePositionSize]);
+  }, [formik, maxHoldingBaseAsset, noSlippagePositionLimit]);
 
   useEffect(() => {
-    updatePositionSize();
+    updatePositionLimit();
     updateMaxHoldingBaseAsset();
-  }, [value, positionType, leverage, updatePositionSize, updateMaxHoldingBaseAsset]);
+  }, [value, positionType, leverage, updatePositionLimit, updateMaxHoldingBaseAsset]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = event => {
     formik.setFieldValue(event.target.name, event.target.value, true);
@@ -171,7 +172,7 @@ export const useOpenPositionModalViewModel = (
     prevMarketIdRef.current = marketId;
   }, [marketId, updateDDAIBalance]);
 
-  const positionSizeUsd = positionSize.toNumber() * Number(market?.marketPriceUsd ?? ZERO_AMOUNT);
+  const positionSizeUsd = positionSize.times(market?.marketPriceUsd ?? ZERO_AMOUNT).toNumber();
 
   return {
     value,
