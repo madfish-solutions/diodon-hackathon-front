@@ -18,7 +18,7 @@ export const ConnectButton: FC<Props> = observer(({ className, ...props }) => {
     return (
       // @ts-ignore
       <Button onClick={disconnectHandle} className={className} {...props}>
-        <span style={{ color: '#fff' }}>{shortize(address)}</span>
+        🦊 <span style={{ color: '#fff' }}>{shortize(address)}</span>
       </Button>
     );
   }
@@ -27,7 +27,7 @@ export const ConnectButton: FC<Props> = observer(({ className, ...props }) => {
     return (
       // @ts-ignore
       <Button onClick={connectHandle} className={className} {...props}>
-        Connect Metamask
+        🦊 Connect Metamask
       </Button>
     );
   }
@@ -35,7 +35,7 @@ export const ConnectButton: FC<Props> = observer(({ className, ...props }) => {
   return (
     // @ts-ignore
     <Button href="https://metamask.io/" target="_blank" className={className} {...props}>
-      Install Metamask
+      🦊 Install Metamask
     </Button>
   );
 });
