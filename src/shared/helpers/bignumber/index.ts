@@ -10,4 +10,3 @@ export * from './save-bignumber';
 export * from './to-percent';
 export * from './get-sum-of-numbers';
 export * from './value-to-big-number';
-export * from './get-percentage-change';
