@@ -33,6 +33,7 @@
     "intro.js": "^6.0.0",
     "intro.js-react": "^0.7.0",
     "lightweight-charts": "^3.8.0",
+    "lodash": "^4.17.21",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
     "os-browserify": "^0.3.0",
@@ -83,6 +84,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.186",
     "@types/react-modal": "^3.13.1",
     "@types/uuid": "^8.3.4",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
