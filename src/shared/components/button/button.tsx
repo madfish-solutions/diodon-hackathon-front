@@ -6,6 +6,7 @@ import { Link, LinkProps } from 'react-router-dom';
 import { CFC } from '@shared/types';
 import { isUndefined } from '@shared/types/type-checks';
 
+import { LoadingAnimation } from '../loading-animation';
 import styles from './button.module.scss';
 
 export type ButtonProps = {
@@ -44,6 +45,8 @@ export const Button: CFC<ButtonProps> = ({
     [styles.loading]: loading
   });
 
+  const content = loading ? <LoadingAnimation /> : children;
+
   if ('href' in props && !isUndefined(props.href)) {
     const anchorProps = {
       target: external ? '_blank' : undefined,
@@ -56,7 +59,7 @@ export const Button: CFC<ButtonProps> = ({
       return (
         <a {...anchorProps}>
           {control}
-          {children}
+          {content}
           {icon}
         </a>
       );
@@ -64,7 +67,7 @@ export const Button: CFC<ButtonProps> = ({
       return (
         <Link to={anchorProps.href} {...anchorProps}>
           {control}
-          {children}
+          {content}
           {icon}
         </Link>
       );
@@ -79,7 +82,7 @@ export const Button: CFC<ButtonProps> = ({
       {...(props as HTMLProps<HTMLButtonElement>)}
     >
       {control}
-      {children}
+      {content}
       {icon}
     </button>
   );

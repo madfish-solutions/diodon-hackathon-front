@@ -5,6 +5,8 @@ export interface OnboardingStep extends Step {
   id: string;
 }
 
+export const ONBOARDING_LS_KEY = 'DD_ONBOARDING';
+
 const DEFAULT_STEP: Partial<Step> = {
   highlightClass: 'highlightOnboarding',
   tooltipClass: 'tooltipOnboarding'
@@ -63,5 +65,13 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     id: '#feedback',
     intro: 'Share your experience and help us make the platform better for you!',
     title: '🐡 Feedback'
+  },
+
+  {
+    ...DEFAULT_STEP,
+    element: '#welcome',
+    id: '#welcome',
+    intro: 'Open Onboarding again.',
+    title: '🤝 Onboarding'
   }
 ];

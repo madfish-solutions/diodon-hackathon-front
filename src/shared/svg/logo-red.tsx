@@ -7,7 +7,14 @@ export const LogoRedIcon: FC<IconProps> = ({ ...props }) => {
   const { getId, getUrl } = useSvgHelper('LogoRedIcon');
 
   return (
-    <svg width={props.size || 68} height={props.size || 68} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      width={props.size || 68}
+      height={props.size || 68}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <g filter={getUrl('a')}>
         <path
           fillRule="evenodd"
