@@ -69,10 +69,10 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
           <div>
             Margin <Tooltip content="Wished collateral amount to open a position" />
           </div>
-          <div>Balance: {formatValueBalance(balance)} KDAI</div>
+          <div>Balance: {formatValueBalance(balance)} DDAI</div>
         </div>
         <div className={styles.inputWrapper}>
-          <span className={styles.inputPostfix}>KDAI</span>
+          <span className={styles.inputPostfix}>DDAI</span>
           <input
             type="number"
             min={0}
