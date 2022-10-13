@@ -36,6 +36,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
     closeModalHandler,
     handleSubmit,
     submitDisabled,
+    isLoading,
     error,
     positionType,
     value,
@@ -77,6 +78,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
             className={cx(styles.input, styles.amount)}
             value={value}
             onChange={handleChange}
+            disabled={isLoading || submitDisabled}
           />
         </div>
         <div className={styles.info}>
@@ -84,7 +86,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
             Leverage: <b style={{ color: '#fff' }}>{leverage}</b>
           </div>
         </div>
-        <LeverageSlider value={leverage} onChange={handleLeverageChange} />
+        <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading || submitDisabled} />
         <p style={{ color: 'red' }}>{error}</p>
         <div className={styles.additionalInfo}>
           <Cell label={'Min. receive'}>
@@ -98,7 +100,7 @@ export const OpenPositionModal: FC<Props> = observer(({ marketId, recommendedPos
           <Cell label="Slippage">
             <PercentView amount={slippagePercentage} />
           </Cell>
-          <Button type="submit" disabled={submitDisabled} className={styles.opButton}>
+          <Button type="submit" disabled={submitDisabled} className={styles.opButton} loading={isLoading}>
             Open {positionType} position
           </Button>
         </div>

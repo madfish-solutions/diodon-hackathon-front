@@ -191,6 +191,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
 
   const closePosition = useCallback(async () => {
     try {
+      formik.setSubmitting(true);
       setPositionBeingChanged(true);
       await api.call(async () => {
         if (!clearingHouse || !marketId) {
@@ -210,8 +211,9 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
       });
     } finally {
       setPositionBeingChanged(false);
+      formik.setSubmitting(false);
     }
-  }, [address, api, clearingHouse, getApproves, getFee, marketId, modalsStore, position, positionsStore]);
+  }, [address, api, clearingHouse, formik, getApproves, getFee, marketId, modalsStore, position, positionsStore]);
 
   useEffect(() => {
     updatePositionSize();
@@ -246,6 +248,8 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
     positionBeingChanged,
+    isLoading: formik.isSubmitting,
+    submitDisabled: formik.isSubmitting || isExist(error),
     positionSize,
     positionSizeUsd,
     formType,

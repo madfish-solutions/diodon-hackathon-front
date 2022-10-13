@@ -40,7 +40,9 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
     positionSizeUsd,
     formType,
     toggleFormType,
-    isDeposit
+    isDeposit,
+    isLoading,
+    submitDisabled
   } = useManagePositionModalViewModel(marketId);
 
   if (!market) {
@@ -74,12 +76,13 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
                   className={cx(styles.input, styles.amount)}
                   value={value}
                   onChange={handleChange}
+                  disabled={isLoading || submitDisabled}
                 />
               </div>
               <div className={styles.info}>
                 <div>Leverage</div>
               </div>
-              <LeverageSlider value={leverage} onChange={handleLeverageChange} />
+              <LeverageSlider value={leverage} onChange={handleLeverageChange} disabled={isLoading || submitDisabled} />
               <p style={{ color: 'red' }}>{error}</p>
               <div className={styles.additionalInfo}>
                 <Cell label="Min. new position size">
@@ -108,11 +111,16 @@ export const ManagePositionModal: FC<Props> = observer(({ marketId }) => {
               <PercentView amount={SLIPPAGE_PERCENTAGE} />
             </Cell>
             {isDeposit ? (
-              <Button type="submit" disabled={positionBeingChanged}>
+              <Button type="submit" disabled={positionBeingChanged || submitDisabled} loading={isLoading}>
                 Increase position
               </Button>
             ) : (
-              <Button type="button" onClick={closePosition} disabled={positionBeingChanged}>
+              <Button
+                type="button"
+                onClick={closePosition}
+                disabled={positionBeingChanged || submitDisabled}
+                loading={isLoading}
+              >
                 Fully close position
               </Button>
             )}

@@ -35,7 +35,7 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
         </Link>
         <Socials />
         <div id="feedback">
-          <a href="https://quipuswap.com/" target="_blank" rel="noreferrer">
+          <a href="https://29152f82zsf.typeform.com/to/WcnMeY0w" target="_blank" rel="noreferrer">
             <FeedbackIcon />
           </a>
         </div>

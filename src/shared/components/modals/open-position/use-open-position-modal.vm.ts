@@ -185,6 +185,7 @@ export const useOpenPositionModalViewModel = (
     closeModalHandler,
     handleSubmit: formik.handleSubmit,
     submitDisabled: formik.isSubmitting || isExist(error),
+    isLoading: formik.isSubmitting,
     positionType,
     setPositionType,
     values: formik.values,
