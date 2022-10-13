@@ -12,9 +12,10 @@ import styles from './usd-view.module.scss';
 interface Props extends HTMLProps<HTMLDivElement> {
   amount: BigNumber.Value;
   percentEquivalent?: BigNumber.Value;
+  pnl?: boolean;
 }
 
-export const GetUsdView: FC<Props> = ({ amount, percentEquivalent, ...props }) => {
+export const GetUsdView: FC<Props> = ({ amount, percentEquivalent, pnl, ...props }) => {
   const roundedAmount = useMemo(() => new BigNumber(amount).decimalPlaces(2), [amount]);
   const roundedPercentEquivalent = useMemo(
     () => (isExist(percentEquivalent) ? new BigNumber(percentEquivalent).decimalPlaces(2) : null),
@@ -32,8 +33,12 @@ export const GetUsdView: FC<Props> = ({ amount, percentEquivalent, ...props }) =
 
   const sign = isProfit ? '+' : '';
 
+  const color = isExist(pnl)
+    ? { [styles.green]: new BigNumber(amount).gte(ZERO_AMOUNT), [styles.red]: new BigNumber(amount).lt(ZERO_AMOUNT) }
+    : {};
+
   return (
-    <span className={styles.root} {...props}>
+    <span className={cx({ [styles.root]: true, ...color })} {...props}>
       <span className={styles.prefix}>$</span>
       <span title={`${amount}`}>{formatValueBalance(roundedAmount, 6)}</span>
       {isExist(roundedPercentEquivalent) && (
