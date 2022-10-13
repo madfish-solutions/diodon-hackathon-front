@@ -5,7 +5,7 @@ import styles from '../market-item.module.scss';
 
 export const getMarginRiskColor = (marginRatioPercentage: number) => {
   if (marginRatioPercentage <= 6.5) {
-    return '#000000';
+    return '#FB5959';
   }
   if (marginRatioPercentage <= 50) {
     return '#FFD700';
