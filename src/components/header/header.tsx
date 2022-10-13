@@ -8,7 +8,8 @@ import { Socials } from '@components/socials';
 import { GiveMeMoneyButton } from '@shared/components';
 import { ConnectButton } from '@shared/components/connect-button';
 import { useAuthStore } from '@shared/hooks';
-import { FeedbackIcon } from '@shared/svg';
+import { FeedbackIcon, WelcomeIcon } from '@shared/svg';
+import { ONBOARDING_LS_KEY } from '@shared/utils/onboarding/ONBOARDING_STEPS';
 
 import { DiodonHeaderLogo } from '../diodon-header-logo';
 import { UserMainStats } from '../user-main-stats';
@@ -21,6 +22,11 @@ interface HeaderProps {
 export const Header: FC<HeaderProps> = observer(({ className }) => {
   const { address } = useAuthStore();
 
+  const restoreOnboarding = () => {
+    localStorage.removeItem(ONBOARDING_LS_KEY);
+    window.location.reload();
+  };
+
   return (
     <div className={styles.wrapper}>
       <header className={cx(styles.root, className)} data-test-id="header">
@@ -29,8 +35,13 @@ export const Header: FC<HeaderProps> = observer(({ className }) => {
         </Link>
         <Socials />
         <div id="feedback">
-          <a href="https://quipuswap.com/" target="_blank" rel="noreferrer">
+          <a href="https://29152f82zsf.typeform.com/to/WcnMeY0w" target="_blank" rel="noreferrer">
             <FeedbackIcon />
+          </a>
+        </div>
+        <div id="welcome" style={{ marginLeft: 8 }}>
+          <a onClick={restoreOnboarding} style={{ cursor: 'pointer' }}>
+            <WelcomeIcon />
           </a>
         </div>
         <div className={styles.flex1} />

@@ -3,7 +3,14 @@ import { FC } from 'react';
 import { IconProps } from './svg-props';
 
 export const LogoYellowIcon: FC<IconProps> = ({ ...props }) => (
-  <svg width={props.size || 64} height={props.size || 64} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width={props.size || 64}
+    height={props.size || 64}
+    viewBox="0 0 64 64"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"

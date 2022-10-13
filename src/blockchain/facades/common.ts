@@ -1,5 +1,6 @@
+import { Listener } from '@ethersproject/abstract-provider';
 import { BigNumber } from 'bignumber.js';
-import { Contract, ethers } from 'ethers';
+import { Contract, ethers, EventFilter } from 'ethers';
 
 import { address } from './types';
 
@@ -19,6 +20,18 @@ export class CommonFacade {
     this.provider = provider;
     this.contract = new ethers.Contract(contractAddress, abi, this.provider);
     this.signer = signer;
+  }
+
+  public on(event: EventFilter | string, listener: Listener) {
+    this.contract.on(event, listener);
+  }
+
+  public off(event: EventFilter | string, listener: Listener) {
+    this.contract.off(event, listener);
+  }
+
+  get filters() {
+    return this.contract.filters;
   }
 
   public async getOwner(): Promise<address> {

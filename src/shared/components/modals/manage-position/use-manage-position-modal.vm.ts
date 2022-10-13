@@ -117,7 +117,8 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
           modalsStore.close();
           await Promise.all([
             accountStore.loadFreeCollateral(AMMS[marketId!], address!),
-            positionsStore.loadPositions(address!)
+            positionsStore.loadPositions(address!),
+            accountStore.loadDDAIBalance(address!)
           ]);
         }, 'Position has been successfully opened!');
       } finally {
@@ -190,6 +191,7 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
 
   const closePosition = useCallback(async () => {
     try {
+      formik.setSubmitting(true);
       setPositionBeingChanged(true);
       await api.call(async () => {
         if (!clearingHouse || !marketId) {
@@ -209,8 +211,9 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
       });
     } finally {
       setPositionBeingChanged(false);
+      formik.setSubmitting(false);
     }
-  }, [address, api, clearingHouse, getApproves, getFee, marketId, modalsStore, position, positionsStore]);
+  }, [address, api, clearingHouse, formik, getApproves, getFee, marketId, modalsStore, position, positionsStore]);
 
   useEffect(() => {
     updatePositionSize();
@@ -245,6 +248,8 @@ export const useManagePositionModalViewModel = (marketId: Undefined<MarketId>) =
     handleSubmit: formik.handleSubmit,
     isSubmitting: formik.isSubmitting,
     positionBeingChanged,
+    isLoading: formik.isSubmitting,
+    submitDisabled: formik.isSubmitting || isExist(error),
     positionSize,
     positionSizeUsd,
     formType,
