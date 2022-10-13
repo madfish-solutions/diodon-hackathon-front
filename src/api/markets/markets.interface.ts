@@ -13,6 +13,7 @@ export interface MarketData {
   indexPriceChangePercentage: number;
   volume24Tokens: string;
   volume24Usd: number;
+  fundingRate: number;
   fundingRateChangePercentage: number;
   marketPriceChangePercentage: number;
 }

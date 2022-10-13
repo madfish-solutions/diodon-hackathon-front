@@ -24,7 +24,8 @@ export const getMarketsApi = async (
         marketPriceUsd: toReal(await amm.getSpotPrice(), DDAI_DECIMALS).toNumber(),
         indexPriceUsd: toReal(await amm.getUnderlyingPrice(), DDAI_DECIMALS).toNumber(),
         marketPriceChangePercentage: Number(marketData.marketPriceChangePercentage),
-        indexPriceChangePercentage: Number(marketData.indexPriceChangePercentage)
+        indexPriceChangePercentage: Number(marketData.indexPriceChangePercentage),
+        fundingRate: toReal(marketData.fundingRate, DDAI_DECIMALS).multipliedBy(100).toNumber()
       };
     })
   );
