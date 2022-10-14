@@ -7,3 +7,4 @@ export * from './navigation';
 export * from './sidebar';
 export * from './diodon-header-logo';
 export * from './user-main-stats';
+export * from './blocked-ui';
